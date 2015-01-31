@@ -6,7 +6,7 @@
 
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 群组定义的租户类型
@@ -19,7 +19,7 @@ namespace Spacebuilder.Group
         /// <param name="TenantTypeIds">被扩展对象</param>
         public static string Group(this TenantTypeIds TenantTypeIds)
         {
-            return "101100";
+            return "900200";
         }
     }
 }

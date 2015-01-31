@@ -11,7 +11,7 @@ using Tunynet.Globalization;
 using Tunynet.Logging;
 using Spacebuilder.Common;
 
-namespace Spacebuilder.Group.EventModules
+namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
     /// 处理群组操作日志
@@ -25,14 +25,14 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         void IEventMoudle.RegisterEventHandler()
         {
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<GroupEntity, CommonEventArgs>(GroupOperationLogEventModule_After);
+            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(GroupOperationLogEventModule_After);
         }
 
 
         /// <summary>
         /// 群组操作日志事件处理
         /// </summary>
-        private void GroupOperationLogEventModule_After(GroupEntity senders, CommonEventArgs eventArgs)
+        private void GroupOperationLogEventModule_After(TopicEntity senders, CommonEventArgs eventArgs)
         {
             if (eventArgs.EventOperationType == EventOperationType.Instance().Delete()
                || eventArgs.EventOperationType == EventOperationType.Instance().Approved()

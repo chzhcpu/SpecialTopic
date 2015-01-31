@@ -17,15 +17,15 @@ using Tunynet.Utilities;
 using System.Web.Routing;
 using DevTrends.MvcDonutCaching;
 
-namespace Spacebuilder.Group.Controllers
+namespace SpecialTopic.Topic.Controllers
 {
     [Themed(PresentAreaKeysOfBuiltIn.GroupSpace, IsApplication = true)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
-    [GroupSpaceAuthorize]
+    [TopicSpaceAuthorize]
     public class GroupSpaceController : Controller
     {
-        public GroupService groupService { get; set; }
+        public TopicService groupService { get; set; }
         public IPageResourceManager pageResourceManager { get; set; }
         public IUserService userService { get; set; }
         public FollowService followService { get; set; }
@@ -59,7 +59,7 @@ namespace Spacebuilder.Group.Controllers
         /// </summary>
         public ActionResult _LastGroupVisitors(string spaceKey, int topNumber = 12)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             IEnumerable<Visit> visits = visitService.GetTopVisits(groupId, topNumber);
             ViewData["groupId"] = groupId;
             return View(visits);
@@ -71,7 +71,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _ListActivities(string spaceKey, int? pageIndex, int? applicationId, MediaType? mediaType, bool? isOriginal, long? userId)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             PagingDataSet<Activity> activities = activityService.GetOwnerActivities(ActivityOwnerTypes.Instance().Group(), groupId, applicationId, mediaType, isOriginal, null, pageIndex ?? 1, userId);
             if (activities.FirstOrDefault() != null)
             {
@@ -92,7 +92,7 @@ namespace Spacebuilder.Group.Controllers
         {
             if (UserContext.CurrentUser == null)
                 return new EmptyResult();
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             IEnumerable<Activity> newActivities = activityService.GetNewerActivities(groupId, lastActivityId.Value, applicationId, ActivityOwnerTypes.Instance().Group(), UserContext.CurrentUser.UserId);
 
             if (newActivities != null && newActivities.Count() > 0)
@@ -110,7 +110,7 @@ namespace Spacebuilder.Group.Controllers
         {
             if (UserContext.CurrentUser == null)
                 return Json(new { });
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             string name;
             int count = activityService.GetNewerCount(groupId, lastActivityId, applicationId, out name, ActivityOwnerTypes.Instance().Group(), UserContext.CurrentUser.UserId);
             if (count == 0)
@@ -151,7 +151,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpPost]
         public ActionResult DeleteGroupVisitor(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
 
@@ -181,8 +181,8 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _GroupMemberAlsoJoinedGroups(string spaceKey, int topNumber = 10)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<GroupEntity> groups = groupService.GroupMemberAlsoJoinedGroups(groupId, topNumber);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            IEnumerable<TopicEntity> groups = groupService.GroupMemberAlsoJoinedGroups(groupId, topNumber);
             return View(groups);
         }
 
@@ -194,7 +194,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _EditAnnouncement(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             ViewData["announcement"] = group.Announcement;
             return View();
         }
@@ -206,10 +206,10 @@ namespace Spacebuilder.Group.Controllers
         [DonutOutputCache(CacheProfile = "Frequently")]
         public ActionResult _OnlineGroupMembers(string spaceKey, int topNumber = 12)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             ViewData["User"] = group.User;
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<GroupMember> groupMembers = groupService.GetOnlineGroupMembers(groupId);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            IEnumerable<TopicMember> groupMembers = groupService.GetOnlineGroupMembers(groupId);
             if (group.User.IsOnline)
             {
                 return View(groupMembers.Take(topNumber - 1));
@@ -226,7 +226,7 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult _GroupProfile(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             return View(group);
         }
 
@@ -245,7 +245,7 @@ namespace Spacebuilder.Group.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, errorMessage));
             }
 
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return Json(new { });
             if (!authorizer.Group_Manage(group))
@@ -277,7 +277,7 @@ namespace Spacebuilder.Group.Controllers
         {
             StatusMessageData message = null;
             string unInviteFriendNames = string.Empty;
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
 
 
             if (group == null)
@@ -354,13 +354,13 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult Members(string spaceKey, int pageIndex = 1)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.GroupName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            PagingDataSet<GroupMember> groupMembers = groupService.GetGroupMembers(groupId, false, pageSize: 60, pageIndex: pageIndex);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            PagingDataSet<TopicMember> groupMembers = groupService.GetGroupMembers(groupId, false, pageSize: 60, pageIndex: pageIndex);
 
 
 
@@ -378,7 +378,7 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult MyFollowedUsers(string spaceKey, int pageIndex = 1)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
             var currentUser = UserContext.CurrentUser;
@@ -388,9 +388,9 @@ namespace Spacebuilder.Group.Controllers
             pageResourceManager.InsertTitlePart(group.GroupName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
 
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<GroupMember> groupMember = groupService.GetGroupMembersAlsoIsMyFollowedUser(groupId, currentUser.UserId);
-            PagingDataSet<GroupMember> groupMembers = new PagingDataSet<GroupMember>(groupMember);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            IEnumerable<TopicMember> groupMember = groupService.GetGroupMembersAlsoIsMyFollowedUser(groupId, currentUser.UserId);
+            PagingDataSet<TopicMember> groupMembers = new PagingDataSet<TopicMember>(groupMember);
 
             if (currentUser.IsFollowed(group.User.UserId))
             {
@@ -411,7 +411,7 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult DeleteManager(string spaceKey, long userId)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
 
 
             if (!authorizer.Group_DeleteMember(group, userId))
@@ -430,12 +430,12 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult _ListMembers(string spaceKey, int topNumber)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return new EmptyResult();
-            PagingDataSet<GroupMember> groupMembers = groupService.GetGroupMembers(groupId, false, SortBy_GroupMember.DateCreated_Desc);
-            IEnumerable<GroupMember> members = groupMembers.Take(topNumber);
+            PagingDataSet<TopicMember> groupMembers = groupService.GetGroupMembers(groupId, false, SortBy_TopicMember.DateCreated_Desc);
+            IEnumerable<TopicMember> members = groupMembers.Take(topNumber);
 
             return View(members);
         }
@@ -448,8 +448,8 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _GroupMenu(string spaceKey)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            GroupEntity group = groupService.Get(groupId);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 
@@ -479,7 +479,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _Announcement(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
             return View(group);
@@ -493,7 +493,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _GroupActivities(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
 

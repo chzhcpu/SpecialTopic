@@ -7,7 +7,7 @@
 using Tunynet.Common;
 using Tunynet.Events;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 积分项

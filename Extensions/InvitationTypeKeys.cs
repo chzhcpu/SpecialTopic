@@ -6,7 +6,7 @@
 
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 扩展InvitationTypeKeys

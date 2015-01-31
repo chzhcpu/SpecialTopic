@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tunynet;
 
-namespace Spacebuilder.Group.EventModules
+namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
     /// 处理群组成员退出群组通知的EventMoudle
@@ -27,9 +27,9 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<GroupMember>.Instance().After += new CommonEventHandler<GroupMember, CommonEventArgs>(GroupMemberActivityModule_After);
-            EventBus<GroupMember>.Instance().After += new CommonEventHandler<GroupMember, CommonEventArgs>(GroupMemberNoticeModule_After);
-            EventBus<GroupMember>.Instance().After += new CommonEventHandler<GroupMember, CommonEventArgs>(SetManagerNoticeEventModule_After);
+            EventBus<GroupMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberActivityModule_After);
+            EventBus<GroupMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberNoticeModule_After);
+            EventBus<GroupMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(SetManagerNoticeEventModule_After);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="groupMember"></param>
         /// <param name="eventArgs"></param>
-        private void GroupMemberActivityModule_After(GroupMember groupMember, CommonEventArgs eventArgs)
+        private void GroupMemberActivityModule_After(TopicMember groupMember, CommonEventArgs eventArgs)
         {
             ActivityService activityService = new ActivityService();
             if (eventArgs.EventOperationType == EventOperationType.Instance().Create())
@@ -45,7 +45,7 @@ namespace Spacebuilder.Group.EventModules
                 //生成动态
                 if (groupMember == null)
                     return;
-                var group = new GroupService().Get(groupMember.GroupId);
+                var group = new TopicService().Get(groupMember.GroupId);
                 if (group == null)
                     return;
                 //生成Owner为群组的动态
@@ -97,12 +97,12 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void GroupMemberNoticeModule_After(GroupMember sender, CommonEventArgs eventArgs)
+        private void GroupMemberNoticeModule_After(TopicMember sender, CommonEventArgs eventArgs)
         {
             if (eventArgs.EventOperationType != EventOperationType.Instance().Delete() && eventArgs.EventOperationType != EventOperationType.Instance().Create() && sender != null)
                 return;
-            GroupService groupService = new GroupService();
-            GroupEntity entity = groupService.Get(sender.GroupId);
+            TopicService groupService = new TopicService();
+            TopicEntity entity = groupService.Get(sender.GroupId);
             if (entity == null)
                 return;
 
@@ -178,13 +178,13 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void SetManagerNoticeEventModule_After(GroupMember sender, CommonEventArgs eventArgs)
+        private void SetManagerNoticeEventModule_After(TopicMember sender, CommonEventArgs eventArgs)
         {
             if (eventArgs.EventOperationType != EventOperationType.Instance().SetGroupManager() && eventArgs.EventOperationType != EventOperationType.Instance().CancelGroupManager())
                 return;
 
-            GroupService groupService = new GroupService();
-            GroupEntity entity = groupService.Get(sender.GroupId);
+            TopicService groupService = new TopicService();
+            TopicEntity entity = groupService.Get(sender.GroupId);
             if (entity == null)
                 return;
 

@@ -14,7 +14,7 @@ using System.Linq;
 using Spacebuilder.UI;
 using System.Text;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 当前皮肤获取器接口
@@ -27,7 +27,7 @@ namespace Spacebuilder.Group
         ThemeAppearance IThemeResolver.GetRequestTheme(RequestContext controllerContext)
         {
             string spaceKey = controllerContext.GetParameterFromRouteDataOrQueryString("SpaceKey");
-            GroupEntity group = new GroupService().Get(spaceKey);
+            TopicEntity group = new TopicService().Get(spaceKey);
             if (group == null)
                 throw new ExceptionFacade("找不到群组");
 
@@ -68,7 +68,7 @@ namespace Spacebuilder.Group
         void IThemeResolver.IncludeStyle(RequestContext controllerContext)
         {
             string spaceKey = controllerContext.GetParameterFromRouteDataOrQueryString("SpaceKey");
-            GroupEntity group = new GroupService().Get(spaceKey);
+            TopicEntity group = new TopicService().Get(spaceKey);
             if (group == null)
                 return;
             PresentArea presentArea = new PresentAreaService().Get(PresentAreaKeysOfBuiltIn.GroupSpace);
@@ -167,8 +167,8 @@ namespace Spacebuilder.Group
         /// <returns></returns>
         public string GetThemeAppearance(long ownerId)
         {
-            var groupService = new GroupService();
-            GroupEntity group = groupService.Get(ownerId);
+            var groupService = new TopicService();
+            TopicEntity group = groupService.Get(ownerId);
             if (group == null)
                 return string.Empty;
             PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfBuiltIn.GroupSpace);
@@ -210,7 +210,7 @@ namespace Spacebuilder.Group
             if (!pa.EnableThemes)
                 return false;
 
-            if (DIContainer.Resolve<Authorizer>().Group_Manage(new GroupService().Get(ownerId)))
+            if (DIContainer.Resolve<Authorizer>().Group_Manage(new TopicService().Get(ownerId)))
                 return true;
             return false;
         }
@@ -223,13 +223,13 @@ namespace Spacebuilder.Group
         /// <param name="themeAppearance">themeKey与appearanceKey用逗号关联</param>
         public void ChangeThemeAppearance(long ownerId, bool isUseCustomStyle, string themeAppearance)
         {
-            var groupService = new GroupService();
-            GroupEntity group = groupService.Get(ownerId);
+            var groupService = new TopicService();
+            TopicEntity group = groupService.Get(ownerId);
             if (group == null)
                 throw new ExceptionFacade("找不到群组");
 
             new ThemeService().ChangeThemeAppearanceUserCount(PresentAreaKeysOfBuiltIn.GroupSpace, group.IsUseCustomStyle ? string.Empty : group.ThemeAppearance, isUseCustomStyle ? string.Empty : themeAppearance);
-            new GroupService().ChangeThemeAppearance(ownerId, isUseCustomStyle, themeAppearance);
+            new TopicService().ChangeThemeAppearance(ownerId, isUseCustomStyle, themeAppearance);
         }
     }
 }

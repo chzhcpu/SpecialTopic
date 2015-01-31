@@ -15,15 +15,15 @@ using Tunynet.Common;
 using Tunynet.UI;
 using Tunynet.Utilities;
 
-namespace Spacebuilder.Group.Controllers
+namespace SpecialTopic.Topic.Controllers
 {
     [Themed(PresentAreaKeysOfBuiltIn.GroupSpace, IsApplication = false)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
-    [GroupSpaceAuthorize]
+    [TopicSpaceAuthorize]
     public class GroupSpaceThemeController : Controller
     {
-        public GroupService groupService { get; set; }
+        public TopicService groupService { get; set; }
         public IPageResourceManager pageResourceManager { get; set; }
         public IUserService userService { get; set; }
         public FollowService followService { get; set; }
@@ -89,7 +89,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _GroupHeader(string spaceKey, bool showManageButton)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
             {
                 return HttpNotFound();
@@ -105,7 +105,7 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult Home(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             
             //已修改
             if (group == null)
@@ -153,8 +153,8 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _Menu_App(string spaceKey)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            GroupEntity group = groupService.Get(groupId);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 
@@ -196,8 +196,8 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _Menu_Main(string spaceKey)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            GroupEntity group = groupService.Get(groupId);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 
@@ -217,8 +217,8 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _GroupInfo(string spaceKey, bool? showGroupLogo)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            GroupEntity group = groupService.Get(groupId);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 

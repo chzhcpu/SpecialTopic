@@ -13,7 +13,7 @@ using System.Web.Routing;
 using Tunynet.Common;
 using Spacebuilder.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 拥有者计数类型扩展类

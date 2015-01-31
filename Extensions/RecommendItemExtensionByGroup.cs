@@ -6,7 +6,7 @@
 
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 推荐项类型扩展类
@@ -16,9 +16,9 @@ namespace Spacebuilder.Group
         /// <summary>
         /// 
         /// </summary>
-        public static GroupEntity GetGroup(this RecommendItem item)
+        public static TopicEntity GetGroup(this RecommendItem item)
         {
-            return new GroupService().Get(item.ItemId);
+            return new TopicService().Get(item.ItemId);
         }
     }
 }

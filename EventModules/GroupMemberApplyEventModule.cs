@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tunynet;
 
-namespace Spacebuilder.Group.EventModules
+namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
     /// 处理群组申请通知的EventMoudle
@@ -27,7 +27,7 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<GroupMemberApply>.Instance().After += new CommonEventHandler<GroupMemberApply, CommonEventArgs>(GroupMemberApplyNoticeModule_After);
+            EventBus<GroupMemberApply>.Instance().After += new CommonEventHandler<TopicMemberApply, CommonEventArgs>(GroupMemberApplyNoticeModule_After);
         }
 
         /// <summary>
@@ -35,10 +35,10 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void GroupMemberApplyNoticeModule_After(GroupMemberApply sender, CommonEventArgs eventArgs)
+        private void GroupMemberApplyNoticeModule_After(TopicMemberApply sender, CommonEventArgs eventArgs)
         {
-            GroupService groupService = new GroupService();
-            GroupEntity entity = groupService.Get(sender.GroupId);
+            TopicService groupService = new TopicService();
+            TopicEntity entity = groupService.Get(sender.GroupId);
             if (entity == null)
                 return;
 
@@ -51,7 +51,7 @@ namespace Spacebuilder.Group.EventModules
             Notice notice;
             if (eventArgs.EventOperationType == EventOperationType.Instance().Create())
             {
-                if (sender.ApplyStatus == GroupMemberApplyStatus.Pending)
+                if (sender.ApplyStatus == TopicMemberApplyStatus.Pending)
                 {
                     List<long> toUserIds = new List<long>();
                     toUserIds.Add(entity.UserId);
@@ -81,14 +81,14 @@ namespace Spacebuilder.Group.EventModules
             string noticeTemplateName = string.Empty;
             if (eventArgs.EventOperationType == EventOperationType.Instance().Approved())
             {
-                if (sender.ApplyStatus == GroupMemberApplyStatus.Approved)
+                if (sender.ApplyStatus == TopicMemberApplyStatus.Approved)
                 {
                     noticeTemplateName = NoticeTemplateNames.Instance().MemberApplyApproved();
                 }
             }
             else if (eventArgs.EventOperationType == EventOperationType.Instance().Disapproved())
             {
-                if (sender.ApplyStatus == GroupMemberApplyStatus.Disapproved)
+                if (sender.ApplyStatus == TopicMemberApplyStatus.Disapproved)
                 {
                     noticeTemplateName = NoticeTemplateNames.Instance().MemberApplyDisapproved();
                 }

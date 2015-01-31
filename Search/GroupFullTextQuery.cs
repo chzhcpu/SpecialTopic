@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 群组全文检索条件
@@ -54,7 +54,7 @@ namespace Spacebuilder.Group
         /// <summary>
         /// 排序
         /// </summary>
-        public SortBy_Group? sortBy { get; set; } 
+        public SortBy_Topic? sortBy { get; set; } 
 
         /// <summary>
         /// 当前显示页面页码

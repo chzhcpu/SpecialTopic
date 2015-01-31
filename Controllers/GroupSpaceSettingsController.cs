@@ -16,18 +16,18 @@ using Tunynet.Common.Configuration;
 using Tunynet.UI;
 using Tunynet.Utilities;
 
-namespace Spacebuilder.Group.Controllers
+namespace SpecialTopic.Topic.Controllers
 {
     [Themed(PresentAreaKeysOfBuiltIn.GroupSpace, IsApplication = true)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
-    [GroupSpaceAuthorize(RequireManager = true)]
+    [TopicSpaceAuthorize(RequireManager = true)]
     public class GroupSpaceSettingsController : Controller
     {
 
         public IPageResourceManager pageResourceManager { get; set; }
         public CategoryService categoryService { get; set; }
-        public GroupService groupService { get; set; }
+        public TopicService groupService { get; set; }
         public Authorizer authorizer { get; set; }
         private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
 
@@ -40,8 +40,8 @@ namespace Spacebuilder.Group.Controllers
         /// <returns></returns>
         public ActionResult _GroupSettingRightMenu(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
-            PagingDataSet<GroupMemberApply> applys = groupService.GetGroupMemberApplies(group.GroupId, GroupMemberApplyStatus.Pending);
+            TopicEntity group = groupService.Get(spaceKey);
+            PagingDataSet<TopicMemberApply> applys = groupService.GetGroupMemberApplies(group.GroupId, TopicMemberApplyStatus.Pending);
             long totalRecords = applys.TotalRecords;
             ViewData["totalRecords"] = totalRecords;
             return View(group);
@@ -54,16 +54,16 @@ namespace Spacebuilder.Group.Controllers
         /// <param name="pageIndex"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult ManageMemberApplies(string spaceKey, GroupMemberApplyStatus? applyStatus, int pageIndex = 1, int pageSize = 20)
+        public ActionResult ManageMemberApplies(string spaceKey, TopicMemberApplyStatus? applyStatus, int pageIndex = 1, int pageSize = 20)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.GroupName);
             pageResourceManager.InsertTitlePart("管理群组成员申请页");
             
             //已修改
-            PagingDataSet<GroupMemberApply> groupMemberApplies = groupService.GetGroupMemberApplies(group.GroupId, applyStatus, pageSize, pageIndex);
+            PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetGroupMemberApplies(group.GroupId, applyStatus, pageSize, pageIndex);
             ViewData["groupId"] = group.GroupId;
             TempData["GroupMenu"] = GroupMenu.ManageMember;
 
@@ -79,7 +79,7 @@ namespace Spacebuilder.Group.Controllers
         {
             
             
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             groupService.ApproveGroupMemberApply(applyIds, isApproved);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
@@ -94,7 +94,7 @@ namespace Spacebuilder.Group.Controllers
         {
             
             
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             groupService.DeleteGroupMemberApply(id);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
@@ -108,7 +108,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult ManageMembers(string spaceKey, int pageIndex = 1, int pageSize = 20)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.GroupName);
@@ -117,7 +117,7 @@ namespace Spacebuilder.Group.Controllers
 
             
             
-            PagingDataSet<GroupMember> groupMembers = groupService.GetGroupMembers(group.GroupId, true, SortBy_GroupMember.DateCreated_Asc, pageSize, pageIndex);
+            PagingDataSet<TopicMember> groupMembers = groupService.GetGroupMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Asc, pageSize, pageIndex);
             ViewData["group"] = group;
             TempData["GroupMenu"] = GroupMenu.ManageMember;
 
@@ -139,7 +139,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _ChangeGroupOwner(string spaceKey, string returnUrl)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return Content(string.Empty);
             
@@ -163,7 +163,7 @@ namespace Spacebuilder.Group.Controllers
             
             var userIds = Request.Form.Gets<long>("UserId", new List<long>());
             long userId = userIds.FirstOrDefault();
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return Content(string.Empty);
             if (userId == 0)
@@ -197,7 +197,7 @@ namespace Spacebuilder.Group.Controllers
         public ActionResult SetManager(string spaceKey, long userId, bool isManager)
         {
             StatusMessageData message = null;
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
 
@@ -225,7 +225,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpPost]
         public ActionResult DeleteMember(string spaceKey, List<long> userIds)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
             foreach (var userId in userIds)
@@ -251,7 +251,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpPost]
         public ActionResult _DeleteGroupLogo(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "没有该群组！"));
             IUser currentUser = UserContext.CurrentUser;
@@ -273,7 +273,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult EditGroup(string spaceKey)
         {
-            GroupEntity group = groupService.Get(spaceKey);
+            TopicEntity group = groupService.Get(spaceKey);
             
             //已修改
             if (group == null)
@@ -323,7 +323,7 @@ namespace Spacebuilder.Group.Controllers
                 groupEditModel.Logo = groupLogo.FileName;
             }
 
-            GroupEntity group = groupEditModel.AsGroupEntity();
+            TopicEntity group = groupEditModel.AsGroupEntity();
 
 
             //设置分类
@@ -355,8 +355,8 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _Menu_Manage(string spaceKey)
         {
-            long groupId = GroupIdToGroupKeyDictionary.GetGroupId(spaceKey);
-            GroupEntity group = groupService.Get(groupId);
+            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 

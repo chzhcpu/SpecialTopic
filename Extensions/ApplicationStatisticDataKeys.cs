@@ -12,7 +12,7 @@ using System.Text;
 using System.Web.Routing;
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 用户计数类型扩展类

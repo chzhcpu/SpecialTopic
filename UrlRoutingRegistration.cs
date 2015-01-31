@@ -5,7 +5,7 @@ using Spacebuilder.Common;
 
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 群组路由设置
@@ -14,7 +14,7 @@ namespace Spacebuilder.Group
     {
         public override string AreaName
         {
-            get { return "Group"; }
+            get { return "Topic"; }
         }
 
         public override void RegisterArea(AreaRegistrationContext context)
@@ -31,125 +31,125 @@ namespace Spacebuilder.Group
             #region Channel
 
             context.MapRoute(
-              "Channel_Group_Home", // Route name
-              "Group" + extensionForOldIIS, // URL with parameters
-              new { controller = "ChannelGroup", action = "Home", CurrentNavigationId = "10101102" } // Parameter defaults
+              "Channel_Topic_Home", // Route name
+              "Topic" + extensionForOldIIS, // URL with parameters
+              new { controller = "ChannelTopic", action = "Home", CurrentNavigationId = "10900202" } // Parameter defaults
             );
 
             context.MapRoute(
-              "Channel_Group_Create", // Route name
-              "Group/Create" + extensionForOldIIS, // URL with parameters
-              new { controller = "ChannelGroup", action = "Create" } // Parameter defaults
+              "Channel_Topic_Create", // Route name
+              "Topic/Create" + extensionForOldIIS, // URL with parameters
+              new { controller = "ChannelTopic", action = "Create" } // Parameter defaults
             );
 
             context.MapRoute(
-                "Channel_Group_UserGroups", // Route name
-                "Group/u-{spaceKey}" + extensionForOldIIS, // URL with parameters
-                new { controller = "ChannelGroup", action = "UserJoinedGroups", CurrentNavigationId = "10101103" }
+                "Channel_Topic_UserTopics", // Route name
+                "Topic/u-{spaceKey}" + extensionForOldIIS, // URL with parameters
+                new { controller = "ChannelTopic", action = "UserJoinedTopics", CurrentNavigationId = "10900203" }
             );
 
             context.MapRoute(
-                "Channel_Group_FindGroup", // Route name
-                "Group/FindGroup" + extensionForOldIIS, // URL with parameters
-                new { controller = "ChannelGroup", action = "FindGroup", CurrentNavigationId = "10101104" }
+                "Channel_Topic_FindTopic", // Route name
+                "Topic/FindTopic" + extensionForOldIIS, // URL with parameters
+                new { controller = "ChannelTopic", action = "FindTopic", CurrentNavigationId = "10900204" }
             );
 
             context.MapRoute(
-                "Channel_Group_Created", // Route name
-                "Group/u-{spaceKey}/Created" + extensionForOldIIS, // URL with parameters
-                new { controller = "ChannelGroup", action = "UserCreatedGroups", CurrentNavigationId = "10101103" }
+                "Channel_Topic_Created", // Route name
+                "Topic/u-{spaceKey}/Created" + extensionForOldIIS, // URL with parameters
+                new { controller = "ChannelTopic", action = "UserCreatedTopics", CurrentNavigationId = "10900203" }
             );
 
             context.MapRoute(
-                "Channel_Group_Tag", // Route name
-                "Group/t-{tagName}" + extensionForOldIIS, // URL with parameters
-                new { controller = "ChannelGroup", action = "ListByTag" } // Parameter defaults
+                "Channel_Topic_Tag", // Route name
+                "Topic/t-{tagName}" + extensionForOldIIS, // URL with parameters
+                new { controller = "ChannelTopic", action = "ListByTag" } // Parameter defaults
             );
 
             context.MapRoute(
-                "Channel_Group_Common", // Route name
-                "Group/{action}" + extensionForOldIIS, // URL with parameters
-                new { controller = "ChannelGroup" } // Parameter defaults
+                "Channel_Topic_Common", // Route name
+                "Topic/{action}" + extensionForOldIIS, // URL with parameters
+                new { controller = "ChannelTopic" } // Parameter defaults
             );
 
             #endregion
 
-            #region GroupActivity
+            #region TopicActivity
             context.MapRoute(
-                string.Format("ActivityDetail_{0}_CreateGroup", TenantTypeIds.Instance().Group()), // Route name
-                "GroupActivity/CreateThread/{ActivityId}" + extensionForOldIIS, // URL with parameters
-                new { controller = "ChannelGroup", action = "_CreateGroup" } // Parameter defaults
+                string.Format("ActivityDetail_{0}_CreateTopic", TenantTypeIds.Instance().Topic()), // Route name
+                "TopicActivity/CreateThread/{ActivityId}" + extensionForOldIIS, // URL with parameters
+                new { controller = "ChannelTopic", action = "_CreateTopic" } // Parameter defaults
             );
 
             context.MapRoute(
-               string.Format("ActivityDetail_{0}_CreateGroupMember", TenantTypeIds.Instance().User()), // Route name
-               "GroupActivity/CreateGroupMember/{ActivityId}" + extensionForOldIIS, // URL with parameters
-               new { controller = "ChannelGroup", action = "_CreateGroupMember" } // Parameter defaults
+               string.Format("ActivityDetail_{0}_CreateTopicMember", TenantTypeIds.Instance().User()), // Route name
+               "TopicActivity/CreateTopicMember/{ActivityId}" + extensionForOldIIS, // URL with parameters
+               new { controller = "ChannelTopic", action = "_CreateTopicMember" } // Parameter defaults
            );
 
             context.MapRoute(
-               string.Format("ActivityDetail_{0}_JoinGroup", TenantTypeIds.Instance().User()), // Route name
-               "GroupActivity/JoinGroup/{ActivityId}" + extensionForOldIIS, // URL with parameters
-               new { controller = "ChannelGroup", action = "_JoinGroup" } // Parameter defaults
+               string.Format("ActivityDetail_{0}_JoinTopic", TenantTypeIds.Instance().User()), // Route name
+               "TopicActivity/JoinTopic/{ActivityId}" + extensionForOldIIS, // URL with parameters
+               new { controller = "ChannelTopic", action = "_JoinTopic" } // Parameter defaults
            );
 
             #endregion
 
-            #region GroupSpace
+            #region TopicSpace
 
             context.MapRoute(
-                "GroupSpace_Member", // Route name
+                "TopicSpace_Member", // Route name
                 "g/{SpaceKey}/Members" + extensionForOldIIS, // URL with parameters
-                new { controller = "GroupSpace", action = "Members", CurrentNavigationId = "13900180" } // Parameter defaults
+                new { controller = "TopicSpace", action = "Members", CurrentNavigationId = "13900180" } // Parameter defaults
             );
 
             #endregion
 
-            #region GroupSpaceTheme
+            #region TopicSpaceTheme
 
             //群组空间首页
             context.MapRoute(
-                "GroupSpaceTheme_Home", // Route name
+                "TopicSpaceTheme_Home", // Route name
                 "g/{SpaceKey}" + extensionForOldIIS, // URL with parameters
-                new { controller = "GroupSpaceTheme", action = "Home", CurrentNavigationId = "13101101" } // Parameter defaults
+                new { controller = "TopicSpaceTheme", action = "Home", CurrentNavigationId = "13900201" } // Parameter defaults
             );
 
             context.MapRoute(
-                "GroupSpaceTheme_Common", // Route name
-                "grouptheme/{SpaceKey}/{action}" + extensionForOldIIS, // URL with parameters
-                new { controller = "GroupSpaceTheme", action = "Home" } // Parameter defaults
+                "TopicSpaceTheme_Common", // Route name
+                "Topictheme/{SpaceKey}/{action}" + extensionForOldIIS, // URL with parameters
+                new { controller = "TopicSpaceTheme", action = "Home" } // Parameter defaults
             );
             #endregion
 
-            #region GroupSettings
+            #region TopicSettings
 
             context.MapRoute(
-                "GroupSpace_Settings_Common", // Route name
+                "TopicSpace_Settings_Common", // Route name
                 "g/{SpaceKey}/settings/{action}" + extensionForOldIIS, // URL with parameters
-                new { controller = "GroupSpaceSettings", action = "ManageMembers" } // Parameter defaults
+                new { controller = "TopicSpaceSettings", action = "ManageMembers" } // Parameter defaults
             );
 
             #endregion
 
             context.MapRoute(
-                "GroupSpace_Common", // Route name
+                "TopicSpace_Common", // Route name
                 "g/{SpaceKey}/{action}" + extensionForOldIIS, // URL with parameters
-                new { controller = "GroupSpace", action = "Home" } // Parameter defaults
+                new { controller = "TopicSpace", action = "Home" } // Parameter defaults
             );
 
 
             #region ControlPanel
 
             context.MapRoute(
-                "ControlPanel_Group_Home", // Route name
-                "ControlPanelGroup/ManageGroups" + extensionForOldIIS, // URL with parameters
-                new { controller = "ControlPanelGroup", action = "ManageGroups", CurrentNavigationId = "20101101", tenantTypeId = TenantTypeIds.Instance().Group() } // Parameter defaults
+                "ControlPanel_Topic_Home", // Route name
+                "ControlPanelTopic/ManageTopics" + extensionForOldIIS, // URL with parameters
+                new { controller = "ControlPanelTopic", action = "ManageTopics", CurrentNavigationId = "20900201", tenantTypeId = TenantTypeIds.Instance().Topic() } // Parameter defaults
             );
 
             context.MapRoute(
-                "ControlPanel_Group_Common", // Route name
-                "ControlPanelGroup/{action}" + extensionForOldIIS, // URL with parameters
-                new { controller = "ControlPanelGroup", CurrentNavigationId = "20101110" } // Parameter defaults
+                "ControlPanel_Topic_Common", // Route name
+                "ControlPanelTopic/{action}" + extensionForOldIIS, // URL with parameters
+                new { controller = "ControlPanelTopic", CurrentNavigationId = "20900210" } // Parameter defaults
             );
 
             #endregion

@@ -12,7 +12,7 @@ using System.Linq;
 using Tunynet.Globalization;
 using Tunynet.UI;
 
-namespace Spacebuilder.Group.EventModules
+namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
     /// 处理群组动态、积分的EventMoudle
@@ -24,10 +24,10 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<GroupEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<GroupEntity, AuditEventArgs>(GroupEntityActivityModule_After);
-            EventBus<GroupEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<GroupEntity, AuditEventArgs>(GroupEntityPointModule_After);
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<GroupEntity, CommonEventArgs>(InstallApplicationsModule_After);
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<GroupEntity, CommonEventArgs>(ChangeThemeAppearanceUserCountModule_After);
+            EventBus<GroupEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<TopicEntity, AuditEventArgs>(GroupEntityActivityModule_After);
+            EventBus<GroupEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<TopicEntity, AuditEventArgs>(GroupEntityPointModule_After);
+            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(InstallApplicationsModule_After);
+            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(ChangeThemeAppearanceUserCountModule_After);
         }
 
 
@@ -37,7 +37,7 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="group"></param>
         /// <param name="eventArgs"></param>
-        private void GroupEntityActivityModule_After(GroupEntity group, AuditEventArgs eventArgs)
+        private void GroupEntityActivityModule_After(TopicEntity group, AuditEventArgs eventArgs)
         {
             //生成动态
             ActivityService activityService = new ActivityService();
@@ -76,7 +76,7 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void GroupEntityPointModule_After(GroupEntity sender, AuditEventArgs eventArgs)
+        private void GroupEntityPointModule_After(TopicEntity sender, AuditEventArgs eventArgs)
         {
             string pointItemKey = string.Empty;
             string eventOperationType = string.Empty;
@@ -113,7 +113,7 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void InstallApplicationsModule_After(GroupEntity sender, CommonEventArgs eventArgs)
+        private void InstallApplicationsModule_After(TopicEntity sender, CommonEventArgs eventArgs)
         {
             ApplicationService applicationService = new ApplicationService();
             if (eventArgs.EventOperationType == EventOperationType.Instance().Create())
@@ -131,7 +131,7 @@ namespace Spacebuilder.Group.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void ChangeThemeAppearanceUserCountModule_After(GroupEntity sender, CommonEventArgs eventArgs)
+        private void ChangeThemeAppearanceUserCountModule_After(TopicEntity sender, CommonEventArgs eventArgs)
         {
             var themeService = new ThemeService();
             PresentAreaService presentAreaService = new PresentAreaService();

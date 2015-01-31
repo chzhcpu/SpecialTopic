@@ -10,7 +10,7 @@ using System.Web;
 using Lucene.Net.Documents;
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 群组索引文档
@@ -40,7 +40,7 @@ namespace Spacebuilder.Group
         /// </summary>
         /// <param name="GroupEntity">群组实体</param>
         /// <returns>Lucene.Net.Documents.Document</returns>
-        public static Document Convert(GroupEntity group)
+        public static Document Convert(TopicEntity group)
         {
             Document doc = new Document();
 
@@ -76,10 +76,10 @@ namespace Spacebuilder.Group
         /// </summary>
         /// <param name="groups">日志实体</param>
         /// <returns>Lucene.Net.Documents.Document</returns>
-        public static IEnumerable<Document> Convert(IEnumerable<GroupEntity> groups)
+        public static IEnumerable<Document> Convert(IEnumerable<TopicEntity> groups)
         {
             List<Document> docs = new List<Document>();
-            foreach (GroupEntity group in groups)
+            foreach (TopicEntity group in groups)
             {
                 Document doc = Convert(group);
                 docs.Add(doc);

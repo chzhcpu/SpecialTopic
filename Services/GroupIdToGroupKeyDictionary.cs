@@ -7,26 +7,26 @@
 using System.Collections.Concurrent;
 using Tunynet;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// GroupId与GroupKey的查询器
     /// </summary>
-    public abstract class GroupIdToGroupKeyDictionary
+    public abstract class TopicIdToTopicKeyDictionary
     {
         private static ConcurrentDictionary<long, string> dictionaryOfGroupIdToGroupKey = new ConcurrentDictionary<long, string>();
         private static ConcurrentDictionary<string, long> dictionaryOfGroupKeyToGroupId = new ConcurrentDictionary<string, long>();
 
         #region Instance
 
-        private static volatile GroupIdToGroupKeyDictionary _defaultInstance = null;
+        private static volatile TopicIdToTopicKeyDictionary _defaultInstance = null;
         private static readonly object lockObject = new object();
 
         /// <summary>
         /// 获取GroupIdToGroupKeyAccessor实例
         /// </summary>
         /// <returns></returns>
-        private static GroupIdToGroupKeyDictionary Instance()
+        private static TopicIdToTopicKeyDictionary Instance()
         {
             if (_defaultInstance == null)
             {
@@ -34,7 +34,7 @@ namespace Spacebuilder.Group
                 {
                     if (_defaultInstance == null)
                     {
-                        _defaultInstance = DIContainer.Resolve<GroupIdToGroupKeyDictionary>();
+                        _defaultInstance = DIContainer.Resolve<TopicIdToTopicKeyDictionary>();
                         if (_defaultInstance == null)
                             throw new ExceptionFacade("未在DIContainer注册GroupIdToGroupKeyDictionary的具体实现类");
                     }

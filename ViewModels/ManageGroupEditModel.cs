@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Tunynet.Common;
 using Spacebuilder.Group;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
 
     /// <summary>
@@ -83,7 +83,7 @@ namespace Spacebuilder.Group
         /// 获取Query
         /// </summary>
         /// <returns></returns>
-        public GroupEntityQuery GetGroupQuery()
+        public TopicEntityQuery GetGroupQuery()
         {
             long? userIdLong = null;
 
@@ -102,7 +102,7 @@ namespace Spacebuilder.Group
             }
 
 
-            return new GroupEntityQuery
+            return new TopicEntityQuery
             {
                 GroupId=this.GroupId,
                 UserId = userIdLong,

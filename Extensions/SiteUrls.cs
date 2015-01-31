@@ -15,7 +15,7 @@ using Tunynet.Utilities;
 using Tunynet.Common;
 using Tunynet;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 群组链接管理
@@ -155,7 +155,7 @@ namespace Spacebuilder.Group
         public static string GroupHome(this SiteUrls siteUrls, long groupId)
         {
             RouteValueDictionary dic = new RouteValueDictionary();
-            dic.Add("spaceKey", GroupIdToGroupKeyDictionary.GetGroupKey(groupId));
+            dic.Add("spaceKey", TopicIdToTopicKeyDictionary.GetGroupKey(groupId));
             return CachedUrlHelper.Action("Home", "GroupSpaceTheme", GroupAreaName, dic);
         }
 
@@ -271,7 +271,7 @@ namespace Spacebuilder.Group
         /// <param name="groupId"></param>
         /// <param name="applyStatus"></param>
         /// <returns></returns>
-        public static string ManageMemberApplies(this SiteUrls siteUrls, string spaceKey, GroupMemberApplyStatus? applyStatus = null)
+        public static string ManageMemberApplies(this SiteUrls siteUrls, string spaceKey, TopicMemberApplyStatus? applyStatus = null)
         {
             RouteValueDictionary route = new RouteValueDictionary();
             route.Add("spaceKey", spaceKey);
@@ -352,7 +352,7 @@ namespace Spacebuilder.Group
         /// 群组地区导航内容块
         /// </summary>
         /// <returns></returns>
-        public static string _AreaGroups(this SiteUrls siteUrls, long topNumber = 5, string areaCode = null, long? categoryId = null, SortBy_Group? sortBy = null)
+        public static string _AreaGroups(this SiteUrls siteUrls, long topNumber = 5, string areaCode = null, long? categoryId = null, SortBy_Topic? sortBy = null)
         {
             RouteValueDictionary routeValueDictionary = new RouteValueDictionary();
             if (!string.IsNullOrEmpty(areaCode))
@@ -376,7 +376,7 @@ namespace Spacebuilder.Group
         /// <param name="categoryId"></param>
         /// <param name="sortBy"></param>
         /// <returns></returns>
-        public static string FindGroup(this SiteUrls siteUrls, string areaCode = null, long? categoryId = null, SortBy_Group? sortBy = null, string nameKeyword = null)
+        public static string FindGroup(this SiteUrls siteUrls, string areaCode = null, long? categoryId = null, SortBy_Topic? sortBy = null, string nameKeyword = null)
         {
             RouteValueDictionary routeValueDictionary = new RouteValueDictionary();
             if (!string.IsNullOrEmpty(areaCode))
@@ -397,7 +397,7 @@ namespace Spacebuilder.Group
         /// <param name="tagName"></param>
         /// <param name="sortBy"></param>
         /// <returns></returns>
-        public static string ListByTag(this SiteUrls siteUrls, string tagName, SortBy_Group? sortBy = null)
+        public static string ListByTag(this SiteUrls siteUrls, string tagName, SortBy_Topic? sortBy = null)
         {
             RouteValueDictionary routeValueDictionary = new RouteValueDictionary();
             if (sortBy.HasValue)

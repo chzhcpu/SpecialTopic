@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Spacebuilder.Group.Resources {
+namespace SpecialTopic.Topic.Resources {
     using System;
     
     

@@ -15,7 +15,7 @@ using Spacebuilder.Common;
 using Tunynet;
 
 
-namespace Spacebuilder.Group.Controllers
+namespace SpecialTopic.Topic.Controllers
 {
     /// <summary>
     /// 群组管理Controller
@@ -28,7 +28,7 @@ namespace Spacebuilder.Group.Controllers
     {
         #region Private Items
         public IPageResourceManager pageResourceManager { get; set; }
-        public GroupService groupService { get; set; }
+        public TopicService groupService { get; set; }
         #endregion
 
         #region 页面
@@ -42,7 +42,7 @@ namespace Spacebuilder.Group.Controllers
         {
             pageResourceManager.InsertTitlePart("群组管理");
 
-            GroupEntityQuery group = model.GetGroupQuery();
+            TopicEntityQuery group = model.GetGroupQuery();
 
             ViewData["Groups"] = groupService.GetsForAdmin(group.AuditStatus, group.CategoryId, group.GroupNameKeyword, group.UserId,
                 group.StartDate, group.EndDate, group.minMemberCount, group.maxMemberCount, model.PageSize ?? 20, pageIndex);

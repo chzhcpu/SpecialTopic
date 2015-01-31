@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 积分项

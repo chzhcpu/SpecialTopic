@@ -13,7 +13,7 @@ using Tunynet.Events;
 using Tunynet.Common;
 using Tunynet;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 更改状态的时候触发事件
@@ -36,8 +36,8 @@ namespace Spacebuilder.Group
                 Invitation invitation = invitationService.Get(sender.Id);
                 if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().InviteJoinGroup() && invitation.Status == InvitationStatus.Accept)
                 {
-                    GroupService groupService = new GroupService();
-                    GroupMember member=GroupMember.New();
+                    TopicService groupService = new TopicService();
+                    TopicMember member=TopicMember.New();
                     member.GroupId=sender.RelativeObjectId;
                     member.UserId = sender.UserId;
                     member.IsManager = false;
@@ -45,19 +45,19 @@ namespace Spacebuilder.Group
                 }
                 else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinGroup() && invitation.Status == InvitationStatus.Accept)
                 {
-                    GroupService groupService = new GroupService();
-                    GroupMember member = GroupMember.New();
+                    TopicService groupService = new TopicService();
+                    TopicMember member = TopicMember.New();
                     member.GroupId = sender.RelativeObjectId;
                     member.UserId = sender.SenderUserId;
                     member.IsManager = false;
                     groupService.CreateGroupMember(member);
-                    IEnumerable<long> a= groupService.GetGroupMemberApplies(sender.RelativeObjectId,GroupMemberApplyStatus.Pending,20,1).Where(n=>n.UserId==sender.SenderUserId).Select(m=>m.Id);
+                    IEnumerable<long> a= groupService.GetGroupMemberApplies(sender.RelativeObjectId,TopicMemberApplyStatus.Pending,20,1).Where(n=>n.UserId==sender.SenderUserId).Select(m=>m.Id);
                     groupService.ApproveGroupMemberApply(a,true);
                 }
                 else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinGroup() && invitation.Status == InvitationStatus.Refuse)
                 {
-                    GroupService groupService = new GroupService();
-                    IEnumerable<long> a = groupService.GetGroupMemberApplies(sender.RelativeObjectId, GroupMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);
+                    TopicService groupService = new TopicService();
+                    IEnumerable<long> a = groupService.GetGroupMemberApplies(sender.RelativeObjectId, TopicMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);
                     groupService.ApproveGroupMemberApply(a,false);
                 }
             }

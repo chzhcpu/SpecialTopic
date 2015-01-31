@@ -14,14 +14,14 @@ using Tunynet;
 using Tunynet.Common;
 using Tunynet.Search;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 群组搜索器
     /// </summary>
     public class GroupSearcher : ISearcher
     {
-        private GroupService groupService = new GroupService();
+        private TopicService groupService = new TopicService();
         private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
         private CategoryService categoryService = new CategoryService();
         private AuditService auditService = new AuditService();
@@ -151,13 +151,13 @@ namespace Spacebuilder.Group
             do
             {
                 //分页获取群组列表
-                PagingDataSet<GroupEntity> groups = groupService.GetsForAdmin(null, null, null, null, null, null, null, null, pageSize, pageIndex);
+                PagingDataSet<TopicEntity> groups = groupService.GetsForAdmin(null, null, null, null, null, null, null, null, pageSize, pageIndex);
                 totalRecords = groups.TotalRecords;
 
                 isEndding = (pageSize * pageIndex < totalRecords) ? false : true;
 
                 //重建索引
-                List<GroupEntity> groupList = groups.ToList<GroupEntity>();
+                List<TopicEntity> groupList = groups.ToList<TopicEntity>();
 
                 IEnumerable<Document> docs = GroupIndexDocument.Convert(groupList);
 
@@ -173,16 +173,16 @@ namespace Spacebuilder.Group
         /// 添加索引
         /// </summary>
         /// <param name="GroupEntity">待添加的群组</param>
-        public void Insert(GroupEntity group)
+        public void Insert(TopicEntity group)
         {
-            Insert(new GroupEntity[] { group });
+            Insert(new TopicEntity[] { group });
         }
 
         /// <summary>
         /// 添加索引
         /// </summary>
         /// <param name="GroupEntitys">待添加的群组</param>
-        public void Insert(IEnumerable<GroupEntity> groups)
+        public void Insert(IEnumerable<TopicEntity> groups)
         {
             IEnumerable<Document> docs = GroupIndexDocument.Convert(groups);
             searchEngine.Insert(docs);
@@ -213,7 +213,7 @@ namespace Spacebuilder.Group
         /// 更新索引
         /// </summary>
         /// <param name="GroupEntity">待更新的群组</param>
-        public void Update(GroupEntity group)
+        public void Update(TopicEntity group)
         {
             Document doc = GroupIndexDocument.Convert(group);
             searchEngine.Update(doc, group.GroupId.ToString(), GroupIndexDocument.GroupId);
@@ -223,7 +223,7 @@ namespace Spacebuilder.Group
         /// 更新索引
         /// </summary>
         /// <param name="GroupEntitys">待更新的群组集合</param>
-        public void Update(IEnumerable<GroupEntity> groups)
+        public void Update(IEnumerable<TopicEntity> groups)
         {
             IEnumerable<Document> docs = GroupIndexDocument.Convert(groups);
             IEnumerable<string> groupIds = groups.Select(n => n.GroupId.ToString());
@@ -243,13 +243,13 @@ namespace Spacebuilder.Group
         /// <param name="groupQuery">搜索条件</param>
         /// <param name="interestGroup">是否是查询可能感兴趣的群组</param>
         /// <returns>符合搜索条件的分页集合</returns>
-        public PagingDataSet<GroupEntity> Search(GroupFullTextQuery groupQuery, bool interestGroup = false)
+        public PagingDataSet<TopicEntity> Search(GroupFullTextQuery groupQuery, bool interestGroup = false)
         {
             if (!interestGroup)
             {
                 if (string.IsNullOrWhiteSpace(groupQuery.Keyword) && !groupQuery.KeywordIsNull)
                 {
-                    return new PagingDataSet<GroupEntity>(new List<GroupEntity>());
+                    return new PagingDataSet<TopicEntity>(new List<TopicEntity>());
                 }
             }
 
@@ -281,7 +281,7 @@ namespace Spacebuilder.Group
             }
 
             //根据群组ID列表批量查询群组实例
-            IEnumerable<GroupEntity> groupList = groupService.GetGroupEntitiesByIds(groupIds);
+            IEnumerable<TopicEntity> groupList = groupService.GetGroupEntitiesByIds(groupIds);
 
             foreach (var group in groupList)
             {
@@ -296,7 +296,7 @@ namespace Spacebuilder.Group
             }
 
             //组装分页对象
-            PagingDataSet<GroupEntity> GroupEntitys = new PagingDataSet<GroupEntity>(groupList)
+            PagingDataSet<TopicEntity> GroupEntitys = new PagingDataSet<TopicEntity>(groupList)
             {
                 TotalRecords = searchResult.TotalRecords,
                 PageSize = searchResult.PageSize,
@@ -315,7 +315,7 @@ namespace Spacebuilder.Group
         /// <returns>符合搜索条件的分页集合</returns>
         public IEnumerable<string> AutoCompleteSearch(string keyword, int topNumber)
         {
-            IEnumerable<GroupEntity> hotGroups = groupService.GetMatchTops(topNumber, keyword, null, null, SortBy_Group.GrowthValue_Desc);
+            IEnumerable<TopicEntity> hotGroups = groupService.GetMatchTops(topNumber, keyword, null, null, SortBy_Topic.GrowthValue_Desc);
             if (hotGroups.Count() > topNumber)
             {
                 hotGroups.Take(topNumber);
@@ -422,13 +422,13 @@ namespace Spacebuilder.Group
             {
                 switch (groupQuery.sortBy.Value)
                 {
-                    case SortBy_Group.DateCreated_Desc:
+                    case SortBy_Topic.DateCreated_Desc:
                         searchBuilder.SortByString(GroupIndexDocument.DateCreated, true);
                         break;
-                    case SortBy_Group.MemberCount_Desc:
+                    case SortBy_Topic.MemberCount_Desc:
                         searchBuilder.SortByString(GroupIndexDocument.MemberCount, true);
                         break;
-                    case SortBy_Group.GrowthValue_Desc:
+                    case SortBy_Topic.GrowthValue_Desc:
                         searchBuilder.SortByString(GroupIndexDocument.GrowthValue, true);
                         break;
                 }

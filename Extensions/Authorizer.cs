@@ -12,7 +12,7 @@ using Spacebuilder.Common;
 using Tunynet;
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 扩展权限方法
@@ -65,7 +65,7 @@ namespace Spacebuilder.Group
         /// <returns>是否拥有设置管理员的权限</returns>
         public static bool Group_SetManager(this Authorizer authorizer, long groupId)
         {
-            return authorizer.Group_SetManager(new GroupService().Get(groupId));
+            return authorizer.Group_SetManager(new TopicService().Get(groupId));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Spacebuilder.Group
         /// <param name="authorizer"></param>
         /// <param name="group"></param>
         /// <returns></returns>
-        public static bool Group_SetManager(this Authorizer authorizer, GroupEntity group)
+        public static bool Group_SetManager(this Authorizer authorizer, TopicEntity group)
         {
             if (group == null)
                 return false;
@@ -101,7 +101,7 @@ namespace Spacebuilder.Group
         /// <returns></returns>
         public static bool Group_Manage(this Authorizer authorizer, long groupId)
         {
-            GroupEntity group = new GroupService().Get(groupId);
+            TopicEntity group = new TopicService().Get(groupId);
             return Group_Manage(authorizer, group);
         }
 
@@ -115,7 +115,7 @@ namespace Spacebuilder.Group
         public static bool Group_DeleteVisitor(this Authorizer authorizer, long groupId, long userId)
         {
             bool result = false;
-            GroupEntity group = new GroupService().Get(groupId);
+            TopicEntity group = new TopicService().Get(groupId);
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser != null && currentUser.UserId == userId)
             {
@@ -134,7 +134,7 @@ namespace Spacebuilder.Group
         /// <param name="group"></param>
         /// <param name="userId">被删除的用户Id</param>
         /// <returns>是否拥有删除群组成员的权限</returns>
-        public static bool Group_DeleteMember(this Authorizer authorizer, GroupEntity group, long userId)
+        public static bool Group_DeleteMember(this Authorizer authorizer, TopicEntity group, long userId)
         {
             if (group == null)
                 return false;
@@ -149,7 +149,7 @@ namespace Spacebuilder.Group
 
             if (authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
                 return true;
-            GroupService groupService = new GroupService();
+            TopicService groupService = new TopicService();
             //群管理员
             if (groupService.IsManager(group.GroupId, currentUser.UserId) && !groupService.IsManager(group.GroupId, userId))
             {
@@ -182,7 +182,7 @@ namespace Spacebuilder.Group
         /// </summary>
         /// <param name="Group"></param>
         /// <returns></returns>
-        public static bool Group_Manage(this Authorizer authorizer, GroupEntity group)
+        public static bool Group_Manage(this Authorizer authorizer, TopicEntity group)
         {
 
 
@@ -203,7 +203,7 @@ namespace Spacebuilder.Group
             if (group.UserId == currentUser.UserId)
                 return true;
 
-            GroupService groupService = new GroupService();
+            TopicService groupService = new TopicService();
             //群管理员
             if (groupService.IsManager(group.GroupId, currentUser.UserId))
                 return true;
@@ -217,14 +217,14 @@ namespace Spacebuilder.Group
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        public static bool Group_Invite(this Authorizer authorizer, GroupEntity group)
+        public static bool Group_Invite(this Authorizer authorizer, TopicEntity group)
         {
             if (group == null)
                 return false;
             if (UserContext.CurrentUser == null)
                 return false;
 
-            GroupService groupService = new GroupService();
+            TopicService groupService = new TopicService();
             if (authorizer.Group_Manage(group))
                 return true;
             if (group.EnableMemberInvite && groupService.IsMember(group.GroupId, UserContext.CurrentUser.UserId))
@@ -238,7 +238,7 @@ namespace Spacebuilder.Group
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        public static bool Group_View(this Authorizer authorizer, GroupEntity group)
+        public static bool Group_View(this Authorizer authorizer, TopicEntity group)
         {
             if (group == null)
                 return false;
@@ -254,7 +254,7 @@ namespace Spacebuilder.Group
                 if (authorizer.Group_Manage(group))
                     return true;
 
-                GroupService groupService = new GroupService();
+                TopicService groupService = new TopicService();
                 if (groupService.IsMember(group.GroupId, UserContext.CurrentUser.UserId))
                     return true;
             }

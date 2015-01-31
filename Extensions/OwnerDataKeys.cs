@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using Tunynet.Common;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     public static class OwnerDataKeysExtension
     {

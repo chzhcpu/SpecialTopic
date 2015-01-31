@@ -4,26 +4,26 @@
 // </copyright> 
 //------------------------------------------------------------------------------
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 通过群组数据仓储实现查询
     /// </summary>
-    public class DefaultGroupIdToGroupKeyDictionary : GroupIdToGroupKeyDictionary
+    public class DefaultTopicIdToTopicKeyDictionary : TopicIdToTopicKeyDictionary
     {
-        private IGroupRepository groupRepository;
+        private ITopicRepository groupRepository;
         /// <summary>
         /// 构造器
         /// </summary>
-        public DefaultGroupIdToGroupKeyDictionary()
-            : this(new GroupRepository())
+        public DefaultTopicIdToTopicKeyDictionary()
+            : this(new TopicRepository())
         {
         }
 
         /// <summary>
         /// 构造器
         /// </summary>
-        public DefaultGroupIdToGroupKeyDictionary(IGroupRepository groupRepository)
+        public DefaultTopicIdToTopicKeyDictionary(ITopicRepository groupRepository)
         {
             this.groupRepository = groupRepository;
         }
@@ -36,7 +36,7 @@ namespace Spacebuilder.Group
         /// </returns>
         protected override string GetGroupKeyByGroupId(long groupId)
         {
-            GroupEntity group = groupRepository.Get(groupId);
+            TopicEntity group = groupRepository.Get(groupId);
             if (group != null)
                 return group.GroupKey;
             return null;

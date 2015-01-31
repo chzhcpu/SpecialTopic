@@ -15,7 +15,7 @@ using Spacebuilder.Common;
 using System.Web.Mvc;
 
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     /// <summary>
     /// 编辑群组实体
@@ -116,15 +116,15 @@ namespace Spacebuilder.Group
         /// 转换成groupEntity类型
         /// </summary>
         /// <returns></returns>
-        public GroupEntity AsGroupEntity()
+        public TopicEntity AsGroupEntity()
         {
             CategoryService categoryService = new CategoryService();
-            GroupEntity groupEntity = null;
+            TopicEntity groupEntity = null;
 
             //创建群组
             if (this.GroupId == 0)
             {
-                groupEntity = GroupEntity.New();
+                groupEntity = TopicEntity.New();
                 groupEntity.UserId = UserContext.CurrentUser.UserId;
                 groupEntity.DateCreated = DateTime.UtcNow;
                 groupEntity.GroupKey = this.GroupKey;
@@ -132,7 +132,7 @@ namespace Spacebuilder.Group
             //编辑群组
             else
             {
-                GroupService groupService = new GroupService();
+                TopicService groupService = new TopicService();
                 groupEntity = groupService.Get(this.GroupId);
             }
             groupEntity.IsPublic = this.IsPublic;
@@ -164,7 +164,7 @@ namespace Spacebuilder.Group
         /// </summary>
         /// <param name="groupEntity"></param>
         /// <returns></returns>
-        public static GroupEditModel AsEditModel(this GroupEntity groupEntity)
+        public static GroupEditModel AsEditModel(this TopicEntity groupEntity)
         {
             return new GroupEditModel
             {

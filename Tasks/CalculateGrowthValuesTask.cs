@@ -10,7 +10,7 @@ using System.Linq;
 using System.Web;
 using Tunynet.Tasks;
 
-namespace Spacebuilder.Group
+namespace SpecialTopic.Topic
 {
     public class CalculateGrowthValuesTask : ITask
     {
@@ -20,7 +20,7 @@ namespace Spacebuilder.Group
         /// <param name="taskDetail">任务配置状态信息</param>
         public void Execute(TaskDetail taskDetail)
         {
-            new GroupRepository().CalculateGrowthValues();
+            new TopicRepository().CalculateGrowthValues();
         }
 
     }

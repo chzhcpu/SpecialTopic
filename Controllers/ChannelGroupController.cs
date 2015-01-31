@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using Tunynet.Utilities;
 using DevTrends.MvcDonutCaching;
 
-namespace Spacebuilder.Group.Controllers
+namespace SpecialTopic.Topic.Controllers
 {
     /// <summary>
     /// 频道群组控制器
@@ -29,12 +29,12 @@ namespace Spacebuilder.Group.Controllers
     [Themed(PresentAreaKeysOfBuiltIn.Channel, IsApplication = true)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
-    public class ChannelGroupController : Controller
+    public class ChannelTopicController : Controller
     {
         public ActivityService activityService { get; set; }
         public IPageResourceManager pageResourceManager { get; set; }
         public CategoryService categoryService { get; set; }
-        public GroupService groupService { get; set; }
+        public TopicService topicService { get; set; }
         public Authorizer authorizer { get; set; }
         public IdentificationService identificationService { get; set; }
         public RecommendService recommendService { get; set; }
@@ -58,7 +58,7 @@ namespace Spacebuilder.Group.Controllers
         /// 群组顶部的局部页面
         /// </summary>
         /// <returns></returns>
-        public ActionResult _GroupSubmenu()
+        public ActionResult _TopicSubmenu()
         {
             return View();
         }
@@ -77,7 +77,7 @@ namespace Spacebuilder.Group.Controllers
             }
             else
             {
-                GroupEntity group = groupService.Get(groupKey);
+                TopicEntity group = topicService.Get(groupKey);
                 if (group != null)
                 {
                     return Json("此群组Key已存在", JsonRequestBehavior.AllowGet);
@@ -172,13 +172,13 @@ namespace Spacebuilder.Group.Controllers
                 stream = groupLogo.InputStream;
                 groupEditModel.Logo = groupLogo.FileName;
             }
-            GroupEntity group = groupEditModel.AsGroupEntity();
+            TopicEntity group = groupEditModel.AsGroupEntity();
 
-            bool result = groupService.Create(user.UserId, group);
+            bool result = topicService.Create(user.UserId, group);
 
             if (stream != null)
             {
-                groupService.UploadLogo(group.GroupId, stream);
+                topicService.UploadLogo(group.GroupId, stream);
             }
             //设置分类
             if (groupEditModel.CategoryId > 0)
@@ -197,7 +197,7 @@ namespace Spacebuilder.Group.Controllers
 
                 //已修改
                 IEnumerable<long> userIds = Request.Form.Gets<long>("RelatedUserIds", null);
-                groupService.SendInvitations(group, user, string.Empty, userIds);
+                topicService.SendInvitations(group, user, string.Empty, userIds);
             }
             return Redirect(SiteUrls.Instance().GroupHome(group.GroupKey));
         }
@@ -214,7 +214,7 @@ namespace Spacebuilder.Group.Controllers
 
             //调用搜索器进行搜索
             GroupSearcher groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
-            PagingDataSet<GroupEntity> groups = groupSearcher.Search(query);
+            PagingDataSet<TopicEntity> groups = groupSearcher.Search(query);
 
             //添加到用户搜索历史 
             IUser CurrentUser = UserContext.CurrentUser;
@@ -257,7 +257,7 @@ namespace Spacebuilder.Group.Controllers
 
             //调用搜索器进行搜索
             GroupSearcher groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
-            PagingDataSet<GroupEntity> groups = groupSearcher.Search(query);
+            PagingDataSet<TopicEntity> groups = groupSearcher.Search(query);
 
             return PartialView(groups);
         }
@@ -273,7 +273,7 @@ namespace Spacebuilder.Group.Controllers
             query.Keyword = Server.UrlDecode(query.Keyword);
             //调用搜索器进行搜索
             GroupSearcher GroupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
-            PagingDataSet<GroupEntity> groups = GroupSearcher.Search(query);
+            PagingDataSet<TopicEntity> groups = GroupSearcher.Search(query);
 
             return PartialView(groups);
         }
@@ -306,21 +306,21 @@ namespace Spacebuilder.Group.Controllers
                 query.PageIndex = 1;
                 query.Range = GroupSearchRange.TAG;
                 query.Tags = tagService.GetTopTagsOfItem(currentUser.UserId, 100).Select(n => n.TagName);
-                query.GroupIds = groupService.GetMyJoinedGroups(currentUser.UserId, 100, 1).Select(n => n.GroupId.ToString());
+                query.GroupIds = topicService.GetMyJoinedGroups(currentUser.UserId, 100, 1).Select(n => n.GroupId.ToString());
                 //调用搜索器进行搜索
                 GroupSearcher GroupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
-                IEnumerable<GroupEntity> groupsTag = null;
+                IEnumerable<TopicEntity> groupsTag = null;
                 if (GroupSearcher.Search(query, true).Count == 0)
                 {
                     return View();
                 }
                 else
                 {
-                    groupsTag = GroupSearcher.Search(query, true).AsEnumerable<GroupEntity>();
+                    groupsTag = GroupSearcher.Search(query, true).AsEnumerable<TopicEntity>();
                 }
                 if (groupsTag.Count() < 20)
                 {
-                    IEnumerable<GroupEntity> groupsFollow = groupService.FollowedUserAlsoJoinedGroups(currentUser.UserId, 20 - groupsTag.Count());
+                    IEnumerable<TopicEntity> groupsFollow = topicService.FollowedUserAlsoJoinedGroups(currentUser.UserId, 20 - groupsTag.Count());
                     return View(groupsTag.Union(groupsFollow));
                 }
                 else
@@ -341,12 +341,12 @@ namespace Spacebuilder.Group.Controllers
         /// 创建群组动态内容块
         /// </summary>
         //[DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _CreateGroup(long ActivityId)
+        public ActionResult _CreateTopic(long ActivityId)
         {
             Activity activity = activityService.Get(ActivityId);
             if (activity == null)
                 return Content(string.Empty);
-            GroupEntity group = groupService.Get(activity.SourceId);
+            TopicEntity group = topicService.Get(activity.SourceId);
             if (group == null)
                 return Content(string.Empty);
             ViewData["ActivityId"] = ActivityId;
@@ -365,11 +365,11 @@ namespace Spacebuilder.Group.Controllers
             if (activity == null)
                 return Content(string.Empty);
 
-            GroupEntity group = groupService.Get(activity.OwnerId);
+            TopicEntity group = topicService.Get(activity.OwnerId);
             if (group == null)
                 return Content(string.Empty);
 
-            IEnumerable<GroupMember> groupMembers = groupService.GetGroupMembers(group.GroupId, true, SortBy_GroupMember.DateCreated_Desc);
+            IEnumerable<TopicMember> groupMembers = topicService.GetGroupMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Desc);
             ViewData["activity"] = activity;
             ViewData["GroupMembers"] = groupMembers;
             return View(group);
@@ -381,15 +381,15 @@ namespace Spacebuilder.Group.Controllers
         /// <param name="ActivityId">动态id</param>
         /// <returns>用户加入群组动态内容快</returns>
         //[DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _JoinGroup(long ActivityId)
+        public ActionResult _JoinTopic(long ActivityId)
         {
             Activity activity = activityService.Get(ActivityId);
             if (activity == null)
                 return Content(string.Empty);
-            GroupMember groupMember = groupService.GetGroupMember(activity.SourceId);
+            TopicMember groupMember = topicService.GetGroupMember(activity.SourceId);
             if (groupMember == null)
                 return Content(string.Empty);
-            GroupEntity group = groupService.Get(groupMember.GroupId);
+            TopicEntity group = topicService.Get(groupMember.GroupId);
             if (group == null)
                 return Content(string.Empty);
 
@@ -409,7 +409,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpPost]
         public ActionResult BlockGroup(long groupId)
         {
-            GroupEntity blockedGroup = groupService.Get(groupId);
+            TopicEntity blockedGroup = topicService.Get(groupId);
             if (blockedGroup == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "找不到被屏蔽群组"));
             IUser currentUser = UserContext.CurrentUser;
@@ -436,7 +436,7 @@ namespace Spacebuilder.Group.Controllers
             if (userId > 0 && groupIds != null && groupIds.Count > 0)
                 foreach (var groupId in groupIds)
                 {
-                    GroupEntity group = groupService.Get(groupId);
+                    TopicEntity group = topicService.Get(groupId);
                     if (group == null || service.IsBlockedGroup(userId, groupId))
                         continue;
                     service.BlockGroup(userId, group.GroupId, group.GroupName);
@@ -466,10 +466,10 @@ namespace Spacebuilder.Group.Controllers
 
             if (blockedGroups != null && blockedGroups.Count() > 0)
             {
-                groupService.GetGroupEntitiesByIds(blockedGroups.Select(n => n.ObjectId));
+                topicService.GetGroupEntitiesByIds(blockedGroups.Select(n => n.ObjectId));
                 foreach (var item in blockedGroups)
                 {
-                    GroupEntity group = groupService.Get(item.ObjectId);
+                    TopicEntity group = topicService.Get(item.ObjectId);
                     if (group == null)
                         continue;
 
@@ -494,16 +494,16 @@ namespace Spacebuilder.Group.Controllers
         public ActionResult _ApplyJoinButton(long groupId, bool showQuit = false, string buttonName = null)
         {
 
-            GroupEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return new EmptyResult();
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return new EmptyResult();
-            bool isApplied = groupService.IsApplied(currentUser.UserId, groupId);
-            bool isMember = groupService.IsMember(group.GroupId, currentUser.UserId);
-            bool isOwner = groupService.IsOwner(group.GroupId, currentUser.UserId);
-            bool isManager = groupService.IsManager(group.GroupId, currentUser.UserId);
+            bool isApplied = topicService.IsApplied(currentUser.UserId, groupId);
+            bool isMember = topicService.IsMember(group.GroupId, currentUser.UserId);
+            bool isOwner = topicService.IsOwner(group.GroupId, currentUser.UserId);
+            bool isManager = topicService.IsManager(group.GroupId, currentUser.UserId);
             ViewData["isMember"] = isMember;
             ViewData["showQuit"] = showQuit;
             ViewData["buttonName"] = buttonName;
@@ -519,10 +519,10 @@ namespace Spacebuilder.Group.Controllers
         /// <param name="groupId">群组Id</param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult _QuitGroup(long groupId)
+        public JsonResult _QuitTopic(long groupId)
         {
             StatusMessageData message = new StatusMessageData(StatusMessageType.Success, "退出群组成功！");
-            GroupEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
             IUser currentUser = UserContext.CurrentUser;
@@ -530,7 +530,7 @@ namespace Spacebuilder.Group.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
             try
             {
-                groupService.DeleteGroupMember(group.GroupId, currentUser.UserId);
+                topicService.DeleteGroupMember(group.GroupId, currentUser.UserId);
             }
             catch
             {
@@ -545,11 +545,11 @@ namespace Spacebuilder.Group.Controllers
         /// <param name="groupId">群组Id</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult JoinGroup(long groupId)
+        public ActionResult JoinTopic(long groupId)
         {
             //需判断是否已经加入过群组
             StatusMessageData message = null;
-            GroupEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
 
@@ -562,16 +562,16 @@ namespace Spacebuilder.Group.Controllers
             //已修改
 
             //判断是否加入过该群组
-            bool isMember = groupService.IsMember(groupId, currentUser.UserId);
+            bool isMember = topicService.IsMember(groupId, currentUser.UserId);
 
             //未加入
             if (!isMember)
             {
-                GroupMember member = GroupMember.New();
+                TopicMember member = TopicMember.New();
                 member.UserId = currentUser.UserId;
                 member.GroupId = group.GroupId;
                 member.IsManager = false;
-                groupService.CreateGroupMember(member);
+                topicService.CreateGroupMember(member);
                 message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
             }
             else
@@ -592,7 +592,7 @@ namespace Spacebuilder.Group.Controllers
 
             //已修改
 
-            bool isApplied = groupService.IsApplied(UserContext.CurrentUser.UserId, groupId);
+            bool isApplied = topicService.IsApplied(UserContext.CurrentUser.UserId, groupId);
             ViewData["isApplied"] = isApplied;
             return View();
         }
@@ -606,7 +606,7 @@ namespace Spacebuilder.Group.Controllers
         public ActionResult _EditApply(long groupId, string applyReason)
         {
             StatusMessageData message = null;
-            GroupEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
 
@@ -618,15 +618,15 @@ namespace Spacebuilder.Group.Controllers
 
 
             //已修改
-            bool isApplied = groupService.IsApplied(currentUser.UserId, group.GroupId);
+            bool isApplied = topicService.IsApplied(currentUser.UserId, group.GroupId);
             if (!isApplied)
             {
-                GroupMemberApply apply = GroupMemberApply.New();
+                TopicMemberApply apply = TopicMemberApply.New();
                 apply.ApplyReason = applyReason;
-                apply.ApplyStatus = GroupMemberApplyStatus.Pending;
+                apply.ApplyStatus = TopicMemberApplyStatus.Pending;
                 apply.GroupId = group.GroupId;
                 apply.UserId = UserContext.CurrentUser.UserId;
-                groupService.CreateGroupMemberApply(apply);
+                topicService.CreateGroupMemberApply(apply);
                 message = new StatusMessageData(StatusMessageType.Success, "申请已发出，请等待！");
             }
             else
@@ -644,7 +644,7 @@ namespace Spacebuilder.Group.Controllers
         [HttpGet]
         public ActionResult _ValidateQuestion(long groupId)
         {
-            GroupEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             ViewData["Question"] = group.Question;
             return View();
         }
@@ -658,7 +658,7 @@ namespace Spacebuilder.Group.Controllers
         public ActionResult _ValidateQuestion(long groupId, string myAnswer)
         {
             StatusMessageData message = null;
-            GroupEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
 
@@ -671,16 +671,16 @@ namespace Spacebuilder.Group.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, "当前加入方式不是问题验证"));
 
 
-            bool isMember = groupService.IsMember(group.GroupId, currentUser.UserId);
+            bool isMember = topicService.IsMember(group.GroupId, currentUser.UserId);
             if (!isMember)
             {
                 if (group.Answer == myAnswer)
                 {
-                    GroupMember member = GroupMember.New();
+                    TopicMember member = TopicMember.New();
                     member.UserId = UserContext.CurrentUser.UserId;
                     member.GroupId = group.GroupId;
                     member.IsManager = false;
-                    groupService.CreateGroupMember(member);
+                    topicService.CreateGroupMember(member);
                     message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
                 }
                 else
@@ -705,7 +705,7 @@ namespace Spacebuilder.Group.Controllers
         [DonutOutputCache(CacheProfile = "Frequently")]
         public ActionResult _RecommendedGroup()
         {
-            IEnumerable<RecommendItem> recommendItems = recommendService.GetTops(6, "10110001");
+            IEnumerable<RecommendItem> recommendItems = recommendService.GetTops(6, "90020001");
             return View(recommendItems);
         }
         #endregion
@@ -716,7 +716,7 @@ namespace Spacebuilder.Group.Controllers
         /// 发现群组
         /// </summary>
         /// <returns></returns>
-        public ActionResult FindGroup(string nameKeyword, string areaCode, long? categoryId, SortBy_Group? sortBy, int pageIndex = 1)
+        public ActionResult FindTopic(string nameKeyword, string areaCode, long? categoryId, SortBy_Topic? sortBy, int pageIndex = 1)
         {
             nameKeyword = WebUtility.UrlDecode(nameKeyword);
             string pageTitle = string.Empty;
@@ -805,7 +805,7 @@ namespace Spacebuilder.Group.Controllers
             if (string.IsNullOrEmpty(pageTitle))
                 pageTitle = "发现群组";
             pageResourceManager.InsertTitlePart(pageTitle);
-            PagingDataSet<GroupEntity> groups = groupService.Gets(areaCode, categoryId, sortBy ?? SortBy_Group.DateCreated_Desc, pageIndex: pageIndex);
+            PagingDataSet<TopicEntity> groups = topicService.Gets(areaCode, categoryId, sortBy ?? SortBy_Topic.DateCreated_Desc, pageIndex: pageIndex);
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_List", groups);
@@ -854,9 +854,9 @@ namespace Spacebuilder.Group.Controllers
         /// </summary>
         /// <returns></returns>
         [UserSpaceAuthorize]
-        public ActionResult UserJoinedGroups(string spaceKey, int pageIndex = 1)
+        public ActionResult UserJoinedTopics(string spaceKey, int pageIndex = 1)
         {
-            string title = "我加入的群组";
+            string title = "我加入的专题";
             IUserService userService = DIContainer.Resolve<IUserService>();
             User spaceUser = userService.GetFullUser(spaceKey);
             var currentUser = UserContext.CurrentUser;
@@ -868,16 +868,16 @@ namespace Spacebuilder.Group.Controllers
             {
                 if (currentUser.UserId != spaceUser.UserId)
                 {
-                    title = spaceUser.DisplayName + "加入的群组";
+                    title = spaceUser.DisplayName + "加入的专题";
                 }
             }
             else
             {
-                title = spaceUser.DisplayName + "加入的群组";
+                title = spaceUser.DisplayName + "加入的专题";
             }
 
 
-            PagingDataSet<GroupEntity> groups = groupService.GetMyJoinedGroups(spaceUser.UserId, pageIndex: pageIndex);
+            PagingDataSet<TopicEntity> groups = topicService.GetMyJoinedGroups(spaceUser.UserId, pageIndex: pageIndex);
             if (Request.IsAjaxRequest())
                 return PartialView("_List", groups);
 
@@ -911,9 +911,9 @@ namespace Spacebuilder.Group.Controllers
         /// </summary>
         /// <returns></returns>
         [UserSpaceAuthorize]
-        public ActionResult UserCreatedGroups(string spaceKey)
+        public ActionResult UserCreatedTopics(string spaceKey)
         {
-            string title = "我创建的群组";
+            string title = "我创建的专题";
             IUserService userService = DIContainer.Resolve<IUserService>();
             User spaceUser = userService.GetFullUser(spaceKey);
             if (spaceUser == null)
@@ -927,16 +927,16 @@ namespace Spacebuilder.Group.Controllers
 
                 if (currentUser.UserId != spaceUser.UserId)
                 {
-                    title = spaceUser.DisplayName + "创建的群组";
+                    title = spaceUser.DisplayName + "创建的专题";
                 }
             }
             else
             {
-                title = spaceUser.DisplayName + "创建的群组";
+                title = spaceUser.DisplayName + "创建的专题";
             }
 
             pageResourceManager.InsertTitlePart(title);
-            var groups = groupService.GetMyCreatedGroups(spaceUser.UserId, ignoreAudit);
+            var groups = topicService.GetMyCreatedGroups(spaceUser.UserId, ignoreAudit);
             if (Request.IsAjaxRequest())
                 return PartialView("_List", groups);
 
@@ -950,7 +950,7 @@ namespace Spacebuilder.Group.Controllers
         /// <summary>
         /// 标签显示群组列表
         /// </summary>
-        public ActionResult ListByTag(string tagName, SortBy_Group sortBy = SortBy_Group.DateCreated_Desc, int pageIndex = 1)
+        public ActionResult ListByTag(string tagName, SortBy_Topic sortBy = SortBy_Topic.DateCreated_Desc, int pageIndex = 1)
         {
             tagName = WebUtility.UrlDecode(tagName);
             var tag = new TagService(TenantTypeIds.Instance().Group()).Get(tagName);
@@ -960,7 +960,7 @@ namespace Spacebuilder.Group.Controllers
                 return HttpNotFound();
             }
 
-            PagingDataSet<GroupEntity> groups = groupService.GetsByTag(tagName, sortBy, pageIndex: pageIndex);
+            PagingDataSet<TopicEntity> groups = topicService.GetsByTag(tagName, sortBy, pageIndex: pageIndex);
             pageResourceManager.InsertTitlePart(tagName);
             ViewData["tag"] = tag;
             ViewData["sortBy"] = sortBy;
@@ -979,15 +979,15 @@ namespace Spacebuilder.Group.Controllers
         public ActionResult _GroupGlobalNavigations()
         {
             IUser CurrentUser = UserContext.CurrentUser;
-            IEnumerable<GroupEntity> groups = null;
+            IEnumerable<TopicEntity> groups = null;
             if (CurrentUser != null)
             {
-                groups = groupService.GetMyCreatedGroups(CurrentUser.UserId, true);
+                groups = topicService.GetMyCreatedGroups(CurrentUser.UserId, true);
 
                 if (groups.Count() >= 9)
                     return View(groups.Take(9));
 
-                PagingDataSet<GroupEntity> joinedGroups = groupService.GetMyJoinedGroups(CurrentUser.UserId);
+                PagingDataSet<TopicEntity> joinedGroups = topicService.GetMyJoinedGroups(CurrentUser.UserId);
                 groups = groups.Union(joinedGroups).Take(9);
             }
 
@@ -998,9 +998,9 @@ namespace Spacebuilder.Group.Controllers
         /// 群组排行内容块
         /// </summary>
         [DonutOutputCache(CacheProfile = "Stable")]
-        public ActionResult _TopGroups(int topNumber, string areaCode, long? categoryId, SortBy_Group? sortBy, string viewName = "_TopGroups_List")
+        public ActionResult _TopTopics(int topNumber, string areaCode, long? categoryId, SortBy_Topic? sortBy, string viewName = "_TopGroups_List")
         {
-            var groups = groupService.GetTops(topNumber, areaCode, categoryId, sortBy ?? SortBy_Group.DateCreated_Desc);
+            var groups = topicService.GetTops(topNumber, areaCode, categoryId, sortBy ?? SortBy_Topic.DateCreated_Desc);
 
 
 
@@ -1014,7 +1014,7 @@ namespace Spacebuilder.Group.Controllers
         /// </summary>
         /// <returns></returns>
         [DonutOutputCache(CacheProfile = "Stable")]
-        public ActionResult _CategoryGroups()
+        public ActionResult _CategoryTopics()
         {
             IEnumerable<Category> categories = categoryService.GetRootCategories(TenantTypeIds.Instance().Group());
             return PartialView(categories);
@@ -1024,7 +1024,7 @@ namespace Spacebuilder.Group.Controllers
         /// 群组地区导航内容块
         /// </summary>
         /// <returns></returns>
-        public ActionResult _AreaGroups(int topNumber, string areaCode, long? categoryId, SortBy_Group sortBy = SortBy_Group.DateCreated_Desc)
+        public ActionResult _AreaGroups(int topNumber, string areaCode, long? categoryId, SortBy_Topic sortBy = SortBy_Topic.DateCreated_Desc)
         {
             IUser iUser = (User)UserContext.CurrentUser;
             User user = null;
@@ -1059,7 +1059,7 @@ namespace Spacebuilder.Group.Controllers
                 }
             }
 
-            IEnumerable<GroupEntity> groups = groupService.GetTops(topNumber, areaCode, categoryId, sortBy);
+            IEnumerable<TopicEntity> groups = topicService.GetTops(topNumber, areaCode, categoryId, sortBy);
 
             HttpCookie cookie = new HttpCookie("AreaGroupCookie" + user.UserId, areaCode);
             Response.Cookies.Add(cookie);
@@ -1083,7 +1083,7 @@ namespace Spacebuilder.Group.Controllers
         /// 标签地图
         /// </summary>
         /// <returns></returns>
-        public ActionResult GroupTagMap()
+        public ActionResult TopicTagMap()
         {
             pageResourceManager.InsertTitlePart("标签云图");
             return View();
