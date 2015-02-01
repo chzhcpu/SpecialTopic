@@ -1,6 +1,6 @@
-﻿@model IEnumerable<GroupEntity>
+﻿@model IEnumerable<TopicEntity>
 @{
-    SortBy_Group sortBy = ViewData.Get<SortBy_Group>("SortBy", SortBy_Group.DateCreated_Desc);
+    SortBy_Topic sortBy = ViewData.Get<SortBy_Topic>("SortBy", SortBy_Topic.DateCreated_Desc);
     string[] ranks = { "tnc-num-topone", "tnc-num-toptwo", "tnc-num-topthree", "tnc-num-topfore" };   
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-active-group">

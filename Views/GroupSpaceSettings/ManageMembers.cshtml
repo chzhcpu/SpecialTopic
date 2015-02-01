@@ -1,10 +1,10 @@
-﻿@model PagingDataSet<GroupMember>
+﻿@model PagingDataSet<TopicMember>
 @{
     Layout = "manage-2cols";
 
     Html.ViewContext.RouteData.Values["CurrentNavigationId"] = 13900190;
 
-    GroupEntity group = ViewData.Get<GroupEntity>("group", null);
+    TopicEntity group = ViewData.Get<TopicEntity>("group", null);
     bool canSetManager = DIContainer.Resolve<Authorizer>().Group_SetManager(group);
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-members">

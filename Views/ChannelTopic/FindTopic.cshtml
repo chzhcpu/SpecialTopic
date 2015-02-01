@@ -1,7 +1,7 @@
-﻿@model PagingDataSet<GroupEntity>
+﻿@model PagingDataSet<TopicEntity>
 @{
     Layout = "app-list-2cols";
-    SortBy_Group? sortBy = Request.QueryString.Get<SortBy_Group?>("sortBy", SortBy_Group.DateCreated_Desc);
+    SortBy_Topic? sortBy = Request.QueryString.Get<SortBy_Topic?>("sortBy", SortBy_Topic.DateCreated_Desc);
     long? categoryId = Request.QueryString.Get<long?>("categoryId", null);
     var areaCode = Request.QueryString.Get<string>("areaCode", null);
     var allParentCategories = ViewData.Get<List<Category>>("allParentCategories", new List<Category>());
@@ -13,7 +13,7 @@
     var currentArea = ViewData.Get<Area>("currentArea", Area.New());
 }
 @section Aside{
-    @Html.Action("_TopGroups", "ChannelGroup", new { topNumber = 10, sortBy = SortBy_Group.StageHitTimes, viewName = "_TopGroups_Rank" })
+    @Html.Action("_TopGroups", "ChannelGroup", new { topNumber = 10, sortBy = SortBy_Topic.StageHitTimes, viewName = "_TopGroups_Rank" })
     @Html.Action("_RecommendedGroupOwners", "ChannelGroup", new { topNumber = 5, recommendTypeId = "00001111" })
     <div class="tn-box tn-widget tn-widget-content tn-corner-all">
         <div class="tn-box-header tn-widget-header tn-corner-top tn-border-bottom">
@@ -140,7 +140,7 @@
             <div class="tn-list-header">
                 <div class="tn-list-header-row tn-helper-clearfix tn-border-gray tn-border-bottom">
                     <div class="tn-filter tn-helper-align-right">排序方式：
-                        <a class="tn-action @(sortBy == SortBy_Group.DateCreated_Desc ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId)"><span class="tn-action-text">最新</span></a><span class="tn-spacer tn-text-note">|</span><a class="tn-action @(sortBy == SortBy_Group.MemberCount_Desc ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId, SortBy_Group.MemberCount_Desc)"><span class="tn-action-text">成员数</span></a><span class="tn-spacer tn-text-note">|</span><a class="tn-action @(sortBy == SortBy_Group.GrowthValue_Desc ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId, SortBy_Group.GrowthValue_Desc)"><span class="tn-action-text">成长值</span></a><span class="tn-spacer tn-text-note">|</span><a class="tn-action @(sortBy == SortBy_Group.StageHitTimes ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId, SortBy_Group.StageHitTimes)"><span class="tn-action-text">浏览数</span></a>
+                        <a class="tn-action @(sortBy == SortBy_Topic.DateCreated_Desc ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId)"><span class="tn-action-text">最新</span></a><span class="tn-spacer tn-text-note">|</span><a class="tn-action @(sortBy == SortBy_Topic.MemberCount_Desc ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId, SortBy_Topic.MemberCount_Desc)"><span class="tn-action-text">成员数</span></a><span class="tn-spacer tn-text-note">|</span><a class="tn-action @(sortBy == SortBy_Topic.GrowthValue_Desc ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId, SortBy_Topic.GrowthValue_Desc)"><span class="tn-action-text">成长值</span></a><span class="tn-spacer tn-text-note">|</span><a class="tn-action @(sortBy == SortBy_Topic.StageHitTimes ? "tn-selected" : "")" href="@SiteUrls.Instance().FindGroup(areaCode, categoryId, SortBy_Topic.StageHitTimes)"><span class="tn-action-text">浏览数</span></a>
                     </div>
                 </div>
             </div>

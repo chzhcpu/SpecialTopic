@@ -33,14 +33,14 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <returns></returns>
-        IEnumerable<long> GetUserIdsOfGroup(long groupId);
+        IEnumerable<long> GetUserIdsOfTopic(long groupId);
 
         /// <summary>
         /// 获取群组管理员
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <returns>若没有找到，则返回空集合</returns>
-        IEnumerable<long> GetGroupManagers(long groupId);
+        IEnumerable<long> GetTopicManagers(long groupId);
 
         /// <summary>
         /// 获取群组成员
@@ -51,7 +51,7 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>       
         /// <returns>群组成员分页数据</returns>
-        PagingDataSet<TopicMember> GetGroupMembers(long groupId, bool hasManager, SortBy_TopicMember sortBy, int pageSize, int pageIndex);
+        PagingDataSet<TopicMember> GetTopicMembers(long groupId, bool hasManager, SortBy_TopicMember sortBy, int pageSize, int pageIndex);
 
 
         /// <summary>
@@ -60,19 +60,19 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="userId">当前用户的userId</param>
         /// <returns></returns>
-        IEnumerable<TopicMember> GetGroupMembersAlsoIsMyFollowedUser(long groupId, long userId);
+        IEnumerable<TopicMember> GetTopicMembersAlsoIsMyFollowedUser(long groupId, long userId);
         /// <summary>
         /// 在线群组成员
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        IEnumerable<TopicMember> GetOnlineGroupMembers(long groupId);
+        IEnumerable<TopicMember> GetOnlineTopicMembers(long groupId);
 
         /// <summary>
         /// 获取群组下的所有成员
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        IEnumerable<TopicMember> GetAllMembersOfGroup(long groupId);
+        IEnumerable<TopicMember> GetAllMembersOfTopic(long groupId);
     }
 }

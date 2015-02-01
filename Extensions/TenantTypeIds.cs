@@ -17,7 +17,7 @@ namespace SpecialTopic.Topic
         /// 群组应用
         /// </summary>
         /// <param name="TenantTypeIds">被扩展对象</param>
-        public static string Group(this TenantTypeIds TenantTypeIds)
+        public static string Topic(this TenantTypeIds TenantTypeIds)
         {
             return "900200";
         }

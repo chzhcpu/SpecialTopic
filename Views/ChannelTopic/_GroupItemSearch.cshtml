@@ -1,8 +1,8 @@
-﻿@model GroupEntity
+﻿@model TopicEntity
 @{
     string keyword = Request.QueryString.GetString("keyword", string.Empty);
     string spaceKey=UserIdToUserNameDictionary.GetUserName(Model.UserId);
-    var sortBy = Request.QueryString.Get<SortBy_Group?>("sortBy", null);
+    var sortBy = Request.QueryString.Get<SortBy_Topic?>("sortBy", null);
     var categoryId = Request.QueryString.Get<long?>("categoryId", null);
     var areaCode = Request.QueryString.Get<string>("areaCode", null);
     IUser currentUser = UserContext.CurrentUser;

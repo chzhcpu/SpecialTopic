@@ -7,7 +7,7 @@
 using Tunynet.Events;
 using Spacebuilder.Search;
 using Tunynet.Common;
-using Spacebuilder.Group;
+using SpecialTopic.Topic;
 using Tunynet.Globalization;
 using Tunynet.Utilities;
 using Spacebuilder.Common;
@@ -27,9 +27,9 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<GroupMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberActivityModule_After);
-            EventBus<GroupMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberNoticeModule_After);
-            EventBus<GroupMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(SetManagerNoticeEventModule_After);
+            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberActivityModule_After);
+            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberNoticeModule_After);
+            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(SetManagerNoticeEventModule_After);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SpecialTopic.Topic.EventModules
                 //生成Owner为群组的动态
                 Activity actvityOfGroup = Activity.New();
                 actvityOfGroup.ActivityItemKey = ActivityItemKeys.Instance().CreateGroupMember();
-                actvityOfGroup.ApplicationId = GroupConfig.Instance().ApplicationId;
+                actvityOfGroup.ApplicationId = TopicConfig.Instance().ApplicationId;
                 actvityOfGroup.IsOriginalThread = true;
                 actvityOfGroup.IsPrivate = !group.IsPublic;
                 actvityOfGroup.UserId = groupMember.UserId;
@@ -125,7 +125,7 @@ namespace SpecialTopic.Topic.EventModules
                         continue;
                     notice = Notice.New();
                     notice.UserId = toUserId;
-                    notice.ApplicationId = GroupConfig.Instance().ApplicationId;
+                    notice.ApplicationId = TopicConfig.Instance().ApplicationId;
                     notice.TypeId = NoticeTypeIds.Instance().Hint();
                     notice.LeadingActorUserId = sender.UserId;
                     notice.LeadingActor = senderUser.DisplayName;
@@ -145,7 +145,7 @@ namespace SpecialTopic.Topic.EventModules
                         continue;
                     notice = Notice.New();
                     notice.UserId = toUserId;
-                    notice.ApplicationId = GroupConfig.Instance().ApplicationId;
+                    notice.ApplicationId = TopicConfig.Instance().ApplicationId;
                     notice.TypeId = NoticeTypeIds.Instance().Hint();
                     notice.LeadingActorUserId = sender.UserId;
                     notice.LeadingActor = senderUser.DisplayName;
@@ -196,7 +196,7 @@ namespace SpecialTopic.Topic.EventModules
 
             Notice notice = Notice.New();
             notice.UserId = sender.UserId;
-            notice.ApplicationId = GroupConfig.Instance().ApplicationId;
+            notice.ApplicationId = TopicConfig.Instance().ApplicationId;
             notice.TypeId = NoticeTypeIds.Instance().Hint();
             notice.LeadingActorUserId = 0;
             notice.LeadingActor = string.Empty;

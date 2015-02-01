@@ -1,23 +1,23 @@
-﻿@model IEnumerable<GroupEntity>
+﻿@model IEnumerable<TopicEntity>
 @{
-    SortBy_Group sortBy = ViewData.Get<SortBy_Group>("SortBy", SortBy_Group.DateCreated_Desc);
+    SortBy_Topic sortBy = ViewData.Get<SortBy_Topic>("SortBy", SortBy_Topic.DateCreated_Desc);
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-last-group">
     <div class="tn-box-header tn-widget-header tn-corner-top tn-border-bottom ">
         <h3 class="tn-helper-reset">
             @switch (sortBy)
             {
-                case SortBy_Group.DateCreated_Desc:
+                case SortBy_Topic.DateCreated_Desc:
                 @:最新群组
                     break;
-                case SortBy_Group.StageHitTimes:
-                case SortBy_Group.HitTimes:
+                case SortBy_Topic.StageHitTimes:
+                case SortBy_Topic.HitTimes:
                 @:热门群组
                     break;
-                case SortBy_Group.MemberCount_Desc:
+                case SortBy_Topic.MemberCount_Desc:
                 @:活跃群组  
                 break;
-                case SortBy_Group.GrowthValue_Desc:
+                case SortBy_Topic.GrowthValue_Desc:
                 @:活跃群组
                 break;
             }

@@ -12,12 +12,12 @@ using Tunynet.Globalization;
 using Tunynet.Common.Configuration;
 using Tunynet.Events;
 using Spacebuilder.Common;
-using Spacebuilder.Group.EventModules;
+using SpecialTopic.Topic.EventModules;
 using Spacebuilder.Blog;
 using Spacebuilder.Search;
 using Spacebuilder.Blog.EventModules;
 using Tunynet.UI;
-using Spacebuilder.Group.Configuration;
+using SpecialTopic.Topic.Configuration;
 using System.Collections.Generic;
 
 namespace SpecialTopic.Topic
@@ -26,7 +26,7 @@ namespace SpecialTopic.Topic
     /// 群组配置类
     /// </summary>
     [Serializable]
-    public class GroupConfig : ApplicationConfig
+    public class TopicConfig : ApplicationConfig
     {
         private static int applicationId = 9002;
         private XElement tenantLogoSettingsElement;
@@ -34,13 +34,13 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 获取GroupConfig实例
         /// </summary>
-        public static GroupConfig Instance()
+        public static TopicConfig Instance()
         {
             ApplicationService applicationService = new ApplicationService();
 
             ApplicationBase app = applicationService.Get(applicationId);
             if (app != null)
-                return app.Config as GroupConfig;
+                return app.Config as TopicConfig;
             else
                 return null;
         }
@@ -49,7 +49,7 @@ namespace SpecialTopic.Topic
         /// 构造器
         /// </summary>
         /// <param name="xElement"></param>
-        public GroupConfig(XElement xElement)
+        public TopicConfig(XElement xElement)
             : base(xElement)
         {
             this.tenantLogoSettingsElement = xElement.Element("tenantLogoSettings");
@@ -91,7 +91,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public override string ApplicationKey
         {
-            get { return "Group"; }
+            get { return "Topic"; }
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public override Type ApplicationType
         {
-            get { return typeof(GroupApplication); }
+            get { return typeof(TopicApplication); }
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace SpecialTopic.Topic
             TenantLogoSettings.RegisterSettings(tenantLogoSettingsElement);
 
             //注册ResourceAccessor的应用资源
-            ResourceAccessor.RegisterApplicationResourceManager(ApplicationId, "Spacebuilder.Group.Resources.Resource", typeof(Spacebuilder.Group.Resources.Resource).Assembly);
+            ResourceAccessor.RegisterApplicationResourceManager(ApplicationId, "SpecialTopic.Topic.Resources.Resource", typeof(SpecialTopic.Topic.Resources.Resource).Assembly);
             InvitationType.Register(new InvitationType { Key = InvitationTypeKeys.Instance().InviteJoinGroup(), Name = "邀请参加群组", Description = "" });
             InvitationType.Register(new InvitationType { Key = InvitationTypeKeys.Instance().ApplyJoinGroup(), Name = "申请加入群组", Description = "" });
             containerBuilder.Register(c => new GroupActivityReceiverGetter()).Named<IActivityReceiverGetter>(ActivityOwnerTypes.Instance().Group().ToString()).SingleInstance();

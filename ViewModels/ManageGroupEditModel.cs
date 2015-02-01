@@ -10,7 +10,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using Tunynet.Common;
-using Spacebuilder.Group;
+using SpecialTopic.Topic;
 
 namespace SpecialTopic.Topic
 {

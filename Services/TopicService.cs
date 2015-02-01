@@ -27,8 +27,8 @@ namespace SpecialTopic.Topic
     public class TopicService
     {
         private ITopicRepository groupRepository = null;
-        private ITopicMemberRepository groupMemberRepository = null;
-        private ITopicMemberApplyRepository groupMemberApplyRepository = null;
+        private ITopicMemberRepository TopicMemberRepository = null;
+        private ITopicMemberApplyRepository TopicMemberApplyRepository = null;
         private AuditService auditService = new AuditService();
 
         /// <summary>
@@ -43,15 +43,15 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 构造函数
         /// </summary>
-        ///<param name="groupMemberApplyRepository">群组成员申请仓储</param>
-        ///<param name="groupMemberRepository">群组成员仓储</param>
+        ///<param name="TopicMemberApplyRepository">群组成员申请仓储</param>
+        ///<param name="TopicMemberRepository">群组成员仓储</param>
         ///<param name="groupRepository">群组仓储</param>
         /// <param name="GroupRepository"></param>
-        public TopicService(ITopicRepository groupRepository, ITopicMemberRepository groupMemberRepository, ITopicMemberApplyRepository groupMemberApplyRepository)
+        public TopicService(ITopicRepository groupRepository, ITopicMemberRepository TopicMemberRepository, ITopicMemberApplyRepository TopicMemberApplyRepository)
         {
             this.groupRepository = groupRepository;
-            this.groupMemberRepository = groupMemberRepository;
-            this.groupMemberApplyRepository = groupMemberApplyRepository;
+            this.TopicMemberRepository = TopicMemberRepository;
+            this.TopicMemberApplyRepository = TopicMemberApplyRepository;
         }
 
         #region 维护群组
@@ -72,7 +72,7 @@ namespace SpecialTopic.Topic
             //2、需要触发的事件参见《设计说明书-日志》     
             //3、单独调用标签服务设置标签
             //4、使用 IdGenerator.Next() 生成GroupId
-            EventBus<GroupEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Create()));
+            EventBus<TopicEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Create()));
             //设置审核状态
             auditService.ChangeAuditStatusForCreate(userId, group);
             long id = 0;
@@ -80,8 +80,8 @@ namespace SpecialTopic.Topic
 
             if (id > 0)
             {
-                EventBus<GroupEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Create()));
-                EventBus<GroupEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(null, group.AuditStatus));
+                EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Create()));
+                EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(null, group.AuditStatus));
                 //用户的创建群组数+1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                 ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedGroupCount(), 1);
@@ -97,13 +97,13 @@ namespace SpecialTopic.Topic
         /// <param name="logoFile">群组标识图</param>
         public void Update(long userId, TopicEntity group)
         {
-            EventBus<GroupEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Update()));
+            EventBus<TopicEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Update()));
             auditService.ChangeAuditStatusForUpdate(userId, group);
             groupRepository.Update(group);
 
 
 
-            EventBus<GroupEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Update()));
+            EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Update()));
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace SpecialTopic.Topic
             categoryService.ClearCategoriesFromItem(groupId, null, TenantTypeIds.Instance().Group());
 
 
-            EventBus<GroupEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
+            EventBus<TopicEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
             int affectCount = groupRepository.Delete(group);
             if (affectCount > 0)
             {
@@ -147,8 +147,8 @@ namespace SpecialTopic.Topic
                 logoService.DeleteLogo(groupId);
                 //删除群组下的成员
                 DeleteMembersByGroupId(groupId);
-                EventBus<GroupEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
-                EventBus<GroupEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(group.AuditStatus, null));
+                EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
+                EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(group.AuditStatus, null));
             }
         }
 
@@ -158,16 +158,16 @@ namespace SpecialTopic.Topic
         /// <param name="groupId"></param>
         public void DeleteMembersByGroupId(long groupId)
         {
-            IEnumerable<TopicMember> groupMembers = groupMemberRepository.GetAllMembersOfGroup(groupId);
-            foreach (var groupMember in groupMembers)
+            IEnumerable<TopicMember> TopicMembers = TopicMemberRepository.GetAllMembersOfTopic(groupId);
+            foreach (var TopicMember in TopicMembers)
             {
-                int affectCount = groupMemberRepository.Delete(groupMember);
+                int affectCount = TopicMemberRepository.Delete(TopicMember);
                 if (affectCount > 0)
                 {
-                    EventBus<GroupMember>.Instance().OnAfter(groupMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
+                    EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
                     //用户的参与群组数-1
                     OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                    ownerDataService.Change(groupMember.UserId, OwnerDataKeys.Instance().JoinedGroupCount(), -1);
+                    ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedGroupCount(), -1);
                 }
             }
         }
@@ -190,7 +190,7 @@ namespace SpecialTopic.Topic
                 if (!IsMember(group.GroupId, userId))
                 {
                     Invitation invitation = Invitation.New();
-                    invitation.ApplicationId = GroupConfig.Instance().ApplicationId;
+                    invitation.ApplicationId = TopicConfig.Instance().ApplicationId;
                     invitation.InvitationTypeKey = InvitationTypeKeys.Instance().InviteJoinGroup();
                     invitation.UserId = userId;
                     invitation.SenderUserId = sender.UserId;
@@ -227,8 +227,8 @@ namespace SpecialTopic.Topic
             groupRepository.Update(group);
 
             string operationType = isApproved ? EventOperationType.Instance().Approved() : EventOperationType.Instance().Disapproved();
-            EventBus<GroupEntity>.Instance().OnAfter(group, new CommonEventArgs(operationType));
-            EventBus<GroupEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(oldAuditStatus, newAuditStatus));
+            EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(operationType));
+            EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(oldAuditStatus, newAuditStatus));
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace SpecialTopic.Topic
                 LogoService logoService = new LogoService(TenantTypeIds.Instance().Group());
                 group.Logo = logoService.UploadLogo(groupId, stream);
                 groupRepository.Update(group);
-                EventBus<GroupEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Update()));
+                EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Update()));
             }
         }
 
@@ -415,12 +415,12 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> GroupMemberAlsoJoinedGroups(long groupId, int topNumber)
+        public IEnumerable<TopicEntity> TopicMemberAlsoJoinedTopics(long groupId, int topNumber)
         {
             //设计要点：
             //1、获取群组成员也加入的其他不重复的群组，按群组成长值倒序；
             //2、无需维护缓存即时性，缓存期限：常用集合
-            return groupRepository.GroupMemberAlsoJoinedGroups(groupId, topNumber);
+            return groupRepository.TopicMemberAlsoJoinedTopics(groupId, topNumber);
         }
 
 
@@ -493,29 +493,29 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public bool IsApplied(long userId, long groupId)
         {
-            var groupIds = groupMemberApplyRepository.GetPendingApplyGroupIdsOfUser(userId);
+            var groupIds = TopicMemberApplyRepository.GetPendingApplyTopicIdsOfUser(userId);
             return groupIds.Contains(groupId);
         }
 
         /// <summary>
         /// 申请加入群组
         /// </summary>
-        /// <param name="groupMemberApply">群组加入申请</param>
-        public void CreateGroupMemberApply(TopicMemberApply groupMemberApply)
+        /// <param name="TopicMemberApply">群组加入申请</param>
+        public void CreateTopicMemberApply(TopicMemberApply TopicMemberApply)
         {
             //设计要点：
             //1、用户对同一个群组不允许有多个待处理的加入申请
 
 
-            if (groupMemberApply == null)
+            if (TopicMemberApply == null)
                 return;
-            if (IsApplied(groupMemberApply.UserId, groupMemberApply.GroupId))
+            if (IsApplied(TopicMemberApply.UserId, TopicMemberApply.GroupId))
                 return;
             long id = 0;
-            long.TryParse(groupMemberApplyRepository.Insert(groupMemberApply).ToString(), out id);
+            long.TryParse(TopicMemberApplyRepository.Insert(TopicMemberApply).ToString(), out id);
 
             if (id > 0)
-                EventBus<GroupMemberApply>.Instance().OnAfter(groupMemberApply, new CommonEventArgs(EventOperationType.Instance().Create()));
+                EventBus<TopicMemberApply>.Instance().OnAfter(TopicMemberApply, new CommonEventArgs(EventOperationType.Instance().Create()));
         }
 
         /// <summary>
@@ -523,16 +523,16 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupIds">申请Id列表</param>
         /// <param name="isApproved">是否接受</param>
-        public void ApproveGroupMemberApply(IEnumerable<long> applyIds, bool isApproved)
+        public void ApproveTopicMemberApply(IEnumerable<long> applyIds, bool isApproved)
         {
             //设计要点：
             //1、仅允许对待处理状态的申请变更状态；
-            //2、通过批准的申请，直接创建GroupMember
-            IEnumerable<TopicMemberApply> groupMemberApplies = groupMemberApplyRepository.PopulateEntitiesByEntityIds(applyIds);
+            //2、通过批准的申请，直接创建TopicMember
+            IEnumerable<TopicMemberApply> TopicMemberApplies = TopicMemberApplyRepository.PopulateEntitiesByEntityIds(applyIds);
             TopicMemberApplyStatus applyStatus = isApproved ? TopicMemberApplyStatus.Approved : TopicMemberApplyStatus.Disapproved;
             string operationType = isApproved ? EventOperationType.Instance().Approved() : EventOperationType.Instance().Disapproved();
 
-            foreach (var apply in groupMemberApplies)
+            foreach (var apply in TopicMemberApplies)
             {
                 if (apply.ApplyStatus != TopicMemberApplyStatus.Pending)
                     continue;
@@ -540,18 +540,18 @@ namespace SpecialTopic.Topic
 
 
                 apply.ApplyStatus = applyStatus;
-                groupMemberApplyRepository.Update(apply);
+                TopicMemberApplyRepository.Update(apply);
 
 
 
-                EventBus<GroupMemberApply>.Instance().OnAfter(apply, new CommonEventArgs(operationType));
+                EventBus<TopicMemberApply>.Instance().OnAfter(apply, new CommonEventArgs(operationType));
 
                 if (isApproved)
                 {
                     TopicMember member = TopicMember.New();
                     member.UserId = apply.UserId;
                     member.GroupId = apply.GroupId;
-                    CreateGroupMember(member);
+                    CreateTopicMember(member);
                 }
             }
         }
@@ -560,15 +560,15 @@ namespace SpecialTopic.Topic
         /// 删除群组加入申请
         /// </summary>
         /// <param name="id">申请Id</param>
-        public void DeleteGroupMemberApply(long id)
+        public void DeleteTopicMemberApply(long id)
         {
-            TopicMemberApply apply = groupMemberApplyRepository.Get(id);
+            TopicMemberApply apply = TopicMemberApplyRepository.Get(id);
             if (apply == null)
                 return;
 
-            int affectCount = groupMemberApplyRepository.Delete(apply);
+            int affectCount = TopicMemberApplyRepository.Delete(apply);
             if (affectCount > 0)
-                EventBus<GroupMemberApply>.Instance().OnAfter(apply, new CommonEventArgs(EventOperationType.Instance().Delete()));
+                EventBus<TopicMemberApply>.Instance().OnAfter(apply, new CommonEventArgs(EventOperationType.Instance().Delete()));
         }
 
 
@@ -580,11 +580,11 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>       
         /// <returns>加入申请分页数据</returns>
-        public PagingDataSet<TopicMemberApply> GetGroupMemberApplies(long groupId, TopicMemberApplyStatus? applyStatus, int pageSize = 20, int pageIndex = 1)
+        public PagingDataSet<TopicMemberApply> GetTopicMemberApplies(long groupId, TopicMemberApplyStatus? applyStatus, int pageSize = 20, int pageIndex = 1)
         {
             //设计要点：
             //1、排序：申请状态正序、申请时间倒序（Id代替）；            
-            return groupMemberApplyRepository.GetGroupMemberApplies(groupId, applyStatus, pageSize, pageIndex);
+            return TopicMemberApplyRepository.GetTopicMemberApplies(groupId, applyStatus, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -594,7 +594,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public int GetMemberApplyCount(long groupId)
         {
-            return groupMemberApplyRepository.GetMemberApplyCount(groupId);
+            return TopicMemberApplyRepository.GetMemberApplyCount(groupId);
         }
 
         #endregion
@@ -605,25 +605,25 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 增加群组成员
         /// </summary>
-        /// <param name="groupMember"></param>
-        public void CreateGroupMember(TopicMember groupMember)
+        /// <param name="TopicMember"></param>
+        public void CreateTopicMember(TopicMember TopicMember)
         {
             //设计要点：
             //1、同一个群组不允许用户重复加入
             //2、群主不允许成为群组成员
-            if (IsMember(groupMember.GroupId, groupMember.UserId))
+            if (IsMember(TopicMember.GroupId, TopicMember.UserId))
                 return;
-            if (IsOwner(groupMember.GroupId, groupMember.UserId))
+            if (IsOwner(TopicMember.GroupId, TopicMember.UserId))
                 return;
             long id = 0;
-            long.TryParse(groupMemberRepository.Insert(groupMember).ToString(), out id);
+            long.TryParse(TopicMemberRepository.Insert(TopicMember).ToString(), out id);
 
             if (id > 0)
             {
-                EventBus<GroupMember>.Instance().OnAfter(groupMember, new CommonEventArgs(EventOperationType.Instance().Create()));
+                EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Create()));
                 //用户的参与群组数+1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                ownerDataService.Change(groupMember.UserId, OwnerDataKeys.Instance().JoinedGroupCount(), 1);
+                ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedGroupCount(), 1);
             }
         }
 
@@ -634,19 +634,19 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <param name="userId">用户Id</param>
-        public void DeleteGroupMember(long groupId, long userId)
+        public void DeleteTopicMember(long groupId, long userId)
         {
 
 
 
-            TopicMember groupMember = groupMemberRepository.GetMember(groupId, userId);
-            if (groupMember == null)
+            TopicMember TopicMember = TopicMemberRepository.GetMember(groupId, userId);
+            if (TopicMember == null)
                 return;
 
-            int affectCount = groupMemberRepository.Delete(groupMember);
+            int affectCount = TopicMemberRepository.Delete(TopicMember);
             if (affectCount > 0)
             {
-                EventBus<GroupMember>.Instance().OnAfter(groupMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
+                EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
                 //用户的参与群组数-1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                 ownerDataService.Change(userId, OwnerDataKeys.Instance().JoinedGroupCount(), -1);
@@ -658,12 +658,12 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="userIds">待处理的成员用户Id列表</param>
         /// <param name="groupId">群组Id</param>
-        public void DeleteGroupMember(long groupId, IEnumerable<long> userIds)
+        public void DeleteTopicMember(long groupId, IEnumerable<long> userIds)
         {
 
             foreach (var userId in userIds)
             {
-                DeleteGroupMember(groupId, userId);
+                DeleteTopicMember(groupId, userId);
             }
         }
 
@@ -678,20 +678,20 @@ namespace SpecialTopic.Topic
         {
             //设计要点：
             //1、userId必须是groupId成员
-            TopicMember member = groupMemberRepository.GetMember(groupId, userId);
+            TopicMember member = TopicMemberRepository.GetMember(groupId, userId);
             if (member == null)
                 return false;
             if (member.IsManager == isManager)
                 return false;
             member.IsManager = isManager;
-            groupMemberRepository.Update(member);
+            TopicMemberRepository.Update(member);
             if (isManager)
             {
-                EventBus<GroupMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().SetGroupManager()));
+                EventBus<TopicMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().SetGroupManager()));
             }
             else
             {
-                EventBus<GroupMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().CancelGroupManager()));
+                EventBus<TopicMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().CancelGroupManager()));
             }
             return true;
         }
@@ -715,17 +715,17 @@ namespace SpecialTopic.Topic
             ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().JoinedGroupCount(), 1);
 
             //原群主转换成群组成员
-            TopicMember groupMember = TopicMember.New();
-            groupMember.GroupId = groupId;
-            groupMember.UserId = oldOwnerUserId;
-            groupMemberRepository.Insert(groupMember);
+            TopicMember TopicMember = TopicMember.New();
+            TopicMember.GroupId = groupId;
+            TopicMember.UserId = oldOwnerUserId;
+            TopicMemberRepository.Insert(TopicMember);
 
             //新群主的群组数+1,加入群组数-1
             ownerDataService.Change(newOwnerUserId, OwnerDataKeys.Instance().CreatedGroupCount(), 1);
 
             //如果新群主是群组成员则从成员中移除
             if (IsMember(groupId, newOwnerUserId))
-                DeleteGroupMember(groupId, newOwnerUserId);
+                DeleteTopicMember(groupId, newOwnerUserId);
         }
 
 
@@ -737,7 +737,7 @@ namespace SpecialTopic.Topic
         /// <returns>是群组成员返回true，否则返回false</returns>
         public bool IsMember(long groupId, long userId)
         {
-            TopicMemberRole role = GetGroupMemberRole(groupId, userId);
+            TopicMemberRole role = GetTopicMemberRole(groupId, userId);
             if (role >= TopicMemberRole.Member)
                 return true;
             else
@@ -752,7 +752,7 @@ namespace SpecialTopic.Topic
         /// <returns>是群组管理员返回true，否则返回false</returns>
         public bool IsManager(long groupId, long userId)
         {
-            TopicMemberRole role = GetGroupMemberRole(groupId, userId);
+            TopicMemberRole role = GetTopicMemberRole(groupId, userId);
             if (role >= TopicMemberRole.Manager)
                 return true;
             else
@@ -767,7 +767,7 @@ namespace SpecialTopic.Topic
         /// <returns>是群主返回true，否则返回false</returns>
         public bool IsOwner(long groupId, long userId)
         {
-            TopicMemberRole role = GetGroupMemberRole(groupId, userId);
+            TopicMemberRole role = GetTopicMemberRole(groupId, userId);
             if (role == TopicMemberRole.Owner)
                 return true;
             else
@@ -780,9 +780,9 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="userId">用户Id</param>
         /// <returns>是群主返回true，否则返回false</returns>
-        public TopicMember GetGroupMember(long memberId)
+        public TopicMember GetTopicMember(long memberId)
         {
-            return groupMemberRepository.Get(memberId);
+            return TopicMemberRepository.Get(memberId);
         }
 
         /// <summary>
@@ -791,11 +791,11 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="userId">用户Id</param>
         /// <returns><see cref="TopicMemberRole"/></returns>
-        private TopicMemberRole GetGroupMemberRole(long groupId, long userId)
+        private TopicMemberRole GetTopicMemberRole(long groupId, long userId)
         {
             //设计要点：
             //1、需要缓存，并维护缓存的即时性
-            TopicMember member = groupMemberRepository.GetMember(groupId, userId);
+            TopicMember member = TopicMemberRepository.GetMember(groupId, userId);
             if (member == null)
             {
                 TopicEntity group = groupRepository.Get(groupId);
@@ -820,7 +820,7 @@ namespace SpecialTopic.Topic
             if (group == null)
                 return new List<long>();
             //不必缓存
-            IEnumerable<long> userIds = groupMemberRepository.GetUserIdsOfGroup(groupId);
+            IEnumerable<long> userIds = TopicMemberRepository.GetUserIdsOfTopic(groupId);
             var list = userIds.ToList();
             list.Add(group.UserId);
             return list;
@@ -835,7 +835,7 @@ namespace SpecialTopic.Topic
         {
             //设计要点：
             //1、需要缓存，并维护缓存的即时性
-            IEnumerable<long> manageIds = groupMemberRepository.GetGroupManagers(groupId);
+            IEnumerable<long> manageIds = TopicMemberRepository.GetTopicManagers(groupId);
             return DIContainer.Resolve<UserService>().GetFullUsers(manageIds);
         }
 
@@ -848,12 +848,12 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
         /// <returns>群组成员分页数据</returns>
-        public PagingDataSet<TopicMember> GetGroupMembers(long groupId, bool hasManager = true, SortBy_TopicMember sortBy = SortBy_TopicMember.DateCreated_Asc, int pageSize = 20, int pageIndex = 1)
+        public PagingDataSet<TopicMember> GetTopicMembers(long groupId, bool hasManager = true, SortBy_TopicMember sortBy = SortBy_TopicMember.DateCreated_Asc, int pageSize = 20, int pageIndex = 1)
         {
             //设计要点：
             //1、排序：管理员排在前，其余按加入时间正序；
             //2、使用分区列表缓存
-            return groupMemberRepository.GetGroupMembers(groupId, hasManager, sortBy, pageSize, pageIndex);
+            return TopicMemberRepository.GetTopicMembers(groupId, hasManager, sortBy, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -862,18 +862,18 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="userId">当前用户的userId</param>
         /// <returns></returns>
-        public IEnumerable<TopicMember> GetGroupMembersAlsoIsMyFollowedUser(long groupId, long userId)
+        public IEnumerable<TopicMember> GetTopicMembersAlsoIsMyFollowedUser(long groupId, long userId)
         {
-            return groupMemberRepository.GetGroupMembersAlsoIsMyFollowedUser(groupId, userId);
+            return TopicMemberRepository.GetTopicMembersAlsoIsMyFollowedUser(groupId, userId);
         }
         /// <summary>
         /// 在线群组成员
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public IEnumerable<TopicMember> GetOnlineGroupMembers(long groupId)
+        public IEnumerable<TopicMember> GetOnlineTopicMembers(long groupId)
         {
-            return groupMemberRepository.GetOnlineGroupMembers(groupId);
+            return TopicMemberRepository.GetOnlineTopicMembers(groupId);
         }
 
         #endregion

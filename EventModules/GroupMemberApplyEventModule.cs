@@ -7,7 +7,7 @@
 using Tunynet.Events;
 using Spacebuilder.Search;
 using Tunynet.Common;
-using Spacebuilder.Group;
+using SpecialTopic.Topic;
 using Tunynet.Globalization;
 using Tunynet.Utilities;
 using Spacebuilder.Common;
@@ -27,7 +27,7 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<GroupMemberApply>.Instance().After += new CommonEventHandler<TopicMemberApply, CommonEventArgs>(GroupMemberApplyNoticeModule_After);
+            EventBus<TopicMemberApply>.Instance().After += new CommonEventHandler<TopicMemberApply, CommonEventArgs>(GroupMemberApplyNoticeModule_After);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace SpecialTopic.Topic.EventModules
                         if (!groupService.IsMember(sender.GroupId, sender.UserId))
                         {
                             invitation = Invitation.New();
-                            invitation.ApplicationId = GroupConfig.Instance().ApplicationId;
+                            invitation.ApplicationId = TopicConfig.Instance().ApplicationId;
                             invitation.InvitationTypeKey = InvitationTypeKeys.Instance().ApplyJoinGroup();
                             invitation.UserId = toUserId;
                             invitation.SenderUserId = sender.UserId;
@@ -100,7 +100,7 @@ namespace SpecialTopic.Topic.EventModules
             notice = Notice.New();
 
             notice.UserId = sender.UserId;
-            notice.ApplicationId = GroupConfig.Instance().ApplicationId;
+            notice.ApplicationId = TopicConfig.Instance().ApplicationId;
             notice.TypeId = NoticeTypeIds.Instance().Hint();
             //notice.LeadingActorUserId = UserContext.CurrentUser.UserId;
             //notice.LeadingActor = UserContext.CurrentUser.DisplayName;

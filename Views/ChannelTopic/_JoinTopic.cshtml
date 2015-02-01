@@ -1,4 +1,4 @@
-﻿@model GroupEntity
+﻿@model TopicEntity
 @{
    
     string content = string.Format("@{0} 的群组 \"{1}\" {2} 很不错 推荐给大家看看", Model.User.NickName, Model.GroupName, SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(Model.GroupId)));

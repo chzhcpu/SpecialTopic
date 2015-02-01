@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Spacebuilder.Group</RootNamespace>
-    <AssemblyName>Spacebuilder.Group</AssemblyName>
+    <RootNamespace>SpecialTopic.Topic</RootNamespace>
+    <AssemblyName>SpecialTopic.Topic</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <SccProjectName>
@@ -42,7 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Spacebuilder.Group.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\SpecialTopic.Topic.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,7 +51,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Spacebuilder.Group.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\SpecialTopic.Topic.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AntiXssLibrary, Version=4.2.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
@@ -209,7 +209,7 @@
     <Compile Include="Configuration\TopicRecommendUrlGetter.cs" />
     <Compile Include="Configuration\JoinTopicOwnerDataGetter.cs" />
     <Compile Include="Controllers\GroupSpaceController.cs" />
-    <Compile Include="Controllers\ChannelGroupController.cs" />
+    <Compile Include="Controllers\ChannelTopicController.cs" />
     <Compile Include="Controllers\ControlPanelGroupController.cs" />
     <Compile Include="Controllers\GroupSpaceSettingsController.cs" />
     <Compile Include="Controllers\GroupSpaceThemeController.cs" />
@@ -335,8 +335,8 @@
     <Content Include="Views\ChannelTopic\_EditApply.cshtml" />
     <Content Include="Views\ChannelTopic\_ApplyJoinButton.cshtml" />
     <Content Include="Views\ChannelTopic\_ValidateQuestion.cshtml" />
-    <Content Include="Views\ChannelTopic\UserJoinedGroups.cshtml" />
-    <Content Include="Views\ChannelTopic\UserCreatedGroups.cshtml" />
+    <Content Include="Views\ChannelTopic\UserJoinedTopics.cshtml" />
+    <Content Include="Views\ChannelTopic\UserCreatedTopics.cshtml" />
     <Content Include="Views\GroupSpace\_Invite.cshtml" />
     <Content Include="Views\GroupSpace\_GroupMemberAlsoJoinedGroups.cshtml" />
     <Content Include="Views\GroupSpace\Members.cshtml" />

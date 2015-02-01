@@ -28,7 +28,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
-        public IEnumerable<long> GetPendingApplyGroupIdsOfUser(long userId)
+        public IEnumerable<long> GetPendingApplyTopicIdsOfUser(long userId)
         {
             
             //以下语句可以改为：RealTimeCacheHelper.GetListCacheKeyPrefix(CacheVersionType.AreaVersion,"UserId",userId)+"PendingApplyGroupIdsOfUser"
@@ -60,7 +60,7 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
         /// <returns>加入申请分页数据</returns>
-        public PagingDataSet<TopicMemberApply> GetGroupMemberApplies(long groupId, TopicMemberApplyStatus? applyStatus, int pageSize, int pageIndex)
+        public PagingDataSet<TopicMemberApply> GetTopicMemberApplies(long groupId, TopicMemberApplyStatus? applyStatus, int pageSize, int pageIndex)
         {
             return GetPagingEntities(pageSize, pageIndex, CachingExpirationType.UsualObjectCollection,
             () =>

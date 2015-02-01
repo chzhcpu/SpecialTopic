@@ -1,4 +1,4 @@
-﻿@model GroupEntity
+﻿@model TopicEntity
 @{
     var activity = ViewData.Get<Activity>("activity", Activity.New());
 }
@@ -15,7 +15,7 @@
                 群组 @Html.Link(Model.GroupName, SiteUrls.Instance().GroupHome(Model.GroupKey), Model.GroupName, new { @class = "tnc-mlrf" })中有新成员加入
             </div>
             @{
-    IEnumerable<GroupMember> groupMembers = ViewData.Get<IEnumerable<GroupMember>>("GroupMembers", new List<GroupMember>());
+    IEnumerable<TopicMember> groupMembers = ViewData.Get<IEnumerable<TopicMember>>("GroupMembers", new List<TopicMember>());
     if (groupMembers.Count() > 0)
     {
         groupMembers = groupMembers.Take(3);

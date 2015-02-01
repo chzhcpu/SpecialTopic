@@ -46,12 +46,12 @@ namespace SpecialTopic.Topic
                 return false;
             }
 
-            if (authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
+            if (authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                 return true;
 
-            if (currentUser.Rank < GroupConfig.Instance().MinUserRankOfCreateGroup)
+            if (currentUser.Rank < TopicConfig.Instance().MinUserRankOfCreateGroup)
             {
-                errorMessage = string.Format("只有等级达到{0}级，才能创建群组，您现在的等级是{1}", GroupConfig.Instance().MinUserRankOfCreateGroup, currentUser.Rank);
+                errorMessage = string.Format("只有等级达到{0}级，才能创建群组，您现在的等级是{1}", TopicConfig.Instance().MinUserRankOfCreateGroup, currentUser.Rank);
                 return false;
             }
             return true;
@@ -87,7 +87,7 @@ namespace SpecialTopic.Topic
             if (group.UserId == currentUser.UserId)
                 return true;
 
-            if (authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
+            if (authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                 return true;
 
             return false;
@@ -147,7 +147,7 @@ namespace SpecialTopic.Topic
             if (group.UserId == currentUser.UserId)
                 return true;
 
-            if (authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
+            if (authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                 return true;
             TopicService groupService = new TopicService();
             //群管理员
@@ -193,7 +193,7 @@ namespace SpecialTopic.Topic
             if (currentUser == null)
                 return false;
 
-            if (authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
+            if (authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                 return true;
 
             if (currentUser.IsContentAdministrator())
@@ -259,7 +259,7 @@ namespace SpecialTopic.Topic
                     return true;
             }
 
-            if (authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
+            if (authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                 return true;
 
             return false;

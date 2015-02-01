@@ -44,7 +44,7 @@ namespace SpecialTopic.Topic
             this.AsQuickSearch = asQuickSearch;
             this.DisplayOrder = displayOrder;
             searchEngine = SearcherFactory.GetSearchEngine(indexPath);
-            publiclyAuditStatus = auditService.GetPubliclyAuditStatus(GroupConfig.Instance().ApplicationId);
+            publiclyAuditStatus = auditService.GetPubliclyAuditStatus(TopicConfig.Instance().ApplicationId);
         }
 
         #region 搜索器属性

@@ -41,7 +41,7 @@ namespace SpecialTopic.Topic.Controllers
         public ActionResult _GroupSettingRightMenu(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
-            PagingDataSet<TopicMemberApply> applys = groupService.GetGroupMemberApplies(group.GroupId, TopicMemberApplyStatus.Pending);
+            PagingDataSet<TopicMemberApply> applys = groupService.GetTopicMemberApplies(group.GroupId, TopicMemberApplyStatus.Pending);
             long totalRecords = applys.TotalRecords;
             ViewData["totalRecords"] = totalRecords;
             return View(group);
@@ -63,7 +63,7 @@ namespace SpecialTopic.Topic.Controllers
             pageResourceManager.InsertTitlePart("管理群组成员申请页");
             
             //已修改
-            PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetGroupMemberApplies(group.GroupId, applyStatus, pageSize, pageIndex);
+            PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetTopicMemberApplies(group.GroupId, applyStatus, pageSize, pageIndex);
             ViewData["groupId"] = group.GroupId;
             TempData["GroupMenu"] = GroupMenu.ManageMember;
 
@@ -80,7 +80,7 @@ namespace SpecialTopic.Topic.Controllers
             
             
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            groupService.ApproveGroupMemberApply(applyIds, isApproved);
+            groupService.ApproveTopicMemberApply(applyIds, isApproved);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
 
@@ -95,7 +95,7 @@ namespace SpecialTopic.Topic.Controllers
             
             
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            groupService.DeleteGroupMemberApply(id);
+            groupService.DeleteTopicMemberApply(id);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
 
@@ -115,9 +115,9 @@ namespace SpecialTopic.Topic.Controllers
             pageResourceManager.InsertTitlePart("管理群组成员页");
 
 
-            
-            
-            PagingDataSet<TopicMember> groupMembers = groupService.GetGroupMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Asc, pageSize, pageIndex);
+
+
+            PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Asc, pageSize, pageIndex);
             ViewData["group"] = group;
             TempData["GroupMenu"] = GroupMenu.ManageMember;
 
@@ -236,10 +236,10 @@ namespace SpecialTopic.Topic.Controllers
                 }
             }
 
-            
-            
-            
-            groupService.DeleteGroupMember(group.GroupId, userIds);
+
+
+
+            groupService.DeleteTopicMember(group.GroupId, userIds);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
 

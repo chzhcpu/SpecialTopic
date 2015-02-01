@@ -102,7 +102,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <returns></returns>
-        public IEnumerable<long> GetUserIdsOfGroup(long groupId)
+        public IEnumerable<long> GetUserIdsOfTopic(long groupId)
         {
             Sql sql = Sql.Builder;
             sql.Select("UserId")
@@ -117,7 +117,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <returns>若没有找到，则返回空集合</returns>
-        public IEnumerable<long> GetGroupManagers(long groupId)
+        public IEnumerable<long> GetTopicManagers(long groupId)
         {
             string cacheKey = "GroupManagers" + groupId + "-" + RealTimeCacheHelper.GetAreaVersion("GroupId", groupId);
             List<long> managerIds = cacheService.Get<List<long>>(cacheKey);
@@ -144,7 +144,7 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>       
         /// <returns>群组成员分页数据</returns>
-        public PagingDataSet<TopicMember> GetGroupMembers(long groupId, bool hasManager, SortBy_TopicMember sortBy, int pageSize, int pageIndex)
+        public PagingDataSet<TopicMember> GetTopicMembers(long groupId, bool hasManager, SortBy_TopicMember sortBy, int pageSize, int pageIndex)
         {
             return GetPagingEntities(pageSize, pageIndex, CachingExpirationType.UsualObjectCollection,
                 () =>
@@ -185,7 +185,7 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="userId">当前用户的userId</param>
         /// <returns></returns>
-        public IEnumerable<TopicMember> GetGroupMembersAlsoIsMyFollowedUser(long groupId, long userId)
+        public IEnumerable<TopicMember> GetTopicMembersAlsoIsMyFollowedUser(long groupId, long userId)
         {
             string cacheKey = GetCacheKey_GroupMembersAlsoIsMyFollowedUser(groupId, userId);
             IEnumerable<long> groupMemberIds = cacheService.Get<IList<long>>(cacheKey);
@@ -210,7 +210,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public IEnumerable<TopicMember> GetOnlineGroupMembers(long groupId)
+        public IEnumerable<TopicMember> GetOnlineTopicMembers(long groupId)
         {
             string cacheKey = GetCacheKey_OnlineGroupMembers(groupId);
             IEnumerable<long> groupMemberIds = cacheService.Get<IList<long>>(cacheKey);
@@ -245,7 +245,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public IEnumerable<TopicMember> GetAllMembersOfGroup(long groupId)
+        public IEnumerable<TopicMember> GetAllMembersOfTopic(long groupId)
         {
             var sql = Sql.Builder;
             sql.Select("*")

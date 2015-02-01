@@ -1,8 +1,8 @@
-﻿@model PagingDataSet<GroupMember>
+﻿@model PagingDataSet<TopicMember>
 @{
     Layout = "list-2cols";
     Html.Style("~/Applications/Bar/Styles/app.css");
-    var group = ViewData.Get<GroupEntity>("Group", null);
+    var group = ViewData.Get<TopicEntity>("Group", null);
 }
 @section GroupInfo{
 }

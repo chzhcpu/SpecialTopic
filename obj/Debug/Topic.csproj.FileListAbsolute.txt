@@ -1,0 +1,7 @@
+F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\Topic.csprojResolveAssemblyReference.cache
+F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\Topic.csproj.GenerateResource.Cache
+F:\coding\Spacebuilder_4.2.0.0_src\Web\bin\SpecialTopic.Topic.dll
+F:\coding\Spacebuilder_4.2.0.0_src\Web\bin\SpecialTopic.Topic.pdb
+F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\SpecialTopic.Topic.Resources.Resource.resources
+F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\SpecialTopic.Topic.dll
+F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\SpecialTopic.Topic.pdb

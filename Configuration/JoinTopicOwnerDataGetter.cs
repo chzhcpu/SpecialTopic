@@ -45,7 +45,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public long ApplicationId
         {
-            get { return GroupConfig.Instance().ApplicationId; }
+            get { return TopicConfig.Instance().ApplicationId; }
         }
     }
 }

@@ -14,9 +14,9 @@ namespace SpecialTopic.Topic
     /// 群组应用
     /// </summary>
     [Serializable]
-    public class GroupApplication : ApplicationBase
+    public class TopicApplication : ApplicationBase
     {
-        protected GroupApplication(ApplicationModel model)
+        protected TopicApplication(ApplicationModel model)
             : base(model)
         { }
 
@@ -28,8 +28,8 @@ namespace SpecialTopic.Topic
         /// <param name="isTakeOver">是否接管被删除用户可被接管的内容</param>
         protected override void DeleteUser(long userId, string takeOverUserName, bool isTakeOver)
         {
-            TopicService groupService = new TopicService();
-            groupService.DeleteUser(userId, takeOverUserName, isTakeOver);
+            TopicService topicService = new TopicService();
+            topicService.DeleteUser(userId, takeOverUserName, isTakeOver);
         }
 
         protected override bool Install(string presentAreaKey, long ownerId)

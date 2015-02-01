@@ -25,7 +25,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
-        IEnumerable<long> GetPendingApplyGroupIdsOfUser(long userId);
+        IEnumerable<long> GetPendingApplyTopicIdsOfUser(long userId);
 
         /// <summary>
         /// 获取群组的加入申请列表
@@ -34,7 +34,7 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>       
         /// <returns>加入申请分页数据</returns>
-        PagingDataSet<TopicMemberApply> GetGroupMemberApplies(long groupId, TopicMemberApplyStatus? applyStatus, int pageSize, int pageIndex);
+        PagingDataSet<TopicMemberApply> GetTopicMemberApplies(long groupId, TopicMemberApplyStatus? applyStatus, int pageSize, int pageIndex);
 
         /// <summary>
         /// 获取成员请求书

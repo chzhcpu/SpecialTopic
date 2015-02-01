@@ -12,6 +12,7 @@ using Tunynet.Repositories;
 using Tunynet;
 using Tunynet.Common;
 using Tunynet.Caching;
+using Spacebuilder.Common;
 
 namespace SpecialTopic.Topic
 {
@@ -82,7 +83,7 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
-        IEnumerable<TopicEntity> GroupMemberAlsoJoinedGroups(long groupId, int topNumber);
+        IEnumerable<TopicEntity> TopicMemberAlsoJoinedTopics(long groupId, int topNumber);
 
         /// <summary>
         /// 获取用户加入的群组列表
@@ -136,7 +137,7 @@ namespace SpecialTopic.Topic
         /// <param name="userId">被删除用户</param>
         /// <param name="takeOver">接管用户</param>
         /// <param name="takeOverAll">是否接管被删除用户的所有内容</param>
-        void DeleteUser(long userId, Common.User takeOver, bool takeOverAll);
+        void DeleteUser(long userId, User takeOver, bool takeOverAll);
 
         /// <summary>
         /// 根据审核状态获取群组数

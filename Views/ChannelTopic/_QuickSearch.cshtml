@@ -1,4 +1,4 @@
-﻿@model PagingDataSet<GroupEntity>
+﻿@model PagingDataSet<TopicEntity>
 @{
     GroupSearcher groupSearcher = (GroupSearcher)Spacebuilder.Search.SearcherFactory.GetSearcher(GroupSearcher.CODE);
     string keyword = Request.QueryString.GetString("keyword", string.Empty);

@@ -24,10 +24,10 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<GroupEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<TopicEntity, AuditEventArgs>(GroupEntityActivityModule_After);
-            EventBus<GroupEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<TopicEntity, AuditEventArgs>(GroupEntityPointModule_After);
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(InstallApplicationsModule_After);
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(ChangeThemeAppearanceUserCountModule_After);
+            EventBus<TopicEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<TopicEntity, AuditEventArgs>(TopicEntityActivityModule_After);
+            EventBus<TopicEntity, AuditEventArgs>.Instance().After += new CommonEventHandler<TopicEntity, AuditEventArgs>(TopicEntityPointModule_After);
+            EventBus<TopicEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(InstallApplicationsModule_After);
+            EventBus<TopicEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(ChangeThemeAppearanceUserCountModule_After);
         }
 
 
@@ -37,7 +37,7 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         /// <param name="group"></param>
         /// <param name="eventArgs"></param>
-        private void GroupEntityActivityModule_After(TopicEntity group, AuditEventArgs eventArgs)
+        private void TopicEntityActivityModule_After(TopicEntity group, AuditEventArgs eventArgs)
         {
             //生成动态
             ActivityService activityService = new ActivityService();
@@ -51,7 +51,7 @@ namespace SpecialTopic.Topic.EventModules
                 //生成Owner为用户的动态
                 Activity actvityOfBar = Activity.New();
                 actvityOfBar.ActivityItemKey = ActivityItemKeys.Instance().CreateGroup();
-                actvityOfBar.ApplicationId = GroupConfig.Instance().ApplicationId;
+                actvityOfBar.ApplicationId = TopicConfig.Instance().ApplicationId;
                 actvityOfBar.IsOriginalThread = true;
                 actvityOfBar.IsPrivate = !group.IsPublic;
                 actvityOfBar.UserId = group.UserId;
@@ -76,7 +76,7 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void GroupEntityPointModule_After(TopicEntity sender, AuditEventArgs eventArgs)
+        private void TopicEntityPointModule_After(TopicEntity sender, AuditEventArgs eventArgs)
         {
             string pointItemKey = string.Empty;
             string eventOperationType = string.Empty;

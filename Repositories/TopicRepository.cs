@@ -314,7 +314,7 @@ namespace SpecialTopic.Topic
         /// <param name="groupId">群组Id</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> GroupMemberAlsoJoinedGroups(long groupId, int topNumber)
+        public IEnumerable<TopicEntity> TopicMemberAlsoJoinedTopics(long groupId, int topNumber)
         {
             string cacheKey = string.Format("GroupMemberAlsoJoinedGroups::groupId-{0}", groupId);
             var ids = cacheService.Get<List<object>>(cacheKey);
@@ -574,7 +574,7 @@ namespace SpecialTopic.Topic
         /// <param name="userId">被删除用户</param>
         /// <param name="takeOver">接管用户</param>
         /// <param name="takeOverAll">是否接管被删除用户的所有内容</param>
-        public void DeleteUser(long userId, SpaceBuilder.Common.User takeOver, bool takeOverAll)
+        public void DeleteUser(long userId, Spacebuilder.Common.User takeOver, bool takeOverAll)
         {
             List<Sql> sqls = new List<Sql>();
             if (takeOver != null)
@@ -643,7 +643,7 @@ namespace SpecialTopic.Topic
                 if (publiclyAuditStatus == null)
                 {
                     AuditService auditService = new AuditService();
-                    publiclyAuditStatus = auditService.GetPubliclyAuditStatus(GroupConfig.Instance().ApplicationId);
+                    publiclyAuditStatus = auditService.GetPubliclyAuditStatus(TopicConfig.Instance().ApplicationId);
                 }
                 return publiclyAuditStatus.Value;
             }

@@ -41,7 +41,7 @@ namespace SpecialTopic.Topic
                     member.GroupId=sender.RelativeObjectId;
                     member.UserId = sender.UserId;
                     member.IsManager = false;
-                    groupService.CreateGroupMember(member);
+                    groupService.CreateTopicMember(member);
                 }
                 else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinGroup() && invitation.Status == InvitationStatus.Accept)
                 {
@@ -50,15 +50,15 @@ namespace SpecialTopic.Topic
                     member.GroupId = sender.RelativeObjectId;
                     member.UserId = sender.SenderUserId;
                     member.IsManager = false;
-                    groupService.CreateGroupMember(member);
-                    IEnumerable<long> a= groupService.GetGroupMemberApplies(sender.RelativeObjectId,TopicMemberApplyStatus.Pending,20,1).Where(n=>n.UserId==sender.SenderUserId).Select(m=>m.Id);
-                    groupService.ApproveGroupMemberApply(a,true);
+                    groupService.CreateTopicMember(member);
+                    IEnumerable<long> a = groupService.GetTopicMemberApplies(sender.RelativeObjectId, TopicMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);
+                    groupService.ApproveTopicMemberApply(a,true);
                 }
                 else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinGroup() && invitation.Status == InvitationStatus.Refuse)
                 {
                     TopicService groupService = new TopicService();
-                    IEnumerable<long> a = groupService.GetGroupMemberApplies(sender.RelativeObjectId, TopicMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);
-                    groupService.ApproveGroupMemberApply(a,false);
+                    IEnumerable<long> a = groupService.GetTopicMemberApplies(sender.RelativeObjectId, TopicMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);
+                    groupService.ApproveTopicMemberApply(a,false);
                 }
             }
         }

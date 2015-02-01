@@ -1,4 +1,4 @@
-﻿@model PagingDataSet<GroupEntity>
+﻿@model PagingDataSet<TopicEntity>
 @{
     Layout = "app-list-2cols";
     User spaceUser = ViewData.Get<User>("spaceUser", null);
@@ -22,7 +22,7 @@
             </ul>
         </div>
     </div>
-    @Html.Action("_TopGroups", "ChannelGroup", new { topNumber = 5, sortBy = SortBy_Group.StageHitTimes, viewName = "_TopGroups_ListForMyGroup" })
+    @Html.Action("_TopGroups", "ChannelGroup", new { topNumber = 5, sortBy = SortBy_Topic.StageHitTimes, viewName = "_TopGroups_ListForMyGroup" })
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-belong">
     <div class="tn-box-content tn-widget-content tn-corner-all">

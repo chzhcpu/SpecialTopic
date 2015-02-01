@@ -182,7 +182,7 @@ namespace SpecialTopic.Topic.Controllers
         public ActionResult _GroupMemberAlsoJoinedGroups(string spaceKey, int topNumber = 10)
         {
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<TopicEntity> groups = groupService.GroupMemberAlsoJoinedGroups(groupId, topNumber);
+            IEnumerable<TopicEntity> groups = groupService.TopicMemberAlsoJoinedTopics(groupId, topNumber);
             return View(groups);
         }
 
@@ -209,7 +209,7 @@ namespace SpecialTopic.Topic.Controllers
             TopicEntity group = groupService.Get(spaceKey);
             ViewData["User"] = group.User;
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<TopicMember> groupMembers = groupService.GetOnlineGroupMembers(groupId);
+            IEnumerable<TopicMember> groupMembers = groupService.GetOnlineTopicMembers(groupId);
             if (group.User.IsOnline)
             {
                 return View(groupMembers.Take(topNumber - 1));
@@ -360,7 +360,7 @@ namespace SpecialTopic.Topic.Controllers
             pageResourceManager.InsertTitlePart(group.GroupName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            PagingDataSet<TopicMember> groupMembers = groupService.GetGroupMembers(groupId, false, pageSize: 60, pageIndex: pageIndex);
+            PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(groupId, false, pageSize: 60, pageIndex: pageIndex);
 
 
 
@@ -389,7 +389,7 @@ namespace SpecialTopic.Topic.Controllers
             pageResourceManager.InsertTitlePart("管理成员列表页");
 
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<TopicMember> groupMember = groupService.GetGroupMembersAlsoIsMyFollowedUser(groupId, currentUser.UserId);
+            IEnumerable<TopicMember> groupMember = groupService.GetTopicMembersAlsoIsMyFollowedUser(groupId, currentUser.UserId);
             PagingDataSet<TopicMember> groupMembers = new PagingDataSet<TopicMember>(groupMember);
 
             if (currentUser.IsFollowed(group.User.UserId))
@@ -417,7 +417,7 @@ namespace SpecialTopic.Topic.Controllers
             if (!authorizer.Group_DeleteMember(group, userId))
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有删除管理员的权限"));
 
-            groupService.DeleteGroupMember(group.GroupId, userId);
+            groupService.DeleteTopicMember(group.GroupId, userId);
             return Json(new StatusMessageData(StatusMessageType.Success, "删除成功"));
         }
 
@@ -434,7 +434,7 @@ namespace SpecialTopic.Topic.Controllers
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return new EmptyResult();
-            PagingDataSet<TopicMember> groupMembers = groupService.GetGroupMembers(groupId, false, SortBy_TopicMember.DateCreated_Desc);
+            PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(groupId, false, SortBy_TopicMember.DateCreated_Desc);
             IEnumerable<TopicMember> members = groupMembers.Take(topNumber);
 
             return View(members);

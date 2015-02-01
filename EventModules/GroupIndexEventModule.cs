@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Spacebuilder.Search;
 using Tunynet.Common;
 using Tunynet.Events;
-using Spacebuilder.Group;
+using SpecialTopic.Topic;
 
 namespace Spacebuilder.Blog.EventModules
 {
@@ -17,7 +17,7 @@ namespace Spacebuilder.Blog.EventModules
     /// </summary>
     public class GroupIndexEventModule : IEventMoudle
     {
-        private GroupService groupService = new GroupService();
+        private TopicService topicService = new TopicService();
         private CategoryService categoryService = new CategoryService();
         private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
 
@@ -26,7 +26,7 @@ namespace Spacebuilder.Blog.EventModules
 
         public void RegisterEventHandler()
         {
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<GroupEntity, CommonEventArgs>(GroupEntity_After);
+            EventBus<TopicEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(GroupEntity_After);
 
             EventBus<string, TagEventArgs>.Instance().BatchAfter += new BatchEventHandler<string, TagEventArgs>(AddTagsToGroup_BatchAfter);
             EventBus<Tag>.Instance().Before += new CommonEventHandler<Tag, CommonEventArgs>(DeleteUpdateTags_Before);
@@ -50,7 +50,7 @@ namespace Spacebuilder.Blog.EventModules
                 {
                     groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
                 }
-                groupSearcher.Update(groupService.Get(groupId));
+                groupSearcher.Update(topicService.Get(groupId));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Spacebuilder.Blog.EventModules
                     {
                         groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
                     }
-                    groupSearcher.Update(groupService.GetGroupEntitiesByIds(groupIds));
+                    groupSearcher.Update(topicService.GetGroupEntitiesByIds(groupIds));
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace Spacebuilder.Blog.EventModules
                 {
                     groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
                 }
-                groupSearcher.Update(groupService.Get(groupId));
+                groupSearcher.Update(topicService.Get(groupId));
             }
         }
         /// <summary>
@@ -105,7 +105,7 @@ namespace Spacebuilder.Blog.EventModules
                     {
                         groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
                     }
-                    groupSearcher.Update(groupService.GetGroupEntitiesByIds(groupIds));
+                    groupSearcher.Update(topicService.GetGroupEntitiesByIds(groupIds));
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace Spacebuilder.Blog.EventModules
                 {
                     groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
                 }
-                groupSearcher.Update(groupService.Get(groupId));
+                groupSearcher.Update(topicService.Get(groupId));
             }
         }
         #endregion
@@ -127,7 +127,7 @@ namespace Spacebuilder.Blog.EventModules
         /// <summary>
         /// 群组增量索引
         /// </summary>
-        private void GroupEntity_After(GroupEntity group, CommonEventArgs eventArgs)
+        private void GroupEntity_After(TopicEntity group, CommonEventArgs eventArgs)
         {
             if (group == null)
             {

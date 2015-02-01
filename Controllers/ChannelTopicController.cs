@@ -41,7 +41,7 @@ namespace SpecialTopic.Topic.Controllers
         public UserService userService { get; set; }
         public AreaService areaService { get; set; }
         public FollowService followService { get; set; }
-        private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
+        private TagService tagService = new TagService(TenantTypeIds.Instance().Topic());
 
         /// <summary>
         /// 频道群组
@@ -50,7 +50,7 @@ namespace SpecialTopic.Topic.Controllers
         [HttpGet]
         public ActionResult Home()
         {
-            pageResourceManager.InsertTitlePart("群组首页");
+            pageResourceManager.InsertTitlePart("专题首页");
             return View();
         }
 
@@ -369,7 +369,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return Content(string.Empty);
 
-            IEnumerable<TopicMember> groupMembers = topicService.GetGroupMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Desc);
+            IEnumerable<TopicMember> groupMembers = topicService.GetTopicMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Desc);
             ViewData["activity"] = activity;
             ViewData["GroupMembers"] = groupMembers;
             return View(group);
@@ -386,7 +386,7 @@ namespace SpecialTopic.Topic.Controllers
             Activity activity = activityService.Get(ActivityId);
             if (activity == null)
                 return Content(string.Empty);
-            TopicMember groupMember = topicService.GetGroupMember(activity.SourceId);
+            TopicMember groupMember = topicService.GetTopicMember(activity.SourceId);
             if (groupMember == null)
                 return Content(string.Empty);
             TopicEntity group = topicService.Get(groupMember.GroupId);
@@ -530,7 +530,7 @@ namespace SpecialTopic.Topic.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
             try
             {
-                topicService.DeleteGroupMember(group.GroupId, currentUser.UserId);
+                topicService.DeleteTopicMember(group.GroupId, currentUser.UserId);
             }
             catch
             {
@@ -571,7 +571,7 @@ namespace SpecialTopic.Topic.Controllers
                 member.UserId = currentUser.UserId;
                 member.GroupId = group.GroupId;
                 member.IsManager = false;
-                topicService.CreateGroupMember(member);
+                topicService.CreateTopicMember(member);
                 message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
             }
             else
@@ -626,7 +626,7 @@ namespace SpecialTopic.Topic.Controllers
                 apply.ApplyStatus = TopicMemberApplyStatus.Pending;
                 apply.GroupId = group.GroupId;
                 apply.UserId = UserContext.CurrentUser.UserId;
-                topicService.CreateGroupMemberApply(apply);
+                topicService.CreateTopicMemberApply(apply);
                 message = new StatusMessageData(StatusMessageType.Success, "申请已发出，请等待！");
             }
             else
@@ -680,7 +680,7 @@ namespace SpecialTopic.Topic.Controllers
                     member.UserId = UserContext.CurrentUser.UserId;
                     member.GroupId = group.GroupId;
                     member.IsManager = false;
-                    topicService.CreateGroupMember(member);
+                    topicService.CreateTopicMember(member);
                     message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
                 }
                 else
@@ -922,7 +922,7 @@ namespace SpecialTopic.Topic.Controllers
             var currentUser = UserContext.CurrentUser;
             if (currentUser != null)
             {
-                if (currentUser.UserId == spaceUser.UserId || authorizer.IsAdministrator(GroupConfig.Instance().ApplicationId))
+                if (currentUser.UserId == spaceUser.UserId || authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                     ignoreAudit = true;
 
                 if (currentUser.UserId != spaceUser.UserId)

@@ -25,7 +25,7 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         void IEventMoudle.RegisterEventHandler()
         {
-            EventBus<GroupEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(GroupOperationLogEventModule_After);
+            EventBus<TopicEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(GroupOperationLogEventModule_After);
         }
 
 
@@ -44,7 +44,7 @@ namespace SpecialTopic.Topic.EventModules
             {
                 OperationLogEntry entry = new OperationLogEntry(eventArgs.OperatorInfo);
                 entry.ApplicationId = entry.ApplicationId;
-                entry.Source = GroupConfig.Instance().ApplicationName;
+                entry.Source = TopicConfig.Instance().ApplicationName;
                 entry.OperationType = eventArgs.EventOperationType;
                 entry.OperationObjectName = senders.GroupName;
                 entry.OperationObjectId = senders.GroupId;
