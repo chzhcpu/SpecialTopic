@@ -29,7 +29,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组实体
     /// </summary>
-    [TableName("spb_Topics")]
+    [TableName("spt_Topics")]
     [PrimaryKey("TopicId", autoIncrement = false)]
     [CacheSetting(true, PropertyNamesOfArea = "UserId")]
     [Serializable]
@@ -40,9 +40,9 @@ namespace SpecialTopic.Topic
         /// </summary>
         public static TopicEntity New()
         {
-            TopicEntity group = new TopicEntity()
+            TopicEntity topic = new TopicEntity()
             {
-                GroupName = string.Empty,
+                TopicName = string.Empty,
                 Description = string.Empty,
                 Logo = string.Empty,
                 ThemeAppearance = string.Empty,
@@ -53,7 +53,7 @@ namespace SpecialTopic.Topic
 
 
             };
-            return group;
+            return topic;
         }
 
         #region 需持久化属性
@@ -61,17 +61,17 @@ namespace SpecialTopic.Topic
         /// <summary>
         ///GroupId
         /// </summary>
-        public long GroupId { get; set; }
+        public long TopicId { get; set; }
 
         /// <summary>
         ///群组名称
         /// </summary>
-        public string GroupName { get; set; }
+        public string TopicName { get; set; }
 
         /// <summary>
         ///群组标识（个性网址的关键组成部分）
         /// </summary>
-        public string GroupKey { get; set; }
+        public string TopicKey { get; set; }
 
         /// <summary>
         ///群组介绍
@@ -171,11 +171,11 @@ namespace SpecialTopic.Topic
         /// 管理员列表
         /// </summary>
         [Ignore]
-        public IEnumerable<User> GroupManagers
+        public IEnumerable<User> TopicManagers
         {
             get
             {
-                return new TopicService().GetGroupManagers(this.GroupId);
+                return new TopicService().GetGroupManagers(this.TopicId);
             }
         }
 
@@ -200,7 +200,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                IEnumerable<Category> categories = new CategoryService().GetCategoriesOfItem(this.GroupId, null, TenantTypeIds.Instance().Group());
+                IEnumerable<Category> categories = new CategoryService().GetCategoriesOfItem(this.TopicId, null, TenantTypeIds.Instance().Group());
                 return categories == null || categories.Count() == 0 ? null : categories.FirstOrDefault();
             }
         }
@@ -230,7 +230,7 @@ namespace SpecialTopic.Topic
                 if (tagNames == null)
                 {
                     TagService service = new TagService(TenantTypeIds.Instance().Group());
-                    IEnumerable<ItemInTag> tags = service.GetItemInTagsOfItem(this.GroupId);
+                    IEnumerable<ItemInTag> tags = service.GetItemInTagsOfItem(this.TopicId);
                     if (tags == null)
                         return new List<string>();
                     return tags.Select(n => n.TagName);
@@ -274,7 +274,7 @@ namespace SpecialTopic.Topic
 
         #region IEntity 成员
 
-        object IEntity.EntityId { get { return this.GroupId; } }
+        object IEntity.EntityId { get { return this.TopicId; } }
 
         bool IEntity.IsDeletedInDatabase { get; set; }
 
@@ -302,7 +302,7 @@ namespace SpecialTopic.Topic
             get
             {
                 CountService countService = new CountService(TenantTypeIds.Instance().Group());
-                return countService.Get(CountTypes.Instance().HitTimes(), this.GroupId);
+                return countService.Get(CountTypes.Instance().HitTimes(), this.TopicId);
             }
         }
 
@@ -315,7 +315,7 @@ namespace SpecialTopic.Topic
             get
             {
                 CountService countService = new CountService(TenantTypeIds.Instance().Group());
-                return countService.GetStageCount(CountTypes.Instance().HitTimes(), 7, this.GroupId);
+                return countService.GetStageCount(CountTypes.Instance().HitTimes(), 7, this.TopicId);
             }
         }
 
@@ -328,7 +328,7 @@ namespace SpecialTopic.Topic
             get
             {
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().Group());
-                return ownerDataService.GetLong(this.GroupId, "Bar-ThreadCount") + ownerDataService.GetLong(this.GroupId, "Bar-PostCount");
+                return ownerDataService.GetLong(this.TopicId, "Bar-ThreadCount") + ownerDataService.GetLong(this.TopicId, "Bar-PostCount");
             }
         }
 
@@ -344,7 +344,7 @@ namespace SpecialTopic.Topic
                 IEnumerable<string> dataKeys = OwnerDataSettings.GetDataKeys(tenantTypeId);
                 if (dataKeys != null && dataKeys.Count() > 0)
                 {
-                    return new OwnerDataService(tenantTypeId).GetTotalCount(dataKeys, this.GroupId);
+                    return new OwnerDataService(tenantTypeId).GetTotalCount(dataKeys, this.TopicId);
                 }
 
                 return 0;

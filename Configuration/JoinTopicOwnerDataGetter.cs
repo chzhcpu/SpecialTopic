@@ -37,7 +37,7 @@ namespace SpecialTopic.Topic
             if (string.IsNullOrEmpty(spaceKey) && ownerId.HasValue)
                 spaceKey = UserIdToUserNameDictionary.GetUserName(ownerId.Value);
 
-            return SiteUrls.Instance().UserJoinedGroups(spaceKey);
+            return SiteUrls.Instance().UserJoinedTopics(spaceKey);
         }
 
         /// <summary>

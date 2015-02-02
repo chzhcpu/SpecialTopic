@@ -38,7 +38,7 @@ namespace SpecialTopic.Topic
         {
             TopicEntity group = groupRepository.Get(groupId);
             if (group != null)
-                return group.GroupKey;
+                return group.TopicKey;
             return null;
         }
 

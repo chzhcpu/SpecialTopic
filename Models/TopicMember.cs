@@ -19,7 +19,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组成员实体
     /// </summary>
-    [TableName("spb_TopicMembers")]
+    [TableName("spt_TopicMembers")]
     [PrimaryKey("Id", autoIncrement = true)]
     [CacheSetting(true, PropertyNamesOfArea = "UserId,TopicId")]
     [Serializable]

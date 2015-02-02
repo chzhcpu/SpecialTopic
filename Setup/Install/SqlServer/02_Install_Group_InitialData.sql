@@ -52,7 +52,7 @@ INSERT [dbo].[tn_PointItems] ([ItemKey], [ApplicationId], [ItemName], [DisplayOr
 
 -----租户类型
 DELETE FROM [dbo].[tn_TenantTypes] WHERE [ApplicationId]=9002
-INSERT [dbo].[tn_TenantTypes] ([TenantTypeId], [ApplicationId], [Name], [ClassType]) VALUES (N'900200', 9002, N'专题', N'Spacebuilder.Topic.TopicEntity,Spacebuilder.Topic')
+INSERT [dbo].[tn_TenantTypes] ([TenantTypeId], [ApplicationId], [Name], [ClassType]) VALUES (N'900200', 9002, N'专题', N'SpecialTopic.Topic.TopicEntity,SpecialTopic.Topic')
 
 -----租户使相关服务
 DELETE FROM [dbo].[tn_TenantTypesInServices] WHERE [TenantTypeId]='900200'
@@ -63,8 +63,8 @@ INSERT [dbo].[tn_TenantTypesInServices] ([TenantTypeId], [ServiceKey]) VALUES (N
 INSERT [dbo].[tn_TenantTypesInServices] ([TenantTypeId], [ServiceKey]) VALUES (N'900200', N'Visit')
 
 -----自运行任务
-DELETE FROM [dbo].[tn_TaskDetails] WHERE [ClassType]=N'Spacebuilder.Topic.CalculateGrowthValuesTask,Spacebuilder.Topic'
-INSERT [dbo].[tn_TaskDetails] ([Name], [TaskRule], [ClassType], [Enabled], [RunAtRestart], [IsRunning], [LastStart], [LastEnd], [LastIsSuccess], [NextStart], [StartDate], [EndDate], [RunAtServer]) VALUES (N'更新专题的成长值', N'0 0 0/12 * * ?', N'Spacebuilder.Topic.CalculateGrowthValuesTask,Spacebuilder.Topic', 1, 0, 0, N'', N'', 1, N'', N'', NULL, 0)
+DELETE FROM [dbo].[tn_TaskDetails] WHERE [ClassType]=N'SpecialTopic.Topic.CalculateGrowthValuesTask,SpecialTopic.Topic'
+INSERT [dbo].[tn_TaskDetails] ([Name], [TaskRule], [ClassType], [Enabled], [RunAtRestart], [IsRunning], [LastStart], [LastEnd], [LastIsSuccess], [NextStart], [StartDate], [EndDate], [RunAtServer]) VALUES (N'更新专题的成长值', N'0 0 0/12 * * ?', N'SpecialTopic.Topic.CalculateGrowthValuesTask,SpecialTopic.Topic', 1, 0, 0, N'', N'', 1, N'', N'', NULL, 0)
 
 -----推荐
 DELETE FROM [dbo].[tn_RecommendItemTypes] WHERE [TypeId] IN ('00001111','90020001')

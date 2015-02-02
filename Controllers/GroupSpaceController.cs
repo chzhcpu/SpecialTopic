@@ -160,7 +160,7 @@ namespace SpecialTopic.Topic.Controllers
             //已修复
             long userId = Request.Form.Get<long>("userId", 0);
             long id = Request.Form.Get<long>("id", 0);
-            if (authorizer.Group_DeleteVisitor(group.GroupId, userId))
+            if (authorizer.Group_DeleteVisitor(group.TopicId, userId))
             {
                 visitService.Delete(id);
                 return RedirectToAction("_LastGroupVisitors");
@@ -251,7 +251,7 @@ namespace SpecialTopic.Topic.Controllers
             if (!authorizer.Group_Manage(group))
                 return Json(new StatusMessageData(StatusMessageType.Error, "没有更新公告的权限"));
 
-            groupService.UpdateAnnouncement(group.GroupId, announcement);
+            groupService.UpdateAnnouncement(group.TopicId, announcement);
             return Json(new { shortAnnouncement = StringUtility.Trim(announcement, 100), longAnnouncement = announcement });
         }
 
@@ -357,7 +357,7 @@ namespace SpecialTopic.Topic.Controllers
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
-            pageResourceManager.InsertTitlePart(group.GroupName);
+            pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
             PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(groupId, false, pageSize: 60, pageIndex: pageIndex);
@@ -385,7 +385,7 @@ namespace SpecialTopic.Topic.Controllers
             if (currentUser == null)
                 return Redirect(SiteUrls.Instance().Login(true));
 
-            pageResourceManager.InsertTitlePart(group.GroupName);
+            pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
 
             long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
@@ -417,7 +417,7 @@ namespace SpecialTopic.Topic.Controllers
             if (!authorizer.Group_DeleteMember(group, userId))
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有删除管理员的权限"));
 
-            groupService.DeleteTopicMember(group.GroupId, userId);
+            groupService.DeleteTopicMember(group.TopicId, userId);
             return Json(new StatusMessageData(StatusMessageType.Success, "删除成功"));
         }
 
@@ -457,7 +457,7 @@ namespace SpecialTopic.Topic.Controllers
             IEnumerable<Navigation> navigations = new List<Navigation>();
 
             NavigationService navigationService = new NavigationService();
-            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.GroupId);
+            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.TopicId);
 
             if (navigation != null && navigation.Children.Count() > 0)
             {
@@ -465,7 +465,7 @@ namespace SpecialTopic.Topic.Controllers
             }
             else
             {
-                navigations = navigationService.GetRootNavigations(PresentAreaKeysOfBuiltIn.GroupSpace, group.GroupId);
+                navigations = navigationService.GetRootNavigations(PresentAreaKeysOfBuiltIn.GroupSpace, group.TopicId);
             }
 
             return View(navigations);
@@ -497,7 +497,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return HttpNotFound();
 
-            IEnumerable<ApplicationBase> applications = applicationService.GetInstalledApplicationsOfOwner(PresentAreaKeysOfBuiltIn.GroupSpace, group.GroupId);
+            IEnumerable<ApplicationBase> applications = applicationService.GetInstalledApplicationsOfOwner(PresentAreaKeysOfBuiltIn.GroupSpace, group.TopicId);
             ViewData["applications"] = applications;
             return View(group);
         }

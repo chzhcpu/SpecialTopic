@@ -18,7 +18,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组成员申请实体
     /// </summary>
-    [TableName("spb_TopicMemberApplies")]
+    [TableName("spt_TopicMemberApplies")]
     [PrimaryKey("Id", autoIncrement = true)]
     [CacheSetting(true, PropertyNamesOfArea = "UserId,GroupId")]
     [Serializable]

@@ -13,7 +13,7 @@
         <ul class="tn-list">
             @foreach (GroupEntity group in Model)
             {
-                string groupUrl = SiteUrls.Instance().GroupHome(group.GroupKey);
+                string groupUrl = SiteUrls.Instance().GroupHome(group.TopicKey);
                 <li class="tn-list-item tnui-option" data-search-url="@groupUrl" data-search-key="@group.GroupName">
                     <div class="tn-list-item-area-main">
                         <div class="tn-list-item-row tn-list-item-heading">

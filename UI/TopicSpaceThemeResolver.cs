@@ -19,7 +19,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 当前皮肤获取器接口
     /// </summary>
-    public class GroupSpaceThemeResolver : IThemeResolver
+    public class TopicSpaceThemeResolver : IThemeResolver
     {
 
         #region IThemeResolver 成员
@@ -92,14 +92,14 @@ namespace SpecialTopic.Topic
 
             if (group.IsUseCustomStyle)
             {
-                var customStyleEntity = new CustomStyleService().Get(presentArea.PresentAreaKey, group.GroupId);
+                var customStyleEntity = new CustomStyleService().Get(presentArea.PresentAreaKey, group.TopicId);
                 if (customStyleEntity == null)
                     return;
                 CustomStyle customStyle = customStyleEntity.CustomStyle;
                 if (customStyle == null)
                     return;
                 string themeCssPath = string.Format("{0}/Custom/theme{1}.css", presentArea.ThemeLocation, customStyle.IsDark ? "-deep" : "");
-                string appearanceCssPath = SiteUrls.Instance().CustomStyle(presentArea.PresentAreaKey, group.GroupId);
+                string appearanceCssPath = SiteUrls.Instance().CustomStyle(presentArea.PresentAreaKey, group.TopicId);
                 resourceManager.IncludeStyle(themeCssPath);
                 resourceManager.IncludeStyle(appearanceCssPath);
                 StringBuilder builder = new StringBuilder();

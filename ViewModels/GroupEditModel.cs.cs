@@ -127,7 +127,7 @@ namespace SpecialTopic.Topic
                 groupEntity = TopicEntity.New();
                 groupEntity.UserId = UserContext.CurrentUser.UserId;
                 groupEntity.DateCreated = DateTime.UtcNow;
-                groupEntity.GroupKey = this.GroupKey;
+                groupEntity.TopicKey = this.GroupKey;
             }
             //编辑群组
             else
@@ -136,7 +136,7 @@ namespace SpecialTopic.Topic
                 groupEntity = groupService.Get(this.GroupId);
             }
             groupEntity.IsPublic = this.IsPublic;
-            groupEntity.GroupName = this.GroupName;
+            groupEntity.TopicName = this.GroupName;
             if (Logo != null)
             {
                 groupEntity.Logo = this.Logo;
@@ -168,10 +168,10 @@ namespace SpecialTopic.Topic
         {
             return new GroupEditModel
             {
-                GroupId = groupEntity.GroupId,
+                GroupId = groupEntity.TopicId,
                 IsPublic = groupEntity.IsPublic,
-                GroupName = groupEntity.GroupName,
-                GroupKey = groupEntity.GroupKey,
+                GroupName = groupEntity.TopicName,
+                GroupKey = groupEntity.TopicKey,
                 Logo = groupEntity.Logo,
                 Description = Formatter.FormatMultiLinePlainTextForEdit(groupEntity.Description, true),
                 AreaCode = groupEntity.AreaCode,

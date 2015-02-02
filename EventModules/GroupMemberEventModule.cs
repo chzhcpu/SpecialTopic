@@ -59,8 +59,8 @@ namespace SpecialTopic.Topic.EventModules
                 actvityOfGroup.ReferenceTenantTypeId = string.Empty;
                 actvityOfGroup.SourceId = groupMember.Id;
                 actvityOfGroup.TenantTypeId = TenantTypeIds.Instance().User();
-                actvityOfGroup.OwnerId = group.GroupId;
-                actvityOfGroup.OwnerName = group.GroupName;
+                actvityOfGroup.OwnerId = group.TopicId;
+                actvityOfGroup.OwnerName = group.TopicName;
                 actvityOfGroup.OwnerType = ActivityOwnerTypes.Instance().Group();
 
                 activityService.Generate(actvityOfGroup, false);
@@ -115,7 +115,7 @@ namespace SpecialTopic.Topic.EventModules
 
             List<long> toUserIds = new List<long>();
             toUserIds.Add(entity.UserId);
-            toUserIds.AddRange(entity.GroupManagers.Select(n => n.UserId));
+            toUserIds.AddRange(entity.TopicManagers.Select(n => n.UserId));
             //删除群组成员通知群管理员
             if (eventArgs.EventOperationType == EventOperationType.Instance().Delete())
             {
@@ -131,8 +131,8 @@ namespace SpecialTopic.Topic.EventModules
                     notice.LeadingActor = senderUser.DisplayName;
                     notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(sender.UserId));
                     notice.RelativeObjectId = sender.GroupId;
-                    notice.RelativeObjectName = StringUtility.Trim(entity.GroupName, 64);
-                    notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(entity.GroupKey));
+                    notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
+                    notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                     notice.TemplateName = NoticeTemplateNames.Instance().MemberQuit();
                     noticeService.Create(notice);
                 }
@@ -151,8 +151,8 @@ namespace SpecialTopic.Topic.EventModules
                     notice.LeadingActor = senderUser.DisplayName;
                     notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(sender.UserId));
                     notice.RelativeObjectId = sender.GroupId;
-                    notice.RelativeObjectName = StringUtility.Trim(entity.GroupName, 64);
-                    notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(entity.GroupKey));
+                    notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
+                    notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                     notice.TemplateName = NoticeTemplateNames.Instance().MemberJoin();
                     noticeService.Create(notice);
                 }
@@ -167,7 +167,7 @@ namespace SpecialTopic.Topic.EventModules
                 //notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(sender.UserId));
                 //notice.RelativeObjectId = sender.GroupId;
                 //notice.RelativeObjectName = StringUtility.Trim(entity.GroupName, 64);
-                //notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(entity.GroupKey));
+                //notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.GroupKey));
                 //notice.TemplateName = NoticeTemplateNames.Instance().MemberApplyApproved();
                 //noticeService.Create(notice);
             }
@@ -202,8 +202,8 @@ namespace SpecialTopic.Topic.EventModules
             notice.LeadingActor = string.Empty;
             notice.LeadingActorUrl = string.Empty;
             notice.RelativeObjectId = sender.GroupId;
-            notice.RelativeObjectName = StringUtility.Trim(entity.GroupName, 64);
-            notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(entity.GroupKey));
+            notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
+            notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
 
             if (eventArgs.EventOperationType == EventOperationType.Instance().SetGroupManager())
             {

@@ -46,8 +46,8 @@ namespace SpecialTopic.Topic.EventModules
                 entry.ApplicationId = entry.ApplicationId;
                 entry.Source = TopicConfig.Instance().ApplicationName;
                 entry.OperationType = eventArgs.EventOperationType;
-                entry.OperationObjectName = senders.GroupName;
-                entry.OperationObjectId = senders.GroupId;
+                entry.OperationObjectName = senders.TopicName;
+                entry.OperationObjectId = senders.TopicId;
                 entry.Description = string.Format(ResourceAccessor.GetString("OperationLog_Pattern_" + eventArgs.EventOperationType, entry.ApplicationId), "群组", entry.OperationObjectName);
 
                 OperationLogService logService = Tunynet.DIContainer.Resolve<OperationLogService>();

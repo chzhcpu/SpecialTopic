@@ -45,8 +45,8 @@ namespace SpecialTopic.Topic
             Document doc = new Document();
 
             //索引群组基本信息
-            doc.Add(new Field(GroupIndexDocument.GroupId, group.GroupId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.GroupName, group.GroupName, Field.Store.YES, Field.Index.ANALYZED));
+            doc.Add(new Field(GroupIndexDocument.GroupId, group.TopicId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(GroupIndexDocument.GroupName, group.TopicName, Field.Store.YES, Field.Index.ANALYZED));
             doc.Add(new Field(GroupIndexDocument.Description, group.Description, Field.Store.NO, Field.Index.ANALYZED));
             doc.Add(new Field(GroupIndexDocument.IsPublic, group.IsPublic==true ? "1" : "0", Field.Store.YES, Field.Index.NOT_ANALYZED));
             doc.Add(new Field(GroupIndexDocument.AreaCode, group.AreaCode, Field.Store.YES, Field.Index.NOT_ANALYZED));

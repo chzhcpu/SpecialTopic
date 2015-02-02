@@ -152,11 +152,11 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string GroupHome(this SiteUrls siteUrls, long groupId)
+        public static string TopicHome(this SiteUrls siteUrls, long groupId)
         {
             RouteValueDictionary dic = new RouteValueDictionary();
             dic.Add("spaceKey", TopicIdToTopicKeyDictionary.GetGroupKey(groupId));
-            return CachedUrlHelper.Action("Home", "GroupSpaceTheme", TopicAreaName, dic);
+            return CachedUrlHelper.Action("Home", "TopicSpaceTheme", TopicAreaName, dic);
         }
 
 
@@ -165,7 +165,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string GroupHome(this SiteUrls siteUrls, string spaceKey)
+        public static string TopicHome(this SiteUrls siteUrls, string spaceKey)
         {
             RouteValueDictionary dic = new RouteValueDictionary();
             dic.Add("spaceKey", spaceKey);
@@ -376,7 +376,7 @@ namespace SpecialTopic.Topic
         /// <param name="categoryId"></param>
         /// <param name="sortBy"></param>
         /// <returns></returns>
-        public static string FindGroup(this SiteUrls siteUrls, string areaCode = null, long? categoryId = null, SortBy_Topic? sortBy = null, string nameKeyword = null)
+        public static string FindTopic(this SiteUrls siteUrls, string areaCode = null, long? categoryId = null, SortBy_Topic? sortBy = null, string nameKeyword = null)
         {
             RouteValueDictionary routeValueDictionary = new RouteValueDictionary();
             if (!string.IsNullOrEmpty(areaCode))
@@ -413,7 +413,7 @@ namespace SpecialTopic.Topic
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
-        public static string UserJoinedGroups(this SiteUrls siteUrls, string spaceKey = null, int pageIndex = 1, bool isGetMore = false)
+        public static string UserJoinedTopics(this SiteUrls siteUrls, string spaceKey = null, int pageIndex = 1, bool isGetMore = false)
         {
             RouteValueDictionary dic = new RouteValueDictionary();
             if (!string.IsNullOrEmpty(spaceKey))
@@ -422,7 +422,7 @@ namespace SpecialTopic.Topic
                 dic.Add("pageIndex", pageIndex);
             if (isGetMore)
                 dic.Add("isGetMore", isGetMore);
-            return CachedUrlHelper.Action("UserJoinedGroups", "ChannelTopic", TopicAreaName, dic);
+            return CachedUrlHelper.Action("UserJoinedTopics", "ChannelTopic", TopicAreaName, dic);
         }
         /// <summary>
         /// 用户创建的群组

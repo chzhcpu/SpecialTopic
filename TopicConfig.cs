@@ -13,9 +13,9 @@ using Tunynet.Common.Configuration;
 using Tunynet.Events;
 using Spacebuilder.Common;
 using SpecialTopic.Topic.EventModules;
-using Spacebuilder.Blog;
+//using Spacebuilder.Blog;
 using Spacebuilder.Search;
-using Spacebuilder.Blog.EventModules;
+//using Spacebuilder.Blog.EventModules;
 using Tunynet.UI;
 using SpecialTopic.Topic.Configuration;
 using System.Collections.Generic;
@@ -53,18 +53,18 @@ namespace SpecialTopic.Topic
             : base(xElement)
         {
             this.tenantLogoSettingsElement = xElement.Element("tenantLogoSettings");
-            XAttribute att = xElement.Attribute("minUserRankOfCreateGroup");
+            XAttribute att = xElement.Attribute("minUserRankOfCreateTopic");
             if (att != null)
-                int.TryParse(att.Value, out this.minUserRankOfCreateGroup);
+                int.TryParse(att.Value, out this.minUserRankOfCreateTopic);
         }
 
-        private int minUserRankOfCreateGroup = 5;
+        private int minUserRankOfCreateTopic = 5;
         /// <summary>
         /// 允许用户创建群组的最小等级数
         /// </summary>
-        public int MinUserRankOfCreateGroup
+        public int MinUserRankOfCreateTopic
         {
-            get { return minUserRankOfCreateGroup; }
+            get { return minUserRankOfCreateTopic; }
         }
 
         private int maxDaysOfCreateMemeberActivity = 3;
@@ -120,9 +120,9 @@ namespace SpecialTopic.Topic
             containerBuilder.Register(c => new DefaultTopicIdToTopicKeyDictionary()).As<TopicIdToTopicKeyDictionary>().SingleInstance();
 
             //注册全文检索搜索器
-            containerBuilder.Register(c => new GroupSearcher("群组", "~/App_Data/IndexFiles/Group", true, 7)).As<ISearcher>().Named<ISearcher>(GroupSearcher.CODE).SingleInstance();
+            containerBuilder.Register(c => new GroupSearcher("专题", "~/App_Data/IndexFiles/Group", true, 7)).As<ISearcher>().Named<ISearcher>(GroupSearcher.CODE).SingleInstance();
 
-            ThemeService.RegisterThemeResolver(PresentAreaKeysOfBuiltIn.GroupSpace, new GroupSpaceThemeResolver());
+            ThemeService.RegisterThemeResolver(PresentAreaKeysOfBuiltIn.GroupSpace, new TopicSpaceThemeResolver());
 
             //群组推荐
             containerBuilder.Register(c => new TopicApplicationStatisticDataGetter()).Named<IApplicationStatisticDataGetter>(this.ApplicationKey).SingleInstance();
@@ -135,9 +135,9 @@ namespace SpecialTopic.Topic
         public override void Load()
         {
             base.Load();
-            TagUrlGetterManager.RegisterGetter(TenantTypeIds.Instance().Group(), new GroupTagUrlGetter());
+            TagUrlGetterManager.RegisterGetter(TenantTypeIds.Instance().Topic(), new GroupTagUrlGetter());
             //注册群组计数服务
-            CountService countService = new CountService(TenantTypeIds.Instance().Group());
+            CountService countService = new CountService(TenantTypeIds.Instance().Topic());
             countService.RegisterCounts();//注册计数服务
             countService.RegisterCountPerDay();//需要统计阶段计数时，需注册每日计数服务
             countService.RegisterStageCount(CountTypes.Instance().HitTimes(), 7);

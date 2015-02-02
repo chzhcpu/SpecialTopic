@@ -55,7 +55,7 @@ namespace SpecialTopic.Topic.EventModules
                 {
                     List<long> toUserIds = new List<long>();
                     toUserIds.Add(entity.UserId);
-                    toUserIds.AddRange(entity.GroupManagers.Select(n => n.UserId));
+                    toUserIds.AddRange(entity.TopicManagers.Select(n => n.UserId));
                     foreach (var toUserId in toUserIds)
                     {
                         //申请加入群组的请求
@@ -69,8 +69,8 @@ namespace SpecialTopic.Topic.EventModules
                             invitation.Sender = senderUser.DisplayName;
                             invitation.SenderUrl = SiteUrls.Instance().SpaceHome(sender.UserId);
                             invitation.RelativeObjectId = sender.GroupId;
-                            invitation.RelativeObjectName = entity.GroupName;
-                            invitation.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(entity.GroupKey));
+                            invitation.RelativeObjectName = entity.TopicName;
+                            invitation.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                             invitation.Remark = sender.ApplyReason;
                             invitationService.Create(invitation);
                         }
@@ -106,8 +106,8 @@ namespace SpecialTopic.Topic.EventModules
             //notice.LeadingActor = UserContext.CurrentUser.DisplayName;
             //notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(UserContext.CurrentUser.UserId));
             notice.RelativeObjectId = sender.GroupId;
-            notice.RelativeObjectName = StringUtility.Trim(entity.GroupName, 64);
-            notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(entity.GroupKey));
+            notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
+            notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
             notice.TemplateName = noticeTemplateName;
             noticeService.Create(notice);
         }

@@ -187,7 +187,7 @@ namespace SpecialTopic.Topic
             InvitationService invitationService = new InvitationService();
             foreach (var userId in userIds)
             {
-                if (!IsMember(group.GroupId, userId))
+                if (!IsMember(group.TopicId, userId))
                 {
                     Invitation invitation = Invitation.New();
                     invitation.ApplicationId = TopicConfig.Instance().ApplicationId;
@@ -196,9 +196,9 @@ namespace SpecialTopic.Topic
                     invitation.SenderUserId = sender.UserId;
                     invitation.Sender = sender.DisplayName;
                     invitation.SenderUrl = SiteUrls.Instance().SpaceHome(sender.UserId);
-                    invitation.RelativeObjectId = group.GroupId;
-                    invitation.RelativeObjectName = group.GroupName;
-                    invitation.RelativeObjectUrl = SiteUrls.Instance().GroupHome(group.GroupKey);
+                    invitation.RelativeObjectId = group.TopicId;
+                    invitation.RelativeObjectName = group.TopicName;
+                    invitation.RelativeObjectUrl = SiteUrls.Instance().TopicHome(group.TopicKey);
                     invitation.Remark = remark;
                     invitationService.Create(invitation);
                 }

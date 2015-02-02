@@ -49,9 +49,9 @@ namespace SpecialTopic.Topic
             if (authorizer.IsAdministrator(TopicConfig.Instance().ApplicationId))
                 return true;
 
-            if (currentUser.Rank < TopicConfig.Instance().MinUserRankOfCreateGroup)
+            if (currentUser.Rank < TopicConfig.Instance().MinUserRankOfCreateTopic)
             {
-                errorMessage = string.Format("只有等级达到{0}级，才能创建群组，您现在的等级是{1}", TopicConfig.Instance().MinUserRankOfCreateGroup, currentUser.Rank);
+                errorMessage = string.Format("只有等级达到{0}级，才能创建群组，您现在的等级是{1}", TopicConfig.Instance().MinUserRankOfCreateTopic, currentUser.Rank);
                 return false;
             }
             return true;
@@ -151,7 +151,7 @@ namespace SpecialTopic.Topic
                 return true;
             TopicService groupService = new TopicService();
             //群管理员
-            if (groupService.IsManager(group.GroupId, currentUser.UserId) && !groupService.IsManager(group.GroupId, userId))
+            if (groupService.IsManager(group.TopicId, currentUser.UserId) && !groupService.IsManager(group.TopicId, userId))
             {
                 return true;
             }
@@ -205,7 +205,7 @@ namespace SpecialTopic.Topic
 
             TopicService groupService = new TopicService();
             //群管理员
-            if (groupService.IsManager(group.GroupId, currentUser.UserId))
+            if (groupService.IsManager(group.TopicId, currentUser.UserId))
                 return true;
 
             return false;
@@ -227,7 +227,7 @@ namespace SpecialTopic.Topic
             TopicService groupService = new TopicService();
             if (authorizer.Group_Manage(group))
                 return true;
-            if (group.EnableMemberInvite && groupService.IsMember(group.GroupId, UserContext.CurrentUser.UserId))
+            if (group.EnableMemberInvite && groupService.IsMember(group.TopicId, UserContext.CurrentUser.UserId))
                 return true;
 
             return false;
@@ -255,7 +255,7 @@ namespace SpecialTopic.Topic
                     return true;
 
                 TopicService groupService = new TopicService();
-                if (groupService.IsMember(group.GroupId, UserContext.CurrentUser.UserId))
+                if (groupService.IsMember(group.TopicId, UserContext.CurrentUser.UserId))
                     return true;
             }
 

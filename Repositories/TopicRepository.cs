@@ -104,7 +104,7 @@ namespace SpecialTopic.Topic
             int affectCount = base.Delete(entity);
             if (affectCount > 0)
             {
-                var sql = Sql.Builder.Append("delete from spb_GroupMemberApplies").Where("GroupId=@0", entity.GroupId);
+                var sql = Sql.Builder.Append("delete from spb_GroupMemberApplies").Where("GroupId=@0", entity.TopicId);
                 CreateDAO().Execute(sql);
             }
             return affectCount;
@@ -117,7 +117,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public override object Insert(TopicEntity entity)
         {
-            entity.GroupId = IdGenerator.Next();
+            entity.TopicId = IdGenerator.Next();
             return base.Insert(entity);
         }
 
@@ -153,7 +153,7 @@ namespace SpecialTopic.Topic
                 () =>
                 {
                     StringBuilder cacheKey = new StringBuilder();
-                    cacheKey.AppendFormat("TopGroups::areaCode-{0}:categoryId-{1}:sortBy-{2}", areaCode, categoryId, sortBy);
+                    cacheKey.AppendFormat("TopTopics::areaCode-{0}:categoryId-{1}:sortBy-{2}", areaCode, categoryId, sortBy);
                     return cacheKey.ToString();
                 },
                 () =>
@@ -200,7 +200,7 @@ namespace SpecialTopic.Topic
                 () =>
                 {
                     StringBuilder cacheKey = new StringBuilder();
-                    cacheKey.AppendFormat("GroupsByTag::TagName-{0}:SortBy-{1}", tagName, sortBy);
+                    cacheKey.AppendFormat("TopicsByTag::TagName-{0}:SortBy-{1}", tagName, sortBy);
                     return cacheKey.ToString();
                 },
                 () =>
@@ -379,14 +379,14 @@ namespace SpecialTopic.Topic
             {
                 StringBuilder cacheKey = new StringBuilder();
                 cacheKey.Append(EntityData.ForType(typeof(TopicMember)).RealTimeCacheHelper.GetListCacheKeyPrefix(CacheVersionType.AreaVersion, "UserId", userId));
-                cacheKey.AppendFormat("MyJoinedGroups::UserId-{0}", userId);
+                cacheKey.AppendFormat("MyJoinedTopics::UserId-{0}", userId);
                 return cacheKey.ToString();
             },
             () =>
             {
                 Sql sql = Sql.Builder;
-                sql.Select("distinct GroupId")
-                   .From("spb_GroupMembers")
+                sql.Select("distinct TopicId")
+                   .From("spt_TopicMembers")
                    .Where("UserId = @0", userId);
 
 

@@ -12,31 +12,31 @@
                 <ul class="tn-list tn-trisect tn-helper-clearfix">
                     @foreach (var item in Model)
                     {
-                        if (item.GetGroup() != null && item.GetGroup().AuditStatus == AuditStatus.Success)
+                        if (item.GetTopic() != null && item.GetTopic().AuditStatus == AuditStatus.Success)
                         { 
                         <li class="tn-list-item tn-helper-clearfix">
                             <div class="tn-list-item-area-left">
                                 <div class="tn-avatar">
-                                    <a href="@SiteUrls.Instance().GroupHome(item.GetGroup().GroupKey)" title="@item.GetGroup().GroupName" target="_blank">
-                                        <img src="@SiteUrls.Instance().LogoUrl(item.GetGroup().Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@item.GetGroup().GroupName"/>
+                                    <a href="@SiteUrls.Instance().TopicHome(item.GetTopic().TopicKey)" title="@item.GetTopic().TopicName" target="_blank">
+                                        <img src="@SiteUrls.Instance().LogoUrl(item.GetTopic().Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@item.GetTopic().TopicName"/>
                                     </a>
                                 </div>
                             </div>
                             <div class="tn-list-item-area-main">
                                 <div class="tn-list-item-row tn-list-item-heading">
                                     <h5 class="tn-helper-reset">
-                                        <a href="@SiteUrls.Instance().GroupHome(item.GetGroup().GroupKey)" title="@item.ItemName" target="_blank">@item.ItemName</a>
+                                        <a href="@SiteUrls.Instance().TopicHome(item.GetTopic().TopicKey)" title="@item.ItemName" target="_blank">@item.ItemName</a>
                                     </h5>
                                 </div>
                                 <div class="tn-list-item-row tn-list-item-summary">
                                     <p>
                                         群主:
-                                        @if (item.GetGroup().User != null)
+                                        @if (item.GetTopic().User != null)
                                         {
-                                            <a href="@SiteUrls.Instance().UserJoinedGroups(item.GetGroup().User.UserName)" title="@item.GetGroup().User.UserName">@item.GetGroup().User.DisplayName</a>
+                                            <a href="@SiteUrls.Instance().UserJoinedTopics(item.GetTopic().User.UserName)" title="@item.GetTopic().User.UserName">@item.GetTopic().User.DisplayName</a>
                                         }</p>
                                     <p>
-                                        成员：@item.GetGroup().MemberCount</p>
+                                        成员：@item.GetTopic().MemberCount</p>
                                 </div>
                             </div>
                         </li>

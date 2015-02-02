@@ -10,7 +10,7 @@ using Tunynet.Common;
 using Tunynet.Events;
 using SpecialTopic.Topic;
 
-namespace Spacebuilder.Blog.EventModules
+namespace SpecialTopic.Blog.EventModules
 {
     /// <summary>
     /// 处理群组索引的EventMoudle
@@ -148,7 +148,7 @@ namespace Spacebuilder.Blog.EventModules
             //删除索引
             if (eventArgs.EventOperationType == EventOperationType.Instance().Delete())
             {
-                groupSearcher.Delete(group.GroupId);
+                groupSearcher.Delete(group.TopicId);
             }
 
             //更新索引

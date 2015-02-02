@@ -12,7 +12,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SpecialTopic.Topic</RootNamespace>
-    <AssemblyName>SpecialTopic.Topic</AssemblyName>
+    <AssemblyName>SpaceBuilder.Topic</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <SccProjectName>
@@ -42,7 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\SpecialTopic.Topic.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\SpaceBuilder.Topic.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -51,7 +51,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\SpecialTopic.Topic.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\SpaceBuilder.Topic.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AntiXssLibrary, Version=4.2.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
@@ -227,7 +227,7 @@
     <Compile Include="Extensions\EventOperationType.cs" />
     <Compile Include="Extensions\InvitationTypeKeys.cs" />
     <Compile Include="Extensions\PointItemKeys.cs" />
-    <Compile Include="Extensions\RecommendItemExtensionByGroup.cs" />
+    <Compile Include="Extensions\RecommendItemExtensionByTopic.cs" />
     <Compile Include="Extensions\SiteUrls.cs" />
     <Compile Include="Extensions\TenantTypeIds.cs" />
     <Compile Include="Extensions\NoticeTemplateNames.cs" />
@@ -259,7 +259,7 @@
     <Compile Include="Services\GroupIdToGroupKeyDictionary.cs" />
     <Compile Include="Services\TopicService.cs" />
     <Compile Include="Tasks\CalculateGrowthValuesTask.cs" />
-    <Compile Include="UI\GroupSpaceThemeResolver.cs" />
+    <Compile Include="UI\TopicSpaceThemeResolver.cs" />
     <Compile Include="UrlRoutingRegistration.cs" />
     <Compile Include="ViewModels\GroupEditModel.cs.cs" />
     <Compile Include="ViewModels\ManageGroupEditModel.cs" />
@@ -317,7 +317,7 @@
     <Content Include="Views\ControlPanelGroup\_PagingGroups.cshtml" />
     <Content Include="Views\ChannelTopic\_TopGroups_Flow.cshtml" />
     <Content Include="Views\ChannelTopic\_TopGroups_List.cshtml" />
-    <Content Include="Views\ChannelTopic\_CategoryGroups.cshtml" />
+    <Content Include="Views\ChannelTopic\_CategoryTopics.cshtml" />
     <Content Include="Views\ChannelTopic\_RecommendedGroupOwners.cshtml" />
     <Content Include="Views\ChannelTopic\FindTopic.cshtml" />
     <Content Include="Views\ChannelTopic\_AreaGroups.cshtml" />

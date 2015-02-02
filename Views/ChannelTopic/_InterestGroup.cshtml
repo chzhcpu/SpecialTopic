@@ -13,8 +13,8 @@
                         @foreach (var group in Model)
                         {                     
                             <li class="tn-photo-item">
-                                <p class="tn-photo-wrap tn-widget-content tn-border-gray"><a href="@SiteUrls.Instance().GroupHome(group.GroupKey)" title="@group.GroupName"><img src="@SiteUrls.Instance().LogoUrl(group.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium(), group.HasLogo)" title="@group.GroupName" alt="@group.GroupName" /></a></p>
-                                <p class="tn-text-heading"><a href="@SiteUrls.Instance().GroupHome(group.GroupKey)" title="@group.GroupName">@group.GroupName</a></p>
+                                <p class="tn-photo-wrap tn-widget-content tn-border-gray"><a href="@SiteUrls.Instance().GroupHome(group.TopicKey)" title="@group.GroupName"><img src="@SiteUrls.Instance().LogoUrl(group.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium(), group.HasLogo)" title="@group.GroupName" alt="@group.GroupName" /></a></p>
+                                <p class="tn-text-heading"><a href="@SiteUrls.Instance().GroupHome(group.TopicKey)" title="@group.GroupName">@group.GroupName</a></p>
                             </li>
                         }
                     </ul>

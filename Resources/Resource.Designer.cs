@@ -61,11 +61,11 @@ namespace SpecialTopic.Topic.Resources {
         }
         
         /// <summary>
-        ///   查找类似 群组 的本地化字符串。
+        ///   查找类似 专题 的本地化字符串。
         /// </summary>
-        internal static string ApplicationName_Group {
+        internal static string ApplicationName_Topic {
             get {
-                return ResourceManager.GetString("ApplicationName_Group", resourceCulture);
+                return ResourceManager.GetString("ApplicationName_Topic", resourceCulture);
             }
         }
     }

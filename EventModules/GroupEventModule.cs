@@ -57,7 +57,7 @@ namespace SpecialTopic.Topic.EventModules
                 actvityOfBar.UserId = group.UserId;
                 actvityOfBar.ReferenceId = 0;//没有涉及到的实体
                 actvityOfBar.ReferenceTenantTypeId = string.Empty;
-                actvityOfBar.SourceId = group.GroupId;
+                actvityOfBar.SourceId = group.TopicId;
                 actvityOfBar.TenantTypeId = TenantTypeIds.Instance().Group();
                 actvityOfBar.OwnerId = group.UserId;
                 actvityOfBar.OwnerName = group.User.DisplayName;
@@ -67,7 +67,7 @@ namespace SpecialTopic.Topic.EventModules
             }
             else if (auditDirection == false) //删除动态
             {
-                activityService.DeleteSource(TenantTypeIds.Instance().Group(), group.GroupId);
+                activityService.DeleteSource(TenantTypeIds.Instance().Group(), group.TopicId);
             }
         }
 
@@ -103,7 +103,7 @@ namespace SpecialTopic.Topic.EventModules
             }
             if (!string.IsNullOrEmpty(pointItemKey))
             {
-                description = string.Format(ResourceAccessor.GetString("PointRecord_Pattern_" + eventOperationType), "群组", sender.GroupName);
+                description = string.Format(ResourceAccessor.GetString("PointRecord_Pattern_" + eventOperationType), "群组", sender.TopicName);
             }
             pointService.GenerateByRole(sender.UserId, pointItemKey, description, eventOperationType == EventOperationType.Instance().Create() || eventOperationType == EventOperationType.Instance().Delete() && eventArgs.OperatorInfo.OperatorUserId == sender.UserId);
         }
@@ -118,11 +118,11 @@ namespace SpecialTopic.Topic.EventModules
             ApplicationService applicationService = new ApplicationService();
             if (eventArgs.EventOperationType == EventOperationType.Instance().Create())
             {
-                applicationService.InstallApplicationsOfPresentAreaOwner(PresentAreaKeysOfBuiltIn.GroupSpace, sender.GroupId);
+                applicationService.InstallApplicationsOfPresentAreaOwner(PresentAreaKeysOfBuiltIn.GroupSpace, sender.TopicId);
             }
             else if (eventArgs.EventOperationType == EventOperationType.Instance().Delete())
             {
-                applicationService.DeleteApplicationsOfPresentAreaOwner(PresentAreaKeysOfBuiltIn.GroupSpace, sender.GroupId);
+                applicationService.DeleteApplicationsOfPresentAreaOwner(PresentAreaKeysOfBuiltIn.GroupSpace, sender.TopicId);
             }
         }
 

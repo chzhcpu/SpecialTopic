@@ -38,13 +38,13 @@
                         <li class="tn-list-item tn-helper-clearfix">
                             <div class="tn-list-item-area-left">
                                 <div class="tn-avatar">
-                                    <a href="@SiteUrls.Instance().GroupHome(item.GroupKey)" target="_blank" title="@item.GroupName">
-                                        <img src="@SiteUrls.Instance().LogoUrl(item.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@item.GroupName"/></a></div>
+                                    <a href="@SiteUrls.Instance().TopicHome(item.TopicKey)" target="_blank" title="@item.TopicName">
+                                        <img src="@SiteUrls.Instance().LogoUrl(item.Logo, TenantTypeIds.Instance().Topic(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@item.TopicName"/></a></div>
                             </div>
                             <div class="tn-list-item-area-main">
                                 <div class="tn-list-item-row tn-list-item-heading">
                                     <h5 class="tn-helper-reset">
-                                        <a href="@SiteUrls.Instance().GroupHome(item.GroupKey)" target="_blank" title="@item.GroupName">@StringUtility.Trim(item.GroupName,8)</a>
+                                        <a href="@SiteUrls.Instance().TopicHome(item.TopicKey)" target="_blank" title="@item.TopicName">@StringUtility.Trim(item.TopicName,8)</a>
                                     </h5>                                    
                                     <span class="tn-actions">
                                    </span>
@@ -53,7 +53,7 @@
                                     <p>
                                     @if (item.User != null)
                                     {
-                                        @:群主：<a href="@SiteUrls.Instance().UserJoinedGroups(item.User.UserName)"  title="@item.User.DisplayName">@item.User.DisplayName</a></p>
+                                        @:群主：<a href="@SiteUrls.Instance().UserJoinedTopics(item.User.UserName)"  title="@item.User.DisplayName">@item.User.DisplayName</a></p>
                                         }
                                     <p>
                                         成员：@item.MemberCount</p>
@@ -64,6 +64,6 @@
                 </ul>}
       
         <div class="tn-more tn-border-gray tn-border-dashed tn-border-top">
-            <a href="@SiteUrls.Instance().FindGroup("", null, null)">更多</a></div>
+            <a href="@SiteUrls.Instance().FindTopic("", null, null)">更多</a></div>
     </div>
 </div>

@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 using Tunynet.Utilities;
 using DevTrends.MvcDonutCaching;
 
-namespace SpecialTopic.Topic.Controllers
+namespace SpecialTopic.Topic.Controllers 
 {
     /// <summary>
     /// 频道群组控制器
@@ -178,18 +178,18 @@ namespace SpecialTopic.Topic.Controllers
 
             if (stream != null)
             {
-                topicService.UploadLogo(group.GroupId, stream);
+                topicService.UploadLogo(group.TopicId, stream);
             }
             //设置分类
             if (groupEditModel.CategoryId > 0)
             {
-                categoryService.AddItemsToCategory(new List<long>() { group.GroupId }, groupEditModel.CategoryId);
+                categoryService.AddItemsToCategory(new List<long>() { group.TopicId }, groupEditModel.CategoryId);
             }
             //设置标签
             string relatedTags = Request.Form.Get<string>("RelatedTags");
             if (!string.IsNullOrEmpty(relatedTags))
             {
-                tagService.AddTagsToItem(relatedTags, group.GroupId, group.GroupId);
+                tagService.AddTagsToItem(relatedTags, group.TopicId, group.TopicId);
             }
             //发送邀请
             if (!string.IsNullOrEmpty(groupEditModel.RelatedUserIds))
@@ -199,7 +199,7 @@ namespace SpecialTopic.Topic.Controllers
                 IEnumerable<long> userIds = Request.Form.Gets<long>("RelatedUserIds", null);
                 topicService.SendInvitations(group, user, string.Empty, userIds);
             }
-            return Redirect(SiteUrls.Instance().GroupHome(group.GroupKey));
+            return Redirect(SiteUrls.Instance().TopicHome(group.TopicKey));
         }
 
         #region 群组全文检索
@@ -306,7 +306,7 @@ namespace SpecialTopic.Topic.Controllers
                 query.PageIndex = 1;
                 query.Range = GroupSearchRange.TAG;
                 query.Tags = tagService.GetTopTagsOfItem(currentUser.UserId, 100).Select(n => n.TagName);
-                query.GroupIds = topicService.GetMyJoinedGroups(currentUser.UserId, 100, 1).Select(n => n.GroupId.ToString());
+                query.GroupIds = topicService.GetMyJoinedGroups(currentUser.UserId, 100, 1).Select(n => n.TopicId.ToString());
                 //调用搜索器进行搜索
                 GroupSearcher GroupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
                 IEnumerable<TopicEntity> groupsTag = null;
@@ -369,7 +369,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return Content(string.Empty);
 
-            IEnumerable<TopicMember> groupMembers = topicService.GetTopicMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Desc);
+            IEnumerable<TopicMember> groupMembers = topicService.GetTopicMembers(group.TopicId, true, SortBy_TopicMember.DateCreated_Desc);
             ViewData["activity"] = activity;
             ViewData["GroupMembers"] = groupMembers;
             return View(group);
@@ -415,7 +415,7 @@ namespace SpecialTopic.Topic.Controllers
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您还没有登录"));
-            new UserBlockService().BlockGroup(currentUser.UserId, blockedGroup.GroupId, blockedGroup.GroupName);
+            new UserBlockService().BlockGroup(currentUser.UserId, blockedGroup.TopicId, blockedGroup.TopicName);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
 
@@ -439,7 +439,7 @@ namespace SpecialTopic.Topic.Controllers
                     TopicEntity group = topicService.Get(groupId);
                     if (group == null || service.IsBlockedGroup(userId, groupId))
                         continue;
-                    service.BlockGroup(userId, group.GroupId, group.GroupName);
+                    service.BlockGroup(userId, group.TopicId, group.TopicName);
                     addCount++;
                 }
             if (addCount > 0)
@@ -501,9 +501,9 @@ namespace SpecialTopic.Topic.Controllers
             if (currentUser == null)
                 return new EmptyResult();
             bool isApplied = topicService.IsApplied(currentUser.UserId, groupId);
-            bool isMember = topicService.IsMember(group.GroupId, currentUser.UserId);
-            bool isOwner = topicService.IsOwner(group.GroupId, currentUser.UserId);
-            bool isManager = topicService.IsManager(group.GroupId, currentUser.UserId);
+            bool isMember = topicService.IsMember(group.TopicId, currentUser.UserId);
+            bool isOwner = topicService.IsOwner(group.TopicId, currentUser.UserId);
+            bool isManager = topicService.IsManager(group.TopicId, currentUser.UserId);
             ViewData["isMember"] = isMember;
             ViewData["showQuit"] = showQuit;
             ViewData["buttonName"] = buttonName;
@@ -530,7 +530,7 @@ namespace SpecialTopic.Topic.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
             try
             {
-                topicService.DeleteTopicMember(group.GroupId, currentUser.UserId);
+                topicService.DeleteTopicMember(group.TopicId, currentUser.UserId);
             }
             catch
             {
@@ -569,7 +569,7 @@ namespace SpecialTopic.Topic.Controllers
             {
                 TopicMember member = TopicMember.New();
                 member.UserId = currentUser.UserId;
-                member.GroupId = group.GroupId;
+                member.GroupId = group.TopicId;
                 member.IsManager = false;
                 topicService.CreateTopicMember(member);
                 message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
@@ -618,13 +618,13 @@ namespace SpecialTopic.Topic.Controllers
 
 
             //已修改
-            bool isApplied = topicService.IsApplied(currentUser.UserId, group.GroupId);
+            bool isApplied = topicService.IsApplied(currentUser.UserId, group.TopicId);
             if (!isApplied)
             {
                 TopicMemberApply apply = TopicMemberApply.New();
                 apply.ApplyReason = applyReason;
                 apply.ApplyStatus = TopicMemberApplyStatus.Pending;
-                apply.GroupId = group.GroupId;
+                apply.GroupId = group.TopicId;
                 apply.UserId = UserContext.CurrentUser.UserId;
                 topicService.CreateTopicMemberApply(apply);
                 message = new StatusMessageData(StatusMessageType.Success, "申请已发出，请等待！");
@@ -671,14 +671,14 @@ namespace SpecialTopic.Topic.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, "当前加入方式不是问题验证"));
 
 
-            bool isMember = topicService.IsMember(group.GroupId, currentUser.UserId);
+            bool isMember = topicService.IsMember(group.TopicId, currentUser.UserId);
             if (!isMember)
             {
                 if (group.Answer == myAnswer)
                 {
                     TopicMember member = TopicMember.New();
                     member.UserId = UserContext.CurrentUser.UserId;
-                    member.GroupId = group.GroupId;
+                    member.GroupId = group.TopicId;
                     member.IsManager = false;
                     topicService.CreateTopicMember(member);
                     message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");

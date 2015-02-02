@@ -41,7 +41,7 @@ namespace SpecialTopic.Topic.Controllers
         public ActionResult _GroupSettingRightMenu(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
-            PagingDataSet<TopicMemberApply> applys = groupService.GetTopicMemberApplies(group.GroupId, TopicMemberApplyStatus.Pending);
+            PagingDataSet<TopicMemberApply> applys = groupService.GetTopicMemberApplies(group.TopicId, TopicMemberApplyStatus.Pending);
             long totalRecords = applys.TotalRecords;
             ViewData["totalRecords"] = totalRecords;
             return View(group);
@@ -59,12 +59,12 @@ namespace SpecialTopic.Topic.Controllers
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
-            pageResourceManager.InsertTitlePart(group.GroupName);
+            pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("管理群组成员申请页");
             
             //已修改
-            PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetTopicMemberApplies(group.GroupId, applyStatus, pageSize, pageIndex);
-            ViewData["groupId"] = group.GroupId;
+            PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetTopicMemberApplies(group.TopicId, applyStatus, pageSize, pageIndex);
+            ViewData["groupId"] = group.TopicId;
             TempData["GroupMenu"] = GroupMenu.ManageMember;
 
             return View(groupMemberApplies);
@@ -111,13 +111,13 @@ namespace SpecialTopic.Topic.Controllers
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return HttpNotFound();
-            pageResourceManager.InsertTitlePart(group.GroupName);
+            pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("管理群组成员页");
 
 
 
 
-            PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(group.GroupId, true, SortBy_TopicMember.DateCreated_Asc, pageSize, pageIndex);
+            PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(group.TopicId, true, SortBy_TopicMember.DateCreated_Asc, pageSize, pageIndex);
             ViewData["group"] = group;
             TempData["GroupMenu"] = GroupMenu.ManageMember;
 
@@ -185,7 +185,7 @@ namespace SpecialTopic.Topic.Controllers
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有更换群主的权限"));
             }
 
-            groupService.ChangeGroupOwner(group.GroupId, userId);
+            groupService.ChangeGroupOwner(group.TopicId, userId);
             return Json(new StatusMessageData(StatusMessageType.Success, "更换群主操作成功"));
         }
 
@@ -204,7 +204,7 @@ namespace SpecialTopic.Topic.Controllers
             if (!authorizer.Group_SetManager(group))
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有设置管理员的权限"));
 
-            bool result = groupService.SetManager(group.GroupId, userId, isManager);
+            bool result = groupService.SetManager(group.TopicId, userId, isManager);
             if (result)
             {
                 message = new StatusMessageData(StatusMessageType.Success, "操作成功！");
@@ -239,7 +239,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
 
-            groupService.DeleteTopicMember(group.GroupId, userIds);
+            groupService.DeleteTopicMember(group.TopicId, userIds);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
 
@@ -261,7 +261,7 @@ namespace SpecialTopic.Topic.Controllers
             //已修改
             //这个功能属于编辑群组，在编辑群组已做权限验证，这边还需要做验证吗？
             
-            groupService.DeleteLogo(group.GroupId);
+            groupService.DeleteLogo(group.TopicId);
             return Json(new StatusMessageData(StatusMessageType.Success, "删除群组Logo成功！"));
         }
 
@@ -278,7 +278,7 @@ namespace SpecialTopic.Topic.Controllers
             //已修改
             if (group == null)
                 return HttpNotFound();
-            pageResourceManager.InsertTitlePart(group.GroupName);
+            pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("编辑群组");
 
             
@@ -329,8 +329,8 @@ namespace SpecialTopic.Topic.Controllers
             //设置分类
             if (groupEditModel.CategoryId > 0)
             {
-                categoryService.ClearCategoriesFromItem(group.GroupId, 0, TenantTypeIds.Instance().Group());
-                categoryService.AddItemsToCategory(new List<long>() { group.GroupId }, groupEditModel.CategoryId);
+                categoryService.ClearCategoriesFromItem(group.TopicId, 0, TenantTypeIds.Instance().Group());
+                categoryService.AddItemsToCategory(new List<long>() { group.TopicId }, groupEditModel.CategoryId);
             }
 
             
@@ -339,17 +339,17 @@ namespace SpecialTopic.Topic.Controllers
             string relatedTags = Request.Form.Get<string>("RelatedTags");
             if (!string.IsNullOrEmpty(relatedTags))
             {
-                tagService.ClearTagsFromItem(group.GroupId, group.GroupId);
-                tagService.AddTagsToItem(relatedTags, group.GroupId, group.GroupId);
+                tagService.ClearTagsFromItem(group.TopicId, group.TopicId);
+                tagService.AddTagsToItem(relatedTags, group.TopicId, group.TopicId);
             }
             if (stream != null)
             {
-                groupService.UploadLogo(group.GroupId, stream);
+                groupService.UploadLogo(group.TopicId, stream);
             }
 
             groupService.Update(currentUser.UserId, group);
             TempData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Success, "更新成功！");
-            return Redirect(SiteUrls.Instance().EditGroup(group.GroupKey));
+            return Redirect(SiteUrls.Instance().EditGroup(group.TopicKey));
         }
 
         [HttpGet]
@@ -363,7 +363,7 @@ namespace SpecialTopic.Topic.Controllers
             int currentNavigationId = RouteData.Values.Get<int>("CurrentNavigationId", 0);
 
             NavigationService navigationService = new NavigationService();
-            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.GroupId);
+            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.TopicId);
 
             IEnumerable<Navigation> navigations = new List<Navigation>();
             if (navigation != null)
@@ -378,7 +378,7 @@ namespace SpecialTopic.Topic.Controllers
                 }
             }
 
-            ViewData["MemberApplyCount"] = groupService.GetMemberApplyCount(group.GroupId);
+            ViewData["MemberApplyCount"] = groupService.GetMemberApplyCount(group.TopicId);
 
             return View(navigations);
         }

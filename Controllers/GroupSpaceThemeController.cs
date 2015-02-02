@@ -111,14 +111,14 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return HttpNotFound();
 
-            IEnumerable<ApplicationBase> applications = applicationService.GetInstalledApplicationsOfOwner(PresentAreaKeysOfBuiltIn.GroupSpace, group.GroupId);
+            IEnumerable<ApplicationBase> applications = applicationService.GetInstalledApplicationsOfOwner(PresentAreaKeysOfBuiltIn.GroupSpace, group.TopicId);
             
 
             //这里先判断group是否为空，再插入了群组名
-            pageResourceManager.InsertTitlePart(group.GroupName);
+            pageResourceManager.InsertTitlePart(group.TopicName);
 
             //浏览计数
-            new CountService(TenantTypeIds.Instance().Group()).ChangeCount(CountTypes.Instance().HitTimes(), group.GroupId, group.UserId);
+            new CountService(TenantTypeIds.Instance().Group()).ChangeCount(CountTypes.Instance().HitTimes(), group.TopicId, group.UserId);
 
             
             //1.为什么匿名用户就不让访问？
@@ -134,8 +134,8 @@ namespace SpecialTopic.Topic.Controllers
                 //ok，传递这些结果可以吗？
                 //已修改
                 //这样做很不好，直接用Authorizer
-                bool isMember = groupService.IsMember(group.GroupId, user.UserId);
-                visitService.CreateVisit(user.UserId, user.DisplayName, group.GroupId, group.GroupName);
+                bool isMember = groupService.IsMember(group.TopicId, user.UserId);
+                visitService.CreateVisit(user.UserId, user.DisplayName, group.TopicId, group.TopicName);
                 ViewData["isMember"] = isMember;
             }
             ViewData["isPublic"] = group.IsPublic;
@@ -162,7 +162,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
             NavigationService navigationService = new NavigationService();
-            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.GroupId);
+            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.TopicId);
 
             IEnumerable<Navigation> navigations = new List<Navigation>();
             if (navigation != null)
@@ -205,7 +205,7 @@ namespace SpecialTopic.Topic.Controllers
             ViewData["ApplicationManagementOperations"] = managementOperationService.GetShortcuts(PresentAreaKeysOfBuiltIn.GroupSpace, false);
 
             NavigationService navigationService = new NavigationService();
-            return View(navigationService.GetRootNavigations(PresentAreaKeysOfBuiltIn.GroupSpace, group.GroupId));
+            return View(navigationService.GetRootNavigations(PresentAreaKeysOfBuiltIn.GroupSpace, group.TopicId));
         }
 
         /// <summary>

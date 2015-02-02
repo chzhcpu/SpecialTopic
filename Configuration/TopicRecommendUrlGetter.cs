@@ -33,7 +33,7 @@ namespace SpecialTopic.Topic
             if (group == null)
                 return string.Empty;
             string userName = UserIdToUserNameDictionary.GetUserName(group.UserId);
-            return SiteUrls.Instance().GroupHome(itemId);
+            return SiteUrls.Instance().TopicHome(itemId);
         }
     }
 }

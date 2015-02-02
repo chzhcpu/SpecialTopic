@@ -216,7 +216,7 @@ namespace SpecialTopic.Topic
         public void Update(TopicEntity group)
         {
             Document doc = GroupIndexDocument.Convert(group);
-            searchEngine.Update(doc, group.GroupId.ToString(), GroupIndexDocument.GroupId);
+            searchEngine.Update(doc, group.TopicId.ToString(), GroupIndexDocument.GroupId);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace SpecialTopic.Topic
         public void Update(IEnumerable<TopicEntity> groups)
         {
             IEnumerable<Document> docs = GroupIndexDocument.Convert(groups);
-            IEnumerable<string> groupIds = groups.Select(n => n.GroupId.ToString());
+            IEnumerable<string> groupIds = groups.Select(n => n.TopicId.ToString());
             searchEngine.Update(docs, groupIds, GroupIndexDocument.GroupId);
         }
 
@@ -285,13 +285,13 @@ namespace SpecialTopic.Topic
 
             foreach (var group in groupList)
             {
-                if (groupTags.ContainsKey(group.GroupId))
+                if (groupTags.ContainsKey(group.TopicId))
                 {
-                    group.TagNames = groupTags[group.GroupId];
+                    group.TagNames = groupTags[group.TopicId];
                 }
-                if (categoryNames.ContainsKey(group.GroupId))
+                if (categoryNames.ContainsKey(group.TopicId))
                 {
-                    group.CategoryName = categoryNames[group.GroupId];
+                    group.CategoryName = categoryNames[group.TopicId];
                 }
             }
 
@@ -320,7 +320,7 @@ namespace SpecialTopic.Topic
             {
                 hotGroups.Take(topNumber);
             }
-            return hotGroups.Select(n => n.GroupName);
+            return hotGroups.Select(n => n.TopicName);
         }
 
         /// <summary>
