@@ -232,7 +232,7 @@
     <Compile Include="Extensions\TenantTypeIds.cs" />
     <Compile Include="Extensions\NoticeTemplateNames.cs" />
     <Compile Include="Extensions\OwnerDataKeys.cs" />
-    <Compile Include="Extensions\UserExtensionByGroup.cs" />
+    <Compile Include="Extensions\UserExtensionByTopic.cs" />
     <Compile Include="TopicApplication.cs" />
     <Compile Include="TopicConfig.cs" />
     <Compile Include="Models\TopicEntity.cs" />
@@ -254,7 +254,7 @@
     </Compile>
     <Compile Include="Search\GroupFullTextQuery.cs" />
     <Compile Include="Search\GroupIndexDocument.cs" />
-    <Compile Include="Search\GroupSearcher.cs" />
+    <Compile Include="Search\TopicSearcher.cs" />
     <Compile Include="Services\DefaultGroupIdToGroupKeyDictionary.cs" />
     <Compile Include="Services\GroupIdToGroupKeyDictionary.cs" />
     <Compile Include="Services\TopicService.cs" />

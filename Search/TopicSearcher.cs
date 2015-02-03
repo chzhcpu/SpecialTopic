@@ -19,16 +19,16 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组搜索器
     /// </summary>
-    public class GroupSearcher : ISearcher
+    public class TopicSearcher : ISearcher
     {
-        private TopicService groupService = new TopicService();
+        private TopicService topicService = new TopicService();
         private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
         private CategoryService categoryService = new CategoryService();
         private AuditService auditService = new AuditService();
         private ISearchEngine searchEngine;
         private PubliclyAuditStatus publiclyAuditStatus;
-        public static string CODE = "GroupSearcher";
-        public static string WATERMARK = "搜索群组";
+        public static string CODE = "TopicSearcher";
+        public static string WATERMARK = "搜索专题";
 
         /// <summary>
         /// 构造函数
@@ -37,7 +37,7 @@ namespace SpecialTopic.Topic
         /// <param name="indexPath">索引文件所在路径（支持"~/"及unc路径）</param>
         /// <param name="asQuickSearch">是否作为快捷搜索</param>
         /// <param name="displayOrder">显示顺序</param>
-        public GroupSearcher(string name, string indexPath, bool asQuickSearch, int displayOrder)
+        public TopicSearcher(string name, string indexPath, bool asQuickSearch, int displayOrder)
         {
             this.Name = name;
             this.IndexPath = Tunynet.Utilities.WebUtility.GetPhysicalFilePath(indexPath);
@@ -92,7 +92,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public string GlobalSearchActionUrl(string keyword)
         {
-            return SiteUrls.Instance().GroupGlobalSearch() + "?keyword=" + keyword;
+            return SiteUrls.Instance().TopicGlobalSearch() + "?keyword=" + keyword;
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public string QuickSearchActionUrl(string keyword)
         {
-            return SiteUrls.Instance().GroupQuickSearch() + "?keyword=" + keyword;
+            return SiteUrls.Instance().TopicQuickSearch() + "?keyword=" + keyword;
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public string PageSearchActionUrl(string keyword)
         {
-            return SiteUrls.Instance().GroupPageSearch(keyword);
+            return SiteUrls.Instance().TopicPageSearch(keyword);
         }
 
         #endregion
@@ -151,7 +151,7 @@ namespace SpecialTopic.Topic
             do
             {
                 //分页获取群组列表
-                PagingDataSet<TopicEntity> groups = groupService.GetsForAdmin(null, null, null, null, null, null, null, null, pageSize, pageIndex);
+                PagingDataSet<TopicEntity> groups = topicService.GetsForAdmin(null, null, null, null, null, null, null, null, pageSize, pageIndex);
                 totalRecords = groups.TotalRecords;
 
                 isEndding = (pageSize * pageIndex < totalRecords) ? false : true;
@@ -281,7 +281,7 @@ namespace SpecialTopic.Topic
             }
 
             //根据群组ID列表批量查询群组实例
-            IEnumerable<TopicEntity> groupList = groupService.GetGroupEntitiesByIds(groupIds);
+            IEnumerable<TopicEntity> groupList = topicService.GetGroupEntitiesByIds(groupIds);
 
             foreach (var group in groupList)
             {
@@ -315,7 +315,7 @@ namespace SpecialTopic.Topic
         /// <returns>符合搜索条件的分页集合</returns>
         public IEnumerable<string> AutoCompleteSearch(string keyword, int topNumber)
         {
-            IEnumerable<TopicEntity> hotGroups = groupService.GetMatchTops(topNumber, keyword, null, null, SortBy_Topic.GrowthValue_Desc);
+            IEnumerable<TopicEntity> hotGroups = topicService.GetMatchTops(topNumber, keyword, null, null, SortBy_Topic.GrowthValue_Desc);
             if (hotGroups.Count() > topNumber)
             {
                 hotGroups.Take(topNumber);

@@ -120,7 +120,7 @@ namespace SpecialTopic.Topic
             containerBuilder.Register(c => new DefaultTopicIdToTopicKeyDictionary()).As<TopicIdToTopicKeyDictionary>().SingleInstance();
 
             //注册全文检索搜索器
-            containerBuilder.Register(c => new GroupSearcher("专题", "~/App_Data/IndexFiles/Group", true, 7)).As<ISearcher>().Named<ISearcher>(GroupSearcher.CODE).SingleInstance();
+            containerBuilder.Register(c => new TopicSearcher("专题", "~/App_Data/IndexFiles/Group", true, 7)).As<ISearcher>().Named<ISearcher>(TopicSearcher.CODE).SingleInstance();
 
             ThemeService.RegisterThemeResolver(PresentAreaKeysOfBuiltIn.GroupSpace, new TopicSpaceThemeResolver());
 

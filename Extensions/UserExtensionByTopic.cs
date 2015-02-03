@@ -18,12 +18,12 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 拥有者计数类型扩展类
     /// </summary>
-    public static class UserExtensionByGroup
+    public static class UserExtensionByTopic
     {
         /// <summary>
         /// 创建的群组数
         /// </summary>
-        public static long CreatedGroupCount(this User user)
+        public static long CreatedTopicCount(this User user)
         {
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
             return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().CreatedGroupCount());
@@ -31,7 +31,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 加入的群组数
         /// </summary>
-        public static long JoinedGroupCount(this User user)
+        public static long JoinedTopicCount(this User user)
         {
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
             return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().JoinedGroupCount());

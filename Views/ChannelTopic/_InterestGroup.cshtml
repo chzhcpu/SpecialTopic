@@ -10,11 +10,11 @@
             <div class="spb-slider-nav">
                 <div class="spb-slider-nav-clip">
                     <ul class="tn-photo-list tn-widget tn-helper-clearfix">
-                        @foreach (var group in Model)
+                        @foreach (var topic in Model)
                         {                     
                             <li class="tn-photo-item">
-                                <p class="tn-photo-wrap tn-widget-content tn-border-gray"><a href="@SiteUrls.Instance().GroupHome(group.TopicKey)" title="@group.GroupName"><img src="@SiteUrls.Instance().LogoUrl(group.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium(), group.HasLogo)" title="@group.GroupName" alt="@group.GroupName" /></a></p>
-                                <p class="tn-text-heading"><a href="@SiteUrls.Instance().GroupHome(group.TopicKey)" title="@group.GroupName">@group.GroupName</a></p>
+                                <p class="tn-photo-wrap tn-widget-content tn-border-gray"><a href="@SiteUrls.Instance().TopicHome(topic.TopicKey)" title="@topic.TopicName"><img src="@SiteUrls.Instance().LogoUrl(topic.Logo, TenantTypeIds.Instance().Topic(), ImageSizeTypeKeys.Instance().Medium(), topic.HasLogo)" title="@topic.TopicName" alt="@topic.TopicName" /></a></p>
+                                <p class="tn-text-heading"><a href="@SiteUrls.Instance().TopicHome(topic.TopicKey)" title="@topic.TopicName">@topic.TopicName</a></p>
                             </li>
                         }
                     </ul>

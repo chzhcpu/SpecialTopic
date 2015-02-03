@@ -213,7 +213,7 @@ namespace SpecialTopic.Topic.Controllers
             query.PageSize = 20;//每页记录数
 
             //调用搜索器进行搜索
-            GroupSearcher groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+            TopicSearcher groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
             PagingDataSet<TopicEntity> groups = groupSearcher.Search(query);
 
             //添加到用户搜索历史 
@@ -223,7 +223,7 @@ namespace SpecialTopic.Topic.Controllers
                 if (!string.IsNullOrWhiteSpace(query.Keyword))
                 {
                     SearchHistoryService searchHistoryService = new SearchHistoryService();
-                    searchHistoryService.SearchTerm(CurrentUser.UserId, GroupSearcher.CODE, query.Keyword);
+                    searchHistoryService.SearchTerm(CurrentUser.UserId, TopicSearcher.CODE, query.Keyword);
                 }
             }
 
@@ -231,7 +231,7 @@ namespace SpecialTopic.Topic.Controllers
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
                 SearchedTermService searchedTermService = new SearchedTermService();
-                searchedTermService.SearchTerm(GroupSearcher.CODE, query.Keyword);
+                searchedTermService.SearchTerm(TopicSearcher.CODE, query.Keyword);
             }
 
             //设置页面Meta
@@ -256,7 +256,7 @@ namespace SpecialTopic.Topic.Controllers
             query.PageIndex = 1;
 
             //调用搜索器进行搜索
-            GroupSearcher groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+            TopicSearcher groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
             PagingDataSet<TopicEntity> groups = groupSearcher.Search(query);
 
             return PartialView(groups);
@@ -272,7 +272,7 @@ namespace SpecialTopic.Topic.Controllers
             query.Range = GroupSearchRange.GROUPNAME;
             query.Keyword = Server.UrlDecode(query.Keyword);
             //调用搜索器进行搜索
-            GroupSearcher GroupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+            TopicSearcher GroupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
             PagingDataSet<TopicEntity> groups = GroupSearcher.Search(query);
 
             return PartialView(groups);
@@ -284,7 +284,7 @@ namespace SpecialTopic.Topic.Controllers
         public JsonResult SearchAutoComplete(string keyword, int topNumber)
         {
             //调用搜索器进行搜索
-            GroupSearcher groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+            TopicSearcher groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
             IEnumerable<string> terms = groupSearcher.AutoCompleteSearch(keyword, topNumber);
 
             var jsonResult = Json(terms.Select(t => new { tagName = t, tagNameWithHighlight = SearchEngine.Highlight(keyword, string.Join("", t.Take(34)), 100) }), JsonRequestBehavior.AllowGet);
@@ -308,7 +308,7 @@ namespace SpecialTopic.Topic.Controllers
                 query.Tags = tagService.GetTopTagsOfItem(currentUser.UserId, 100).Select(n => n.TagName);
                 query.GroupIds = topicService.GetMyJoinedGroups(currentUser.UserId, 100, 1).Select(n => n.TopicId.ToString());
                 //调用搜索器进行搜索
-                GroupSearcher GroupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                TopicSearcher GroupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                 IEnumerable<TopicEntity> groupsTag = null;
                 if (GroupSearcher.Search(query, true).Count == 0)
                 {

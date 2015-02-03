@@ -47,7 +47,7 @@ namespace SpecialTopic.Topic
                 return;
 
             var sql_Update = PetaPoco.Sql.Builder;
-            sql_Update.Append("update spb_Groups set ThemeAppearance = @0,IsUseCustomStyle = @1 where GroupId = @2", themeAppearance ?? string.Empty, isUseCustomStyle, groupId);
+            sql_Update.Append("update spt_Topics set ThemeAppearance = @0,IsUseCustomStyle = @1 where TopicId = @2", themeAppearance ?? string.Empty, isUseCustomStyle, groupId);
             int affectedCount = CreateDAO().Execute(sql_Update);
             if (affectedCount > 0)
             {
@@ -62,10 +62,10 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <param name="newOwnerUserId">新群主UserId</param>
-        public void ChangeGroupOwner(long groupId, long newOwnerUserId)
+        public void ChangeTopicOwner(long groupId, long newOwnerUserId)
         {
             Sql sql = Sql.Builder;
-            sql.Append("update spb_Groups set UserId = @0 where GroupId = @1", newOwnerUserId, groupId);
+            sql.Append("update spt_Topics set UserId = @0 where TopicId = @1", newOwnerUserId, groupId);
             CreateDAO().Execute(sql);
             TopicEntity group = Get(groupId);
             if (group != null)
@@ -86,10 +86,10 @@ namespace SpecialTopic.Topic
         public void CalculateGrowthValues()
         {
             Sql sql = Sql.Builder;
-            sql.Append(@"update spb_Groups set GrowthValue=
-            (select COUNT(*) from spb_BarThreads where SectionId=GroupId and TenantTypeId=@0) * 2 + 
-            (select COUNT(*) from spb_BarPosts where SectionId = GroupId and TenantTypeId=@0) + MemberCount *5 +
-            (select COUNT(*) from spb_Microblogs where OwnerId = GroupId and TenantTypeId=@0)", TenantTypeIds.Instance().Group());
+            sql.Append(@"update spt_Topics set GrowthValue=
+            (select COUNT(*) from spb_BarThreads where SectionId=TopicId and TenantTypeId=@0) * 2 + 
+            (select COUNT(*) from spb_BarPosts where SectionId = TopicId and TenantTypeId=@0) + MemberCount *5 +
+            (select COUNT(*) from spb_Microblogs where OwnerId = TopicId and TenantTypeId=@0)", TenantTypeIds.Instance().Topic());
             CreateDAO().Execute(sql);
         }
 
@@ -104,7 +104,7 @@ namespace SpecialTopic.Topic
             int affectCount = base.Delete(entity);
             if (affectCount > 0)
             {
-                var sql = Sql.Builder.Append("delete from spb_GroupMemberApplies").Where("GroupId=@0", entity.TopicId);
+                var sql = Sql.Builder.Append("delete from spt_TopicMemberApplies").Where("TopicId=@0", entity.TopicId);
                 CreateDAO().Execute(sql);
             }
             return affectCount;
@@ -130,9 +130,9 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupKey">群组Key</param>
         /// <returns>群组Id</returns>
-        public long GetGroupIdByGroupKey(string groupKey)
+        public long GetTopicIdByTopicKey(string groupKey)
         {
-            var sql_Select = Sql.Builder.Select("GroupId").From("spb_Groups").Where("GroupKey = @0", groupKey);
+            var sql_Select = Sql.Builder.Select("TopicId").From("spt_Topics").Where("TopicKey = @0", groupKey);
             return CreateDAO().FirstOrDefault<long>(sql_Select);
         }
 
@@ -177,7 +177,7 @@ namespace SpecialTopic.Topic
                 () =>
                 {
                     StringBuilder cacheKey = new StringBuilder();
-                    cacheKey.AppendFormat("TopGroups::areaCode-{0}:categoryId-{1}:sortBy-{2}:keyword-{3}", areaCode, categoryId, sortBy, keyword);
+                    cacheKey.AppendFormat("TopTopics::areaCode-{0}:categoryId-{1}:sortBy-{2}:keyword-{3}", areaCode, categoryId, sortBy, keyword);
                     return cacheKey.ToString();
                 },
                 () =>
@@ -206,11 +206,11 @@ namespace SpecialTopic.Topic
                 () =>
                 {
                     Sql sql = Sql.Builder;
-                    sql.Select("spb_Groups.*").From("spb_Groups");
+                    sql.Select("spt_Topics.*").From("spt_Topics");
 
-                    sql.InnerJoin("tn_ItemsInTags").On("GroupId = tn_ItemsInTags.ItemId")
-                    .Where("tn_ItemsInTags.TagName = @0 and tn_ItemsInTags.TenantTypeId = @1", tagName, TenantTypeIds.Instance().Group())
-                    .Where("spb_Groups.IsPublic = 1");
+                    sql.InnerJoin("tn_ItemsInTags").On("TopicId = tn_ItemsInTags.ItemId")
+                    .Where("tn_ItemsInTags.TagName = @0 and tn_ItemsInTags.TenantTypeId = @1", tagName, TenantTypeIds.Instance().Topic())
+                    .Where("spt_Topics.IsPublic = 1");
 
                     switch (sortBy)
                     {
@@ -238,19 +238,19 @@ namespace SpecialTopic.Topic
         /// <param name="userId">用户Id</param>
         /// <param name="ignoreAudit">是否忽略审核状态（作者或管理员查看时忽略审核状态）</param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> GetMyCreatedGroups(long userId, bool ignoreAudit)
+        public IEnumerable<TopicEntity> GetMyCreatedTopics(long userId, bool ignoreAudit)
         {
 
 
 
-            string cacheKey = "GroupsOfUser" + "-" + RealTimeCacheHelper.GetListCacheKeyPrefix(CacheVersionType.AreaVersion, "UserId", userId) + "-ignoreAudit" + ignoreAudit;
+            string cacheKey = "TopicsOfUser" + "-" + RealTimeCacheHelper.GetListCacheKeyPrefix(CacheVersionType.AreaVersion, "UserId", userId) + "-ignoreAudit" + ignoreAudit;
 
             List<long> groupIds = cacheService.Get<List<long>>(cacheKey);
             if (groupIds == null)
             {
                 Sql sql = Sql.Builder;
-                sql.Select("GroupId")
-                   .From("spb_Groups")
+                sql.Select("TopicId")
+                   .From("spt_Topics")
                    .Where("UserId=@0", userId);
                 if (!ignoreAudit)
                 {
@@ -272,7 +272,7 @@ namespace SpecialTopic.Topic
                             break;
                     }
                 }
-                sql.OrderBy("GroupId desc");
+                sql.OrderBy("TopicId desc");
 
 
                 groupIds = CreateDAO().Fetch<long>(sql);
@@ -299,7 +299,7 @@ namespace SpecialTopic.Topic
                 () =>
                 {
                     StringBuilder cacheKey = new StringBuilder();
-                    cacheKey.AppendFormat("PagingGroupRanks::areaCode-{0}:categoryId-{1}:sortBy-{2}", areaCode, categoryId, sortBy);
+                    cacheKey.AppendFormat("PagingTopicRanks::areaCode-{0}:categoryId-{1}:sortBy-{2}", areaCode, categoryId, sortBy);
                     return cacheKey.ToString();
                 },
                 () =>
@@ -316,19 +316,19 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public IEnumerable<TopicEntity> TopicMemberAlsoJoinedTopics(long groupId, int topNumber)
         {
-            string cacheKey = string.Format("GroupMemberAlsoJoinedGroups::groupId-{0}", groupId);
+            string cacheKey = string.Format("TopicMemberAlsoJoinedTopics::groupId-{0}", groupId);
             var ids = cacheService.Get<List<object>>(cacheKey);
             if (ids == null)
             {
                 Sql sql = Sql.Builder;
-                sql.Select("distinct spb_Groups.*")
-                   .From("spb_Groups")
-                   .InnerJoin("spb_GroupMembers M")
-                   .On("M.GroupId = spb_Groups.GroupId")
-                   .Where("M.UserId in (select UserId from spb_GroupMembers where GroupId=@0) and spb_Groups.GroupId!=@0", groupId)
-                   .Where("spb_Groups.IsPublic = 1");
-                sql.OrderBy("spb_Groups.GrowthValue desc");
-                ids = CreateDAO().Fetch<dynamic>(sql).Select(n => n.GroupId).ToList();
+                sql.Select("distinct spt_Topics.*")
+                   .From("spt_Topics")
+                   .InnerJoin("spt_TopicMembers M")
+                   .On("M.TopicId = spt_Topics.TopicId")
+                   .Where("M.UserId in (select UserId from spt_TopicMembers where TopicId=@0) and spt_Topics.TopicId!=@0", groupId)
+                   .Where("spt_Topics.IsPublic = 1");
+                sql.OrderBy("spt_Topics.GrowthValue desc");
+                ids = CreateDAO().Fetch<dynamic>(sql).Select(n => n.TopicId).ToList();
                 cacheService.Add(cacheKey, ids, CachingExpirationType.UsualObjectCollection);
             }
             return PopulateEntitiesByEntityIds(ids.Take(topNumber));
@@ -340,27 +340,27 @@ namespace SpecialTopic.Topic
         /// <param name="userId">当前用户的userId</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> FollowedUserAlsoJoinedGroups(long userId, int topNumber)
+        public IEnumerable<TopicEntity> FollowedUserAlsoJoinedTopics(long userId, int topNumber)
         {
             return GetTopEntities(topNumber, CachingExpirationType.UsualObjectCollection,
         () =>
         {
             StringBuilder cacheKey = new StringBuilder();
-            cacheKey.AppendFormat("FollowedUserAlsoJoinedGroups::userId-{0}", userId);
+            cacheKey.AppendFormat("FollowedUserAlsoJoinedTopics::userId-{0}", userId);
             return cacheKey.ToString();
         },
         () =>
         {
             Sql sql = Sql.Builder;
-            sql.Select("distinct spb_Groups.*")
-               .From("spb_Groups")
-               .InnerJoin("spb_GroupMembers M")
-               .On("M.GroupId = spb_Groups.GroupId")
+            sql.Select("distinct spt_Topics.*")
+               .From("spt_Topics")
+               .InnerJoin("spt_TopicMembers M")
+               .On("M.TopicId = spt_Topics.TopicId")
                .InnerJoin("tn_Follows F")
                .On("F.FollowedUserId = M.UserId")
-               .Where("F.UserId = @0 or spb_Groups.UserId = F.FollowedUserId", userId)
-               .Where("spb_Groups.IsPublic = 1");
-            sql.OrderBy("spb_Groups.GrowthValue desc");
+               .Where("F.UserId = @0 or spt_Topics.UserId = F.FollowedUserId", userId)
+               .Where("spt_Topics.IsPublic = 1");
+            sql.OrderBy("spt_Topics.GrowthValue desc");
             return sql;
         });
         }
@@ -372,7 +372,7 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
         /// <returns></returns>
-        public PagingDataSet<TopicEntity> GetMyJoinedGroups(long userId, int pageSize, int pageIndex)
+        public PagingDataSet<TopicEntity> GetMyJoinedTopics(long userId, int pageSize, int pageIndex)
         {
             return GetPagingEntities(pageSize, pageIndex, CachingExpirationType.ObjectCollection,
             () =>
@@ -412,7 +412,7 @@ namespace SpecialTopic.Topic
         public PagingDataSet<TopicEntity> GetsForAdmin(AuditStatus? auditStatus = null, long? categoryId = null, string keywords = null, long? ownerUserId = null, DateTime? minDateTime = null, DateTime? maxDateTime = null, int? minMemberCount = null, int? maxMemberCount = null, int pageSize = 20, int pageIndex = 1)
         {
             Sql sql = Sql.Builder;
-            sql.Select("*").From("spb_Groups");
+            sql.Select("*").From("spt_Topics");
 
             if (categoryId != null && categoryId.Value > 0)
             {
@@ -422,7 +422,7 @@ namespace SpecialTopic.Topic
                 if (categories != null && categories.Count() > 0)
                     categoryIds.AddRange(categories.Select(n => n.CategoryId));
                 sql.InnerJoin("tn_ItemsInCategories")
-               .On("spb_Groups.GroupId = tn_ItemsInCategories.ItemId");
+               .On("spt_Topics.TopicId = tn_ItemsInCategories.ItemId");
                 sql.Where("tn_ItemsInCategories.CategoryId in(@categoryIds)", new { categoryIds = categoryIds });
             }
 
@@ -435,11 +435,11 @@ namespace SpecialTopic.Topic
 
             if (!string.IsNullOrEmpty(keywords))
             {
-                sql.Where("spb_Groups.GroupName like @0", "%" + StringUtility.StripSQLInjection(keywords) + "%");
+                sql.Where("spt_Topics.TopicName like @0", "%" + StringUtility.StripSQLInjection(keywords) + "%");
             }
             if (ownerUserId.HasValue)
             {
-                sql.Where("spb_Groups.UserId = @0", ownerUserId);
+                sql.Where("spt_Topics.UserId = @0", ownerUserId);
             }
             if (minDateTime.HasValue)
             {
@@ -478,7 +478,7 @@ namespace SpecialTopic.Topic
             var whereSql = Sql.Builder;
             var orderSql = Sql.Builder;
 
-            sql.Select("spb_Groups.*").From("spb_Groups");
+            sql.Select("spt_Topics.*").From("spt_Topics");
 
             if (categoryId != null && categoryId.Value > 0)
             {
@@ -488,7 +488,7 @@ namespace SpecialTopic.Topic
                 if (categories != null && categories.Count() > 0)
                     categoryIds.AddRange(categories.Select(n => n.CategoryId));
                 sql.InnerJoin("tn_ItemsInCategories")
-               .On("spb_Groups.GroupId = tn_ItemsInCategories.ItemId");
+               .On("spt_Topics.TopicId = tn_ItemsInCategories.ItemId");
                 whereSql.Where("tn_ItemsInCategories.CategoryId in(@categoryIds)", new { categoryIds = categoryIds });
             }
             if (!string.IsNullOrEmpty(areaCode))
@@ -509,9 +509,9 @@ namespace SpecialTopic.Topic
             }
             if (!string.IsNullOrEmpty(keyword))
             {
-                whereSql.Where("GroupName like @0", StringUtility.StripSQLInjection(keyword) + "%");
+                whereSql.Where("TopicName like @0", StringUtility.StripSQLInjection(keyword) + "%");
             }
-            whereSql.Where("spb_Groups.IsPublic = 1");
+            whereSql.Where("spt_Topics.IsPublic = 1");
 
             //已修改
             switch (this.PubliclyAuditStatus)
@@ -529,7 +529,7 @@ namespace SpecialTopic.Topic
                 default:
                     break;
             }
-            CountService countService = new CountService(TenantTypeIds.Instance().Group());
+            CountService countService = new CountService(TenantTypeIds.Instance().Topic());
             string countTableName = countService.GetTableName_Counts();
             switch (sortBy)
             {
@@ -544,15 +544,15 @@ namespace SpecialTopic.Topic
                     break;
                 case SortBy_Topic.HitTimes:
                     sql.LeftJoin(string.Format("(select * from {0} WHERE ({0}.CountType = '{1}')) c", countTableName, CountTypes.Instance().HitTimes()))
-                    .On("GroupId = c.ObjectId");
+                    .On("TopicId = c.ObjectId");
                     orderSql.OrderBy("c.StatisticsCount desc");
                     break;
                 case SortBy_Topic.StageHitTimes:
-                    StageCountTypeManager stageCountTypeManager = StageCountTypeManager.Instance(TenantTypeIds.Instance().Group());
+                    StageCountTypeManager stageCountTypeManager = StageCountTypeManager.Instance(TenantTypeIds.Instance().Topic());
                     int stageCountDays = stageCountTypeManager.GetMaxDayCount(CountTypes.Instance().HitTimes());
                     string stageCountType = stageCountTypeManager.GetStageCountType(CountTypes.Instance().HitTimes(), stageCountDays);
                     sql.LeftJoin(string.Format("(select * from {0} WHERE ({0}.CountType = '{1}')) c", countTableName, stageCountType))
-                    .On("GroupId = c.ObjectId");
+                    .On("TopicId = c.ObjectId");
                     orderSql.OrderBy("c.StatisticsCount desc");
                     break;
                 default:
@@ -580,31 +580,31 @@ namespace SpecialTopic.Topic
             if (takeOver != null)
             {
                 //更改群主
-                sqls.Add(Sql.Builder.Append("update spb_Groups set UserId = @0 where UserId = @1", takeOver.UserId, userId));
+                sqls.Add(Sql.Builder.Append("update spt_Topics set UserId = @0 where UserId = @1", takeOver.UserId, userId));
 
                 //获取用户Id为userId创建的群组
-                Sql havedGroups = Sql.Builder;
-                havedGroups.Select("GroupId")
-                    .From("spb_Groups")
+                Sql havedTopics = Sql.Builder;
+                havedTopics.Select("TopicId")
+                    .From("spt_Topics")
                     .Where("UserId = @0", userId);
-                IEnumerable<long> groupIds = CreateDAO().Fetch<long>(havedGroups);
+                IEnumerable<long> groupIds = CreateDAO().Fetch<long>(havedTopics);
 
 
                 //获取我加入用户Id为userId创建的群组的群组ID
                 if (groupIds.Count() > 0)
                 {
-                    Sql joinedGroups = Sql.Builder;
-                    joinedGroups.Select("GroupId")
-                        .From("spb_GroupMembers")
-                        .Where("UserId = @userId and GroupId in (@groupIds)", new { userId = takeOver.UserId }, new { groupIds = groupIds });
-                    IEnumerable<long> joinedIds = CreateDAO().Fetch<long>(joinedGroups);
+                    Sql joinedTopics = Sql.Builder;
+                    joinedTopics.Select("TopicId")
+                        .From("spt_TopicMembers")
+                        .Where("UserId = @userId and TopicId in (@groupIds)", new { userId = takeOver.UserId }, new { groupIds = groupIds });
+                    IEnumerable<long> joinedIds = CreateDAO().Fetch<long>(joinedTopics);
 
 
-                    sqls.Add(Sql.Builder.Append("delete from spb_GroupMembers where UserId = (@userId) and GroupId in (@groupIds)", new { userId = takeOver.UserId }, new { groupIds = groupIds }));
-                    sqls.Add(Sql.Builder.Append("delete from spb_GroupMemberApplies where UserId = (@userId) and GroupId in (@groupIds)", new { userId = takeOver.UserId }, new { groupIds = groupIds }));
+                    sqls.Add(Sql.Builder.Append("delete from spt_TopicMembers where UserId = (@userId) and TopicId in (@groupIds)", new { userId = takeOver.UserId }, new { groupIds = groupIds }));
+                    sqls.Add(Sql.Builder.Append("delete from spt_TopicMemberApplies where UserId = (@userId) and TopicId in (@groupIds)", new { userId = takeOver.UserId }, new { groupIds = groupIds }));
                     if (joinedIds.Count() > 0)
                     {
-                        sqls.Add(Sql.Builder.Append("update spb_Groups set MemberCount = MemberCount - 1 where GroupId in(@joinedIds)", new { joinedIds = joinedIds }));
+                        sqls.Add(Sql.Builder.Append("update spt_Topics set MemberCount = MemberCount - 1 where TopicId in(@joinedIds)", new { joinedIds = joinedIds }));
                     }
                 }
                 //此选项尚未用到
@@ -613,17 +613,17 @@ namespace SpecialTopic.Topic
             }
 
             //获取用户ID为userId加入的群组
-            Sql userJoinedGroups = Sql.Builder;
-            userJoinedGroups.Select("GroupId")
-                .From("spb_GroupMembers")
+            Sql userJoinedTopics = Sql.Builder;
+            userJoinedTopics.Select("TopicId")
+                .From("spt_TopicMembers")
                 .Where("UserId = @userId", new { userId = userId });
-            IEnumerable<long> userJoinedIds = CreateDAO().Fetch<long>(userJoinedGroups);
+            IEnumerable<long> userJoinedIds = CreateDAO().Fetch<long>(userJoinedTopics);
 
-            sqls.Add(Sql.Builder.Append("delete from spb_GroupMembers where UserId = @0", userId));
-            sqls.Add(Sql.Builder.Append("delete from spb_GroupMemberApplies where UserId = @0", userId));
+            sqls.Add(Sql.Builder.Append("delete from spt_TopicMembers where UserId = @0", userId));
+            sqls.Add(Sql.Builder.Append("delete from spt_TopicMemberApplies where UserId = @0", userId));
             if (userJoinedIds.Count() > 0)
             {
-                sqls.Add(Sql.Builder.Append("update spb_Groups set MemberCount = MemberCount - 1 where GroupId in(@userJoinedIds)", new { userJoinedIds = userJoinedIds }));
+                sqls.Add(Sql.Builder.Append("update spt_Topics set MemberCount = MemberCount - 1 where TopicId in(@userJoinedIds)", new { userJoinedIds = userJoinedIds }));
             }
 
             CreateDAO().Execute(sqls);
@@ -665,19 +665,19 @@ namespace SpecialTopic.Topic
             Dictionary<TopicManageableCountType, int> countType = new Dictionary<TopicManageableCountType, int>();
 
             var sql_selectIsActivated = PetaPoco.Sql.Builder;
-            sql_selectIsActivated.Select("count(*)").From("spb_Groups");
+            sql_selectIsActivated.Select("count(*)").From("spt_Topics");
 
             sql_selectIsActivated.Where("AuditStatus = @0", AuditStatus.Pending);
 
             countType[TopicManageableCountType.Pending] = dao.FirstOrDefault<int>(sql_selectIsActivated);
 
             var sql_selectIsAll = PetaPoco.Sql.Builder;
-            sql_selectIsAll.Select("count(*)").From("spb_Groups");
+            sql_selectIsAll.Select("count(*)").From("spt_Topics");
 
             countType[TopicManageableCountType.IsAll] = dao.FirstOrDefault<int>(sql_selectIsAll);
 
             var sql_selectIsLast24 = PetaPoco.Sql.Builder;
-            sql_selectIsLast24.Select("count(*)").From("spb_Groups");
+            sql_selectIsLast24.Select("count(*)").From("spt_Topics");
             sql_selectIsLast24.Where("DateCreated >= @0 and  DateCreated < @1", DateTime.UtcNow.AddDays(-1), DateTime.UtcNow);
 
             countType[TopicManageableCountType.IsLast24] = dao.FirstOrDefault<int>(sql_selectIsLast24);
@@ -699,16 +699,16 @@ namespace SpecialTopic.Topic
 
             Sql sql = Sql.Builder;
             sql.Select("count(*)")
-                .From("spb_Groups")
+                .From("spt_Topics")
                 .Where("AuditStatus=@0", AuditStatus.Pending);
 
-            manageableDatas.Add(ApplicationStatisticDataKeys.Instance().GroupPendingCount(), dao.FirstOrDefault<long>(sql));
+            manageableDatas.Add(ApplicationStatisticDataKeys.Instance().TopicPendingCount(), dao.FirstOrDefault<long>(sql));
             sql = Sql.Builder;
             sql.Select("count(*)")
-                .From("spb_Groups")
+                .From("spt_Topics")
                 .Where("AuditStatus=@0", AuditStatus.Again);
 
-            manageableDatas.Add(ApplicationStatisticDataKeys.Instance().GroupAgainCount(), dao.FirstOrDefault<long>(sql));
+            manageableDatas.Add(ApplicationStatisticDataKeys.Instance().TopicAgainCount(), dao.FirstOrDefault<long>(sql));
 
             return manageableDatas;
         }
@@ -720,19 +720,19 @@ namespace SpecialTopic.Topic
         public Dictionary<string, long> GetStatisticDatas(string tenantTypeId = null)
         {
             var dao = CreateDAO();
-            string cacheKey = "GroupStatisticData";
+            string cacheKey = "TopicStatisticData";
             Dictionary<string, long> statisticDatas = cacheService.Get<Dictionary<string, long>>(cacheKey);
             if (statisticDatas == null)
             {
                 statisticDatas = new Dictionary<string, long>();
                 Sql sql = Sql.Builder;
                 sql.Select("count(*)")
-                    .From("spb_Groups");
+                    .From("spt_Topics");
                 statisticDatas.Add(ApplicationStatisticDataKeys.Instance().TotalCount(), dao.FirstOrDefault<long>(sql));
 
                 sql = Sql.Builder;
                 sql.Select("count(*)")
-                    .From("spb_Groups")
+                    .From("spt_Topics")
                     .Where("DateCreated > @0", DateTime.UtcNow.AddDays(-1));
 
                 statisticDatas.Add(ApplicationStatisticDataKeys.Instance().Last24HCount(), dao.FirstOrDefault<long>(sql));

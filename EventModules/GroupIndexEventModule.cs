@@ -22,7 +22,7 @@ namespace SpecialTopic.Blog.EventModules
         private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
 
         //因为EventModule.RegisterEventHandler()在web启动时初始化，而GroupSearcher的构造函数依赖于WCF服务（分布式搜索部署情况下），此时WCF服务尚无法连接，因此GroupSearcher不能在此处构建，只能再下面的方法中构建
-        private GroupSearcher groupSearcher = null;
+        private TopicSearcher groupSearcher = null;
 
         public void RegisterEventHandler()
         {
@@ -48,7 +48,7 @@ namespace SpecialTopic.Blog.EventModules
                 long groupId = eventArgs.ItemId;
                 if (groupSearcher == null)
                 {
-                    groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                    groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                 }
                 groupSearcher.Update(topicService.Get(groupId));
             }
@@ -66,7 +66,7 @@ namespace SpecialTopic.Blog.EventModules
                     IEnumerable<long> groupIds = categoryService.GetItemIds(sender.CategoryId, false);
                     if (groupSearcher == null)
                     {
-                        groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                        groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                     }
                     groupSearcher.Update(topicService.GetGroupEntitiesByIds(groupIds));
                 }
@@ -85,7 +85,7 @@ namespace SpecialTopic.Blog.EventModules
                 long groupId = eventArgs.ItemId;
                 if (groupSearcher == null)
                 {
-                    groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                    groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                 }
                 groupSearcher.Update(topicService.Get(groupId));
             }
@@ -103,7 +103,7 @@ namespace SpecialTopic.Blog.EventModules
                     IEnumerable<long> groupIds = tagService.GetItemIds(sender.TagName, null);
                     if (groupSearcher == null)
                     {
-                        groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                        groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                     }
                     groupSearcher.Update(topicService.GetGroupEntitiesByIds(groupIds));
                 }
@@ -116,7 +116,7 @@ namespace SpecialTopic.Blog.EventModules
                 long groupId = sender.ItemId;
                 if (groupSearcher == null)
                 {
-                    groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                    groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                 }
                 groupSearcher.Update(topicService.Get(groupId));
             }
@@ -136,7 +136,7 @@ namespace SpecialTopic.Blog.EventModules
 
             if (groupSearcher == null)
             {
-                groupSearcher = (GroupSearcher)SearcherFactory.GetSearcher(GroupSearcher.CODE);
+                groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
             }
 
             //添加索引

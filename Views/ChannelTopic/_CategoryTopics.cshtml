@@ -15,7 +15,7 @@
                 foreach (var item in Model)
                 {
                 <h5 class="tn-directory-path">
-                    <a href="@SiteUrls.Instance().FindGroup(areaCode, item.CategoryId, sortBy)" title="@item.CategoryName">@StringUtility.Trim(item.CategoryName,12)</a>
+                    <a href="@SiteUrls.Instance().FindTopic(areaCode, item.CategoryId, sortBy)" title="@item.CategoryName">@StringUtility.Trim(item.CategoryName,12)</a>
                 </h5>
                    if (item.ChildCount > 4)
                    {
@@ -28,7 +28,7 @@
                             <div class="tn-directory-level">
                                 @foreach (var children in item.Children)
                                 {
-                                    <span class="tn-directory-item"><a href="@SiteUrls.Instance().FindGroup(areaCode, children.CategoryId, sortBy)" title="@children.CategoryName">@children.CategoryName</a></span>
+                                    <span class="tn-directory-item"><a href="@SiteUrls.Instance().FindTopic(areaCode, children.CategoryId, sortBy)" title="@children.CategoryName">@children.CategoryName</a></span>
                                 }
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                   
                 <div class="tn-directory-level tn-border-bottom tn-border-gray">
                     @foreach (var children in item.Children.Take(4))
-                    { <span class="tn-directory-item"><a href="@SiteUrls.Instance().FindGroup(areaCode, children.CategoryId, sortBy)" title="@children.CategoryName">@StringUtility.Trim(children.CategoryName,7)</a></span>
+                    { <span class="tn-directory-item"><a href="@SiteUrls.Instance().FindTopic(areaCode, children.CategoryId, sortBy)" title="@children.CategoryName">@StringUtility.Trim(children.CategoryName,7)</a></span>
                     }
                 </div>
                 }
@@ -50,7 +50,7 @@
                     还没有分类!</div> 
             }
             <p class="tn-more">
-                <a href="@SiteUrls.Instance().FindGroup(null, null, null)">查看更多分类</a></p>
+                <a href="@SiteUrls.Instance().FindTopic(null, null, null)">查看更多分类</a></p>
         </div>
     </div>
 </div>

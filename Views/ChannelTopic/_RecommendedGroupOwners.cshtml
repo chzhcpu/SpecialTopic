@@ -31,7 +31,7 @@
                             else if (groupOwner != null)
                             {
                                 displayName = groupOwner.DisplayName;
-                                url = SiteUrls.Instance().UserJoinedGroups(groupOwner.UserName);
+                                url = SiteUrls.Instance().UserJoinedTopics(groupOwner.UserName);
                                 @Html.ShowUserAvatar(groupOwner, url, avatarSizeType: AvatarSizeType.Small)
                             }
                         </div>
@@ -45,8 +45,8 @@
                             {                        
                                 <div class="tn-list-item-row tn-list-item-summary">
                                     <p>
-                                        群组：<a href="@SiteUrls.Instance().UserJoinedGroups(groupOwner.UserName)">
-                                            @groupOwner.JoinedGroupCount()
+                                        群组：<a href="@SiteUrls.Instance().UserJoinedTopics(groupOwner.UserName)">
+                                            @groupOwner.JoinedTopicCount()
                                         </a>
                                     </p>
                                     <p class="tn-user-data">
