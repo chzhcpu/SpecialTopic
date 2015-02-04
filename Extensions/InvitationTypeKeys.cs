@@ -17,18 +17,18 @@ namespace SpecialTopic.Topic
         /// 邀请加入群组
         /// </summary>
         /// <param name="invitationTypeKeys">invitationTypeKeys</param>
-        public static string InviteJoinGroup(this InvitationTypeKeys invitationTypeKeys)
+        public static string InviteJoinTopic(this InvitationTypeKeys invitationTypeKeys)
         {
-            return "InviteJoinGroup";
+            return "InviteJoinTopic";
         }
 
         /// <summary>
         /// 申请加入群组
         /// </summary>
         /// <param name="invitationTypeKeys">invitationTypeKeys</param>
-        public static string ApplyJoinGroup(this InvitationTypeKeys invitationTypeKeys)
+        public static string ApplyJoinTopic(this InvitationTypeKeys invitationTypeKeys)
         {
-            return "ApplyJoinGroup";
+            return "ApplyJoinTopic";
         }
     }
 }

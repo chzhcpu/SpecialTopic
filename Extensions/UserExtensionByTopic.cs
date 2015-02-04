@@ -26,7 +26,7 @@ namespace SpecialTopic.Topic
         public static long CreatedTopicCount(this User user)
         {
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-            return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().CreatedGroupCount());
+            return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().CreatedTopicCount());
         }
         /// <summary>
         /// 加入的群组数
@@ -34,7 +34,7 @@ namespace SpecialTopic.Topic
         public static long JoinedTopicCount(this User user)
         {
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-            return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().JoinedGroupCount());
+            return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().JoinedTopicCount());
         }
     }
 }

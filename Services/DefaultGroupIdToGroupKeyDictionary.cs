@@ -34,7 +34,7 @@ namespace SpecialTopic.Topic
         /// <returns>
         /// 群组Id
         /// </returns>
-        protected override string GetGroupKeyByGroupId(long groupId)
+        protected override string GetTopicKeyByTopicId(long groupId)
         {
             TopicEntity group = groupRepository.Get(groupId);
             if (group != null)
@@ -49,7 +49,7 @@ namespace SpecialTopic.Topic
         /// <returns>
         /// 群组Id
         /// </returns>
-        protected override long GetGroupIdByGroupKey(string groupKey)
+        protected override long GetTopicIdByTopicKey(string groupKey)
         {
             return groupRepository.GetTopicIdByTopicKey(groupKey);
         }

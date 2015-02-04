@@ -14,7 +14,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组动态接收人获取器
     /// </summary>
-    public class GroupActivityReceiverGetter : IActivityReceiverGetter
+    public class TopicActivityReceiverGetter : IActivityReceiverGetter
     {
         /// <summary>
         /// 获取接收人UserId集合
@@ -25,7 +25,7 @@ namespace SpecialTopic.Topic
         IEnumerable<long> IActivityReceiverGetter.GetReceiverUserIds(ActivityService activityService, Activity activity)
         {
             TopicService groupService = new TopicService();
-            IEnumerable<long> userIds = groupService.GetUserIdsOfGroup(activity.OwnerId);
+            IEnumerable<long> userIds = groupService.GetUserIdsOfTopic(activity.OwnerId);
             bool isPublic = false;
             var group = groupService.Get(activity.OwnerId);
             if (group != null)
@@ -53,7 +53,7 @@ namespace SpecialTopic.Topic
                     return false;
             }
             //检查用户是否已屏蔽群组
-            if (new UserBlockService().IsBlockedGroup(userId, activity.OwnerId))
+            if (new UserBlockService().IsBlockedTopic(userId, activity.OwnerId))
                 return false;
             //检查用户是否接收该动态项目
             Dictionary<string, bool> userSettings = activityService.GetActivityItemUserSettings(userId);

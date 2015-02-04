@@ -23,7 +23,7 @@ namespace SpecialTopic.Topic.Controllers
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
     [TopicSpaceAuthorize]
-    public class GroupSpaceController : Controller
+    public class TopicSpaceController : Controller
     {
         public TopicService groupService { get; set; }
         public IPageResourceManager pageResourceManager { get; set; }
@@ -33,8 +33,8 @@ namespace SpecialTopic.Topic.Controllers
         public ApplicationService applicationService { get; set; }
         public PrivacyService privacyService { get; set; }
         public Authorizer authorizer { get; set; }
-        private VisitService visitService = new VisitService(TenantTypeIds.Instance().Group());
-        private SubscribeService subscribeService = new SubscribeService(TenantTypeIds.Instance().Group());
+        private VisitService visitService = new VisitService(TenantTypeIds.Instance().Topic());
+        private SubscribeService subscribeService = new SubscribeService(TenantTypeIds.Instance().Topic());
 
         /// <summary>
         /// 群组标签云
@@ -57,9 +57,9 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 最近访客控件
         /// </summary>
-        public ActionResult _LastGroupVisitors(string spaceKey, int topNumber = 12)
+        public ActionResult _LastTopicVisitors(string spaceKey, int topNumber = 12)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             IEnumerable<Visit> visits = visitService.GetTopVisits(groupId, topNumber);
             ViewData["groupId"] = groupId;
             return View(visits);
@@ -71,8 +71,8 @@ namespace SpecialTopic.Topic.Controllers
         [HttpGet]
         public ActionResult _ListActivities(string spaceKey, int? pageIndex, int? applicationId, MediaType? mediaType, bool? isOriginal, long? userId)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            PagingDataSet<Activity> activities = activityService.GetOwnerActivities(ActivityOwnerTypes.Instance().Group(), groupId, applicationId, mediaType, isOriginal, null, pageIndex ?? 1, userId);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
+            PagingDataSet<Activity> activities = activityService.GetOwnerActivities(ActivityOwnerTypes.Instance().Topic(), groupId, applicationId, mediaType, isOriginal, null, pageIndex ?? 1, userId);
             if (activities.FirstOrDefault() != null)
             {
                 ViewData["lastActivityId"] = activities.FirstOrDefault().ActivityId;
@@ -92,8 +92,8 @@ namespace SpecialTopic.Topic.Controllers
         {
             if (UserContext.CurrentUser == null)
                 return new EmptyResult();
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
-            IEnumerable<Activity> newActivities = activityService.GetNewerActivities(groupId, lastActivityId.Value, applicationId, ActivityOwnerTypes.Instance().Group(), UserContext.CurrentUser.UserId);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
+            IEnumerable<Activity> newActivities = activityService.GetNewerActivities(groupId, lastActivityId.Value, applicationId, ActivityOwnerTypes.Instance().Topic(), UserContext.CurrentUser.UserId);
 
             if (newActivities != null && newActivities.Count() > 0)
             {
@@ -106,13 +106,13 @@ namespace SpecialTopic.Topic.Controllers
         ///  查询自lastActivityId以后又有多少动态进入用户的时间线
         /// </summary>
         [HttpPost]
-        public JsonResult GetNewerGroupActivityCount(string spaceKey, long lastActivityId, int? applicationId)
+        public JsonResult GetNewerTopicActivityCount(string spaceKey, long lastActivityId, int? applicationId)
         {
             if (UserContext.CurrentUser == null)
                 return Json(new { });
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             string name;
-            int count = activityService.GetNewerCount(groupId, lastActivityId, applicationId, out name, ActivityOwnerTypes.Instance().Group(), UserContext.CurrentUser.UserId);
+            int count = activityService.GetNewerCount(groupId, lastActivityId, applicationId, out name, ActivityOwnerTypes.Instance().Topic(), UserContext.CurrentUser.UserId);
             if (count == 0)
             {
                 return Json(new { lastActivityId = lastActivityId, hasNew = false });
@@ -135,10 +135,10 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="activityId"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult _DeleteGroupActivity(string spaceKey, long activityId)
+        public ActionResult _DeleteTopicActivity(string spaceKey, long activityId)
         {
             var activity = activityService.Get(activityId);
-            if (!authorizer.Group_DeleteGroupActivity(activity))
+            if (!authorizer.Topic_DeleteTopicActivity(activity))
                 return Json(new StatusMessageData(StatusMessageType.Error, "没有删除群组动态的权限"));
             activityService.DeleteActivity(activityId);
             return Json(new StatusMessageData(StatusMessageType.Success, "删除群组动态成功！"));
@@ -149,7 +149,7 @@ namespace SpecialTopic.Topic.Controllers
         /// 删除该条访客记录
         /// </summary>
         [HttpPost]
-        public ActionResult DeleteGroupVisitor(string spaceKey)
+        public ActionResult DeleteTopicVisitor(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
@@ -160,10 +160,10 @@ namespace SpecialTopic.Topic.Controllers
             //已修复
             long userId = Request.Form.Get<long>("userId", 0);
             long id = Request.Form.Get<long>("id", 0);
-            if (authorizer.Group_DeleteVisitor(group.TopicId, userId))
+            if (authorizer.Topic_DeleteVisitor(group.TopicId, userId))
             {
                 visitService.Delete(id);
-                return RedirectToAction("_LastGroupVisitors");
+                return RedirectToAction("_LastTopicVisitors");
             }
             else
             {
@@ -179,9 +179,9 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="topNumber"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult _GroupMemberAlsoJoinedGroups(string spaceKey, int topNumber = 10)
+        public ActionResult _TopicMemberAlsoJoinedTopics(string spaceKey, int topNumber = 10)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             IEnumerable<TopicEntity> groups = groupService.TopicMemberAlsoJoinedTopics(groupId, topNumber);
             return View(groups);
         }
@@ -204,11 +204,11 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="spaceKey">群组</param>
         /// <param name="topNumber">前多少条</param>
         [DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _OnlineGroupMembers(string spaceKey, int topNumber = 12)
+        public ActionResult _OnlineTopicMembers(string spaceKey, int topNumber = 12)
         {
             TopicEntity group = groupService.Get(spaceKey);
             ViewData["User"] = group.User;
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             IEnumerable<TopicMember> groupMembers = groupService.GetOnlineTopicMembers(groupId);
             if (group.User.IsOnline)
             {
@@ -224,7 +224,7 @@ namespace SpecialTopic.Topic.Controllers
         /// </summary>
         /// <param name="spaceKey">群组标识</param>
         /// <returns></returns>
-        public ActionResult _GroupProfile(string spaceKey)
+        public ActionResult _TopicProfile(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
             return View(group);
@@ -248,7 +248,7 @@ namespace SpecialTopic.Topic.Controllers
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
                 return Json(new { });
-            if (!authorizer.Group_Manage(group))
+            if (!authorizer.Topic_Manage(group))
                 return Json(new StatusMessageData(StatusMessageType.Error, "没有更新公告的权限"));
 
             groupService.UpdateAnnouncement(group.TopicId, announcement);
@@ -312,7 +312,7 @@ namespace SpecialTopic.Topic.Controllers
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
 
-            if (!authorizer.Group_Invite(group))
+            if (!authorizer.Topic_Invite(group))
             {
                 return Redirect(SiteUrls.Instance().SystemMessage(TempData, new SystemMessageViewModel
                 {
@@ -359,13 +359,13 @@ namespace SpecialTopic.Topic.Controllers
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(groupId, false, pageSize: 60, pageIndex: pageIndex);
 
 
 
 
-            ViewData["Group"] = group;
+            ViewData["Topic"] = group;
 
             return View(groupMembers);
         }
@@ -388,7 +388,7 @@ namespace SpecialTopic.Topic.Controllers
             pageResourceManager.InsertTitlePart(group.TopicName);
             pageResourceManager.InsertTitlePart("管理成员列表页");
 
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             IEnumerable<TopicMember> groupMember = groupService.GetTopicMembersAlsoIsMyFollowedUser(groupId, currentUser.UserId);
             PagingDataSet<TopicMember> groupMembers = new PagingDataSet<TopicMember>(groupMember);
 
@@ -414,7 +414,7 @@ namespace SpecialTopic.Topic.Controllers
             TopicEntity group = groupService.Get(spaceKey);
 
 
-            if (!authorizer.Group_DeleteMember(group, userId))
+            if (!authorizer.Topic_DeleteMember(group, userId))
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有删除管理员的权限"));
 
             groupService.DeleteTopicMember(group.TopicId, userId);
@@ -430,7 +430,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <returns></returns>
         public ActionResult _ListMembers(string spaceKey, int topNumber)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return new EmptyResult();
@@ -446,9 +446,9 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="spaceKey">群组空间标识</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult _GroupMenu(string spaceKey)
+        public ActionResult _TopicMenu(string spaceKey)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
@@ -491,7 +491,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="spaceKey">群组标识</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult _GroupActivities(string spaceKey)
+        public ActionResult _TopicActivities(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
@@ -503,7 +503,7 @@ namespace SpecialTopic.Topic.Controllers
         }
     }
 
-    public enum GroupMenu
+    public enum TopicMenu
     {
         /// <summary>
         /// 主页
@@ -518,7 +518,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 群组设置
         /// </summary>
-        GroupSettings
+        TopicSettings
 
     }
 }

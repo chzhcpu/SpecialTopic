@@ -99,7 +99,7 @@ namespace SpecialTopic.Topic
 
             context.MapRoute(
                 "TopicSpace_Member", // Route name
-                "g/{SpaceKey}/Members" + extensionForOldIIS, // URL with parameters
+                "t/{SpaceKey}/Members" + extensionForOldIIS, // URL with parameters
                 new { controller = "TopicSpace", action = "Members", CurrentNavigationId = "13900180" } // Parameter defaults
             );
 
@@ -110,7 +110,7 @@ namespace SpecialTopic.Topic
             //群组空间首页
             context.MapRoute(
                 "TopicSpaceTheme_Home", // Route name
-                "g/{SpaceKey}" + extensionForOldIIS, // URL with parameters
+                "t/{SpaceKey}" + extensionForOldIIS, // URL with parameters
                 new { controller = "TopicSpaceTheme", action = "Home", CurrentNavigationId = "13900201" } // Parameter defaults
             );
 
@@ -125,7 +125,7 @@ namespace SpecialTopic.Topic
 
             context.MapRoute(
                 "TopicSpace_Settings_Common", // Route name
-                "g/{SpaceKey}/settings/{action}" + extensionForOldIIS, // URL with parameters
+                "t/{SpaceKey}/settings/{action}" + extensionForOldIIS, // URL with parameters
                 new { controller = "TopicSpaceSettings", action = "ManageMembers" } // Parameter defaults
             );
 
@@ -133,7 +133,7 @@ namespace SpecialTopic.Topic
 
             context.MapRoute(
                 "TopicSpace_Common", // Route name
-                "g/{SpaceKey}/{action}" + extensionForOldIIS, // URL with parameters
+                "t/{SpaceKey}/{action}" + extensionForOldIIS, // URL with parameters
                 new { controller = "TopicSpace", action = "Home" } // Parameter defaults
             );
 

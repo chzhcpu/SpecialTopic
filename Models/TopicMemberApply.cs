@@ -12,7 +12,7 @@ using Tunynet.Caching;
 namespace SpecialTopic.Topic
 {
     //设计要点：
-    //1、缓存分区：GroupId；
+    //1、缓存分区：TopicId；
     
     
     /// <summary>
@@ -20,7 +20,7 @@ namespace SpecialTopic.Topic
     /// </summary>
     [TableName("spt_TopicMemberApplies")]
     [PrimaryKey("Id", autoIncrement = true)]
-    [CacheSetting(true, PropertyNamesOfArea = "UserId,GroupId")]
+    [CacheSetting(true, PropertyNamesOfArea = "UserId,TopicId")]
     [Serializable]
     public class TopicMemberApply : IEntity
     {
@@ -47,7 +47,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         ///群组Id
         /// </summary>
-        public long GroupId { get; set; }
+        public long TopicId { get; set; }
 
         /// <summary>
         ///用户Id

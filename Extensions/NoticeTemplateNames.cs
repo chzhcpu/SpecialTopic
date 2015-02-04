@@ -63,18 +63,18 @@ namespace SpecialTopic.Topic
         /// 设置管理员
         /// </summary>
         /// <param name="questionId">questionId</param>
-        public static string SetGroupManager(this NoticeTemplateNames noticeTemplateNames)
+        public static string SetTopicManager(this NoticeTemplateNames noticeTemplateNames)
         {
-            return "SetGroupManager";
+            return "SetTopicManager";
         }
 
         /// <summary>
         /// 取消管理员
         /// </summary>
         /// <param name="questionId">questionId</param>
-        public static string CannelGroupManager(this NoticeTemplateNames noticeTemplateNames)
+        public static string CannelTopicManager(this NoticeTemplateNames noticeTemplateNames)
         {
-            return "CannelGroupManager";
+            return "CannelTopicManager";
         }
     }
 }

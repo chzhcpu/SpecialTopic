@@ -20,14 +20,14 @@ namespace SpecialTopic.Topic.EventModules
     /// <summary>
     /// 处理群组申请通知的EventMoudle
     /// </summary>
-    public class GroupMemberApplyEventModule : IEventMoudle
+    public class TopicMemberApplyEventModule : IEventMoudle
     {
         /// <summary>
         /// 注册EventHandler
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<TopicMemberApply>.Instance().After += new CommonEventHandler<TopicMemberApply, CommonEventArgs>(GroupMemberApplyNoticeModule_After);
+            EventBus<TopicMemberApply>.Instance().After += new CommonEventHandler<TopicMemberApply, CommonEventArgs>(TopicMemberApplyNoticeModule_After);
         }
 
         /// <summary>
@@ -35,10 +35,10 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void GroupMemberApplyNoticeModule_After(TopicMemberApply sender, CommonEventArgs eventArgs)
+        private void TopicMemberApplyNoticeModule_After(TopicMemberApply sender, CommonEventArgs eventArgs)
         {
             TopicService groupService = new TopicService();
-            TopicEntity entity = groupService.Get(sender.GroupId);
+            TopicEntity entity = groupService.Get(sender.TopicId);
             if (entity == null)
                 return;
 
@@ -59,16 +59,16 @@ namespace SpecialTopic.Topic.EventModules
                     foreach (var toUserId in toUserIds)
                     {
                         //申请加入群组的请求
-                        if (!groupService.IsMember(sender.GroupId, sender.UserId))
+                        if (!groupService.IsMember(sender.TopicId, sender.UserId))
                         {
                             invitation = Invitation.New();
                             invitation.ApplicationId = TopicConfig.Instance().ApplicationId;
-                            invitation.InvitationTypeKey = InvitationTypeKeys.Instance().ApplyJoinGroup();
+                            invitation.InvitationTypeKey = InvitationTypeKeys.Instance().ApplyJoinTopic();
                             invitation.UserId = toUserId;
                             invitation.SenderUserId = sender.UserId;
                             invitation.Sender = senderUser.DisplayName;
                             invitation.SenderUrl = SiteUrls.Instance().SpaceHome(sender.UserId);
-                            invitation.RelativeObjectId = sender.GroupId;
+                            invitation.RelativeObjectId = sender.TopicId;
                             invitation.RelativeObjectName = entity.TopicName;
                             invitation.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                             invitation.Remark = sender.ApplyReason;
@@ -105,7 +105,7 @@ namespace SpecialTopic.Topic.EventModules
             //notice.LeadingActorUserId = UserContext.CurrentUser.UserId;
             //notice.LeadingActor = UserContext.CurrentUser.DisplayName;
             //notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(UserContext.CurrentUser.UserId));
-            notice.RelativeObjectId = sender.GroupId;
+            notice.RelativeObjectId = sender.TopicId;
             notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
             notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
             notice.TemplateName = noticeTemplateName;

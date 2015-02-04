@@ -24,7 +24,7 @@ using DevTrends.MvcDonutCaching;
 namespace SpecialTopic.Topic.Controllers 
 {
     /// <summary>
-    /// 频道群组控制器
+    /// 频道专题控制器
     /// </summary>
     [Themed(PresentAreaKeysOfBuiltIn.Channel, IsApplication = true)]
     [AnonymousBrowseCheck]
@@ -44,7 +44,7 @@ namespace SpecialTopic.Topic.Controllers
         private TagService tagService = new TagService(TenantTypeIds.Instance().Topic());
 
         /// <summary>
-        /// 频道群组
+        /// 频道专题
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -55,7 +55,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组顶部的局部页面
+        /// 专题顶部的局部页面
         /// </summary>
         /// <returns></returns>
         public ActionResult _TopicSubmenu()
@@ -64,11 +64,11 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 验证群组Key的方法
+        /// 验证专题Key的方法
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult ValidateGroupKey(string groupKey, long groupId)
+        public JsonResult ValidateTopicKey(string groupKey, long groupId)
         {
             bool result = false;
             if (groupId > 0)
@@ -80,7 +80,7 @@ namespace SpecialTopic.Topic.Controllers
                 TopicEntity group = topicService.Get(groupKey);
                 if (group != null)
                 {
-                    return Json("此群组Key已存在", JsonRequestBehavior.AllowGet);
+                    return Json("此专题Key已存在", JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -95,15 +95,15 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 创建群组
+        /// 创建专题
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public ActionResult Create()
         {
-            pageResourceManager.InsertTitlePart("创建群组");
+            pageResourceManager.InsertTitlePart("创建专题");
             string errorMessage = null;
-            if (!authorizer.Group_Create(out errorMessage))
+            if (!authorizer.Topic_Create(out errorMessage))
             {
                 return Redirect(SiteUrls.Instance().SystemMessage(TempData, new SystemMessageViewModel
                 {
@@ -112,18 +112,18 @@ namespace SpecialTopic.Topic.Controllers
                     StatusMessageType = StatusMessageType.Hint
                 }));
             }
-            GroupEditModel group = new GroupEditModel();
+            TopicEditModel group = new TopicEditModel();
             return View(group);
         }
 
 
         //已修改
         /// <summary>
-        /// 创建群组
+        /// 创建专题
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(GroupEditModel groupEditModel)
+        public ActionResult Create(TopicEditModel groupEditModel)
         {
             string errorMessage = null;
             if (ModelState.HasBannedWord(out errorMessage))
@@ -145,7 +145,7 @@ namespace SpecialTopic.Topic.Controllers
             if (user == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
 
-            if (!authorizer.Group_Create(out errorMessage))
+            if (!authorizer.Topic_Create(out errorMessage))
             {
                 return Redirect(SiteUrls.Instance().SystemMessage(TempData, new SystemMessageViewModel
                 {
@@ -156,7 +156,7 @@ namespace SpecialTopic.Topic.Controllers
             }
             if (groupLogo != null && !string.IsNullOrEmpty(groupLogo.FileName))
             {
-                TenantLogoSettings tenantLogoSettings = TenantLogoSettings.GetRegisteredSettings(TenantTypeIds.Instance().Group());
+                TenantLogoSettings tenantLogoSettings = TenantLogoSettings.GetRegisteredSettings(TenantTypeIds.Instance().Topic());
                 if (!tenantLogoSettings.ValidateFileLength(groupLogo.ContentLength))
                 {
                     ViewData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Error, string.Format("文件大小不允许超过{0}", Formatter.FormatFriendlyFileSize(tenantLogoSettings.MaxLogoLength * 1024)));
@@ -172,7 +172,7 @@ namespace SpecialTopic.Topic.Controllers
                 stream = groupLogo.InputStream;
                 groupEditModel.Logo = groupLogo.FileName;
             }
-            TopicEntity group = groupEditModel.AsGroupEntity();
+            TopicEntity group = groupEditModel.AsTopicEntity();
 
             bool result = topicService.Create(user.UserId, group);
 
@@ -202,12 +202,12 @@ namespace SpecialTopic.Topic.Controllers
             return Redirect(SiteUrls.Instance().TopicHome(group.TopicKey));
         }
 
-        #region 群组全文检索
+        #region 专题全文检索
 
         /// <summary>
-        /// 群组搜索
+        /// 专题搜索
         /// </summary>
-        public ActionResult Search(GroupFullTextQuery query)
+        public ActionResult Search(TopicFullTextQuery query)
         {
             query.Keyword = WebUtility.UrlDecode(query.Keyword);
             query.PageSize = 20;//每页记录数
@@ -237,20 +237,20 @@ namespace SpecialTopic.Topic.Controllers
             //设置页面Meta
             if (string.IsNullOrWhiteSpace(query.Keyword))
             {
-                pageResourceManager.InsertTitlePart("群组搜索");//设置页面Title
+                pageResourceManager.InsertTitlePart("专题搜索");//设置页面Title
             }
             else
             {
-                pageResourceManager.InsertTitlePart('“' + query.Keyword + '”' + "的相关群组");//设置页面Title
+                pageResourceManager.InsertTitlePart('“' + query.Keyword + '”' + "的相关专题");//设置页面Title
             }
 
             return View(groups);
         }
 
         /// <summary>
-        /// 群组全局搜索
+        /// 专题全局搜索
         /// </summary>
-        public ActionResult _GlobalSearch(GroupFullTextQuery query, int topNumber)
+        public ActionResult _GlobalSearch(TopicFullTextQuery query, int topNumber)
         {
             query.PageSize = topNumber;//每页记录数
             query.PageIndex = 1;
@@ -263,23 +263,23 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组快捷搜索
+        /// 专题快捷搜索
         /// </summary>
-        public ActionResult _QuickSearch(GroupFullTextQuery query, int topNumber)
+        public ActionResult _QuickSearch(TopicFullTextQuery query, int topNumber)
         {
             query.PageSize = topNumber;//每页记录数
             query.PageIndex = 1;
-            query.Range = GroupSearchRange.GROUPNAME;
+            query.Range = TopicSearchRange.GROUPNAME;
             query.Keyword = Server.UrlDecode(query.Keyword);
             //调用搜索器进行搜索
-            TopicSearcher GroupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
-            PagingDataSet<TopicEntity> groups = GroupSearcher.Search(query);
+            TopicSearcher TopicSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
+            PagingDataSet<TopicEntity> groups = TopicSearcher.Search(query);
 
             return PartialView(groups);
         }
 
         /// <summary>
-        /// 群组搜索自动完成
+        /// 专题搜索自动完成
         /// </summary>
         public JsonResult SearchAutoComplete(string keyword, int topNumber)
         {
@@ -292,35 +292,35 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 可能感兴趣的群组
+        /// 可能感兴趣的专题
         /// </summary>
         [DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _InterestGroup()
+        public ActionResult _InterestTopic()
         {
             TagService tagService = new TagService(TenantTypeIds.Instance().User());
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser != null)
             {
-                GroupFullTextQuery query = new GroupFullTextQuery();
+                TopicFullTextQuery query = new TopicFullTextQuery();
                 query.PageSize = 20;
                 query.PageIndex = 1;
-                query.Range = GroupSearchRange.TAG;
+                query.Range = TopicSearchRange.TAG;
                 query.Tags = tagService.GetTopTagsOfItem(currentUser.UserId, 100).Select(n => n.TagName);
-                query.GroupIds = topicService.GetMyJoinedTopics(currentUser.UserId, 100, 1).Select(n => n.TopicId.ToString());
+                query.TopicIds = topicService.GetMyJoinedTopics(currentUser.UserId, 100, 1).Select(n => n.TopicId.ToString());
                 //调用搜索器进行搜索
-                TopicSearcher GroupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
+                TopicSearcher TopicSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                 IEnumerable<TopicEntity> groupsTag = null;
-                if (GroupSearcher.Search(query, true).Count == 0)
+                if (TopicSearcher.Search(query, true).Count == 0)
                 {
                     return View();
                 }
                 else
                 {
-                    groupsTag = GroupSearcher.Search(query, true).AsEnumerable<TopicEntity>();
+                    groupsTag = TopicSearcher.Search(query, true).AsEnumerable<TopicEntity>();
                 }
                 if (groupsTag.Count() < 20)
                 {
-                    IEnumerable<TopicEntity> groupsFollow = topicService.FollowedUserAlsoJoinedGroups(currentUser.UserId, 20 - groupsTag.Count());
+                    IEnumerable<TopicEntity> groupsFollow = topicService.FollowedUserAlsoJoinedTopics(currentUser.UserId, 20 - groupsTag.Count());
                     return View(groupsTag.Union(groupsFollow));
                 }
                 else
@@ -338,7 +338,7 @@ namespace SpecialTopic.Topic.Controllers
 
         #region 动态内容块
         /// <summary>
-        /// 创建群组动态内容块
+        /// 创建专题动态内容块
         /// </summary>
         //[DonutOutputCache(CacheProfile = "Frequently")]
         public ActionResult _CreateTopic(long ActivityId)
@@ -354,12 +354,12 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 用户加入群组动态内容快
+        /// 用户加入专题动态内容快
         /// </summary>
         /// <param name="ActivityId">动态id</param>
-        /// <returns>用户加入群组动态内容快</returns>
+        /// <returns>用户加入专题动态内容快</returns>
         //[DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _CreateGroupMember(long ActivityId)
+        public ActionResult _CreateTopicMember(long ActivityId)
         {
             Activity activity = activityService.Get(ActivityId);
             if (activity == null)
@@ -371,15 +371,15 @@ namespace SpecialTopic.Topic.Controllers
 
             IEnumerable<TopicMember> groupMembers = topicService.GetTopicMembers(group.TopicId, true, SortBy_TopicMember.DateCreated_Desc);
             ViewData["activity"] = activity;
-            ViewData["GroupMembers"] = groupMembers;
+            ViewData["TopicMembers"] = groupMembers;
             return View(group);
         }
 
         /// <summary>
-        /// 用户加入群组动态内容快
+        /// 用户加入专题动态内容快
         /// </summary>
         /// <param name="ActivityId">动态id</param>
-        /// <returns>用户加入群组动态内容快</returns>
+        /// <returns>用户加入专题动态内容快</returns>
         //[DonutOutputCache(CacheProfile = "Frequently")]
         public ActionResult _JoinTopic(long ActivityId)
         {
@@ -389,7 +389,7 @@ namespace SpecialTopic.Topic.Controllers
             TopicMember groupMember = topicService.GetTopicMember(activity.SourceId);
             if (groupMember == null)
                 return Content(string.Empty);
-            TopicEntity group = topicService.Get(groupMember.GroupId);
+            TopicEntity group = topicService.Get(groupMember.TopicId);
             if (group == null)
                 return Content(string.Empty);
 
@@ -399,34 +399,34 @@ namespace SpecialTopic.Topic.Controllers
 
         #endregion
 
-        #region 屏蔽群组
+        #region 屏蔽专题
 
         /// <summary>
-        /// 屏蔽群组
+        /// 屏蔽专题
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult BlockGroup(long groupId)
+        public ActionResult BlockTopic(long groupId)
         {
-            TopicEntity blockedGroup = topicService.Get(groupId);
-            if (blockedGroup == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到被屏蔽群组"));
+            TopicEntity blockedTopic = topicService.Get(groupId);
+            if (blockedTopic == null)
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到被屏蔽专题"));
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您还没有登录"));
-            new UserBlockService().BlockGroup(currentUser.UserId, blockedGroup.TopicId, blockedGroup.TopicName);
+            new UserBlockService().BlockTopic(currentUser.UserId, blockedTopic.TopicId, blockedTopic.TopicName);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
 
         /// <summary>
-        /// 屏蔽群组的post方法
+        /// 屏蔽专题的post方法
         /// </summary>
         /// <param name="spaceKey">屏蔽的spacekey</param>
         /// <param name="groupIds">被屏蔽的分组名称</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult BlockGroups(string spaceKey, List<long> groupIds)
+        public ActionResult BlockTopics(string spaceKey, List<long> groupIds)
         {
             int addCount = 0;
 
@@ -437,37 +437,37 @@ namespace SpecialTopic.Topic.Controllers
                 foreach (var groupId in groupIds)
                 {
                     TopicEntity group = topicService.Get(groupId);
-                    if (group == null || service.IsBlockedGroup(userId, groupId))
+                    if (group == null || service.IsBlockedTopic(userId, groupId))
                         continue;
-                    service.BlockGroup(userId, group.TopicId, group.TopicName);
+                    service.BlockTopic(userId, group.TopicId, group.TopicName);
                     addCount++;
                 }
             if (addCount > 0)
-                TempData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Success, string.Format("成功添加{0}个群组添加到屏蔽列表", addCount));
+                TempData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Success, string.Format("成功添加{0}个专题添加到屏蔽列表", addCount));
             else
-                TempData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Error, "没有任何群组被添加到屏蔽列表中");
+                TempData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Error, "没有任何专题被添加到屏蔽列表中");
             return Redirect(SiteUrls.Instance().BlockGroups(spaceKey));
         }
 
         /// <summary>
-        /// 屏蔽群组
+        /// 屏蔽专题
         /// </summary>
         /// <param name="spaceKey">空间名</param>
-        /// <returns>屏蔽群组名</returns>
-        public ActionResult _BlockGroups(string spaceKey)
+        /// <returns>屏蔽专题名</returns>
+        public ActionResult _BlockTopics(string spaceKey)
         {
             long userId = UserIdToUserNameDictionary.GetUserId(spaceKey);
-            if (UserContext.CurrentUser == null || (UserContext.CurrentUser.UserId != userId && authorizer.IsAdministrator(new TenantTypeService().Get(TenantTypeIds.Instance().Group()).ApplicationId)))
+            if (UserContext.CurrentUser == null || (UserContext.CurrentUser.UserId != userId && authorizer.IsAdministrator(new TenantTypeService().Get(TenantTypeIds.Instance().Topic()).ApplicationId)))
                 return Content(string.Empty);
 
-            IEnumerable<UserBlockedObject> blockedGroups = new UserBlockService().GetBlockedGroups(userId);
+            IEnumerable<UserBlockedObject> blockedTopics = new UserBlockService().GetBlockedTopics(userId);
 
             List<UserBlockedObjectViewModel> blockedObjectes = new List<UserBlockedObjectViewModel>();
 
-            if (blockedGroups != null && blockedGroups.Count() > 0)
+            if (blockedTopics != null && blockedTopics.Count() > 0)
             {
-                topicService.GetGroupEntitiesByIds(blockedGroups.Select(n => n.ObjectId));
-                foreach (var item in blockedGroups)
+                topicService.GetTopicEntitiesByIds(blockedTopics.Select(n => n.ObjectId));
+                foreach (var item in blockedTopics)
                 {
                     TopicEntity group = topicService.Get(item.ObjectId);
                     if (group == null)
@@ -484,11 +484,11 @@ namespace SpecialTopic.Topic.Controllers
 
         #endregion
 
-        #region 加入群组
+        #region 加入专题
         /// <summary>
         /// 申请加入按钮
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>   
         [HttpGet]
         public ActionResult _ApplyJoinButton(long groupId, bool showQuit = false, string buttonName = null)
@@ -514,17 +514,17 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 退出群组
+        /// 退出专题
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult _QuitTopic(long groupId)
         {
-            StatusMessageData message = new StatusMessageData(StatusMessageType.Success, "退出群组成功！");
+            StatusMessageData message = new StatusMessageData(StatusMessageType.Success, "退出专题成功！");
             TopicEntity group = topicService.Get(groupId);
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到专题！"));
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
@@ -534,24 +534,24 @@ namespace SpecialTopic.Topic.Controllers
             }
             catch
             {
-                message = new StatusMessageData(StatusMessageType.Error, "退出群组失败！");
+                message = new StatusMessageData(StatusMessageType.Error, "退出专题失败！");
             }
             return Json(message);
         }
 
         /// <summary>
-        /// 用户加入群组（群组无验证时）
+        /// 用户加入专题（专题无验证时）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult JoinTopic(long groupId)
         {
-            //需判断是否已经加入过群组
+            //需判断是否已经加入过专题
             StatusMessageData message = null;
             TopicEntity group = topicService.Get(groupId);
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到专题！"));
 
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
@@ -561,7 +561,7 @@ namespace SpecialTopic.Topic.Controllers
 
             //已修改
 
-            //判断是否加入过该群组
+            //判断是否加入过该专题
             bool isMember = topicService.IsMember(groupId, currentUser.UserId);
 
             //未加入
@@ -569,22 +569,22 @@ namespace SpecialTopic.Topic.Controllers
             {
                 TopicMember member = TopicMember.New();
                 member.UserId = currentUser.UserId;
-                member.GroupId = group.TopicId;
+                member.TopicId = group.TopicId;
                 member.IsManager = false;
                 topicService.CreateTopicMember(member);
-                message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
+                message = new StatusMessageData(StatusMessageType.Success, "加入专题成功！");
             }
             else
             {
-                message = new StatusMessageData(StatusMessageType.Hint, "您已加入过该群组！");
+                message = new StatusMessageData(StatusMessageType.Hint, "您已加入过该专题！");
             }
             return Json(message);
         }
 
         /// <summary>
-        /// 用户加入群组（群组有验证时）
+        /// 用户加入专题（专题有验证时）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _EditApply(long groupId)
@@ -598,9 +598,9 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 用户加入群组（群组有验证时）
+        /// 用户加入专题（专题有验证时）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult _EditApply(long groupId, string applyReason)
@@ -608,7 +608,7 @@ namespace SpecialTopic.Topic.Controllers
             StatusMessageData message = null;
             TopicEntity group = topicService.Get(groupId);
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到专题！"));
 
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
@@ -624,22 +624,22 @@ namespace SpecialTopic.Topic.Controllers
                 TopicMemberApply apply = TopicMemberApply.New();
                 apply.ApplyReason = applyReason;
                 apply.ApplyStatus = TopicMemberApplyStatus.Pending;
-                apply.GroupId = group.TopicId;
+                apply.TopicId = group.TopicId;
                 apply.UserId = UserContext.CurrentUser.UserId;
                 topicService.CreateTopicMemberApply(apply);
                 message = new StatusMessageData(StatusMessageType.Success, "申请已发出，请等待！");
             }
             else
             {
-                message = new StatusMessageData(StatusMessageType.Hint, "您已给该群组发送过申请！");
+                message = new StatusMessageData(StatusMessageType.Hint, "您已给该专题发送过申请！");
             }
             return Json(message);
         }
 
         /// <summary>
-        ///  用户加入群组（通过问题验证）
+        ///  用户加入专题（通过问题验证）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _ValidateQuestion(long groupId)
@@ -650,9 +650,9 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 用户加入群组（通过问题验证）
+        /// 用户加入专题（通过问题验证）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult _ValidateQuestion(long groupId, string myAnswer)
@@ -660,7 +660,7 @@ namespace SpecialTopic.Topic.Controllers
             StatusMessageData message = null;
             TopicEntity group = topicService.Get(groupId);
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到专题！"));
 
 
             //已修改
@@ -678,10 +678,10 @@ namespace SpecialTopic.Topic.Controllers
                 {
                     TopicMember member = TopicMember.New();
                     member.UserId = UserContext.CurrentUser.UserId;
-                    member.GroupId = group.TopicId;
+                    member.TopicId = group.TopicId;
                     member.IsManager = false;
                     topicService.CreateTopicMember(member);
-                    message = new StatusMessageData(StatusMessageType.Success, "加入群组成功！");
+                    message = new StatusMessageData(StatusMessageType.Success, "加入专题成功！");
                 }
                 else
                 {
@@ -690,20 +690,20 @@ namespace SpecialTopic.Topic.Controllers
             }
             else
             {
-                message = new StatusMessageData(StatusMessageType.Hint, "您已加入过该群组！");
+                message = new StatusMessageData(StatusMessageType.Hint, "您已加入过该专题！");
             }
             return Json(message);
         }
 
         #endregion
 
-        #region 推荐群组
+        #region 推荐专题
         /// <summary>
-        /// 推荐群组
+        /// 推荐专题
         /// </summary>
         /// <returns></returns>
         [DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _RecommendedGroup()
+        public ActionResult _RecommendedTopic()
         {
             IEnumerable<RecommendItem> recommendItems = recommendService.GetTops(6, "90020001");
             return View(recommendItems);
@@ -713,7 +713,7 @@ namespace SpecialTopic.Topic.Controllers
         #region 页面
 
         /// <summary>
-        /// 发现群组
+        /// 发现专题
         /// </summary>
         /// <returns></returns>
         public ActionResult FindTopic(string nameKeyword, string areaCode, long? categoryId, SortBy_Topic? sortBy, int pageIndex = 1)
@@ -748,7 +748,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
             if (childCategories == null)
-                childCategories = categoryService.GetRootCategories(TenantTypeIds.Instance().Group());
+                childCategories = categoryService.GetRootCategories(TenantTypeIds.Instance().Topic());
 
             ViewData["childCategories"] = childCategories;
 
@@ -803,7 +803,7 @@ namespace SpecialTopic.Topic.Controllers
             }
 
             if (string.IsNullOrEmpty(pageTitle))
-                pageTitle = "发现群组";
+                pageTitle = "发现专题";
             pageResourceManager.InsertTitlePart(pageTitle);
             PagingDataSet<TopicEntity> groups = topicService.Gets(areaCode, categoryId, sortBy ?? SortBy_Topic.DateCreated_Desc, pageIndex: pageIndex);
             if (Request.IsAjaxRequest())
@@ -850,7 +850,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
         /// <summary>
-        /// 用户的群组页
+        /// 用户的专题页
         /// </summary>
         /// <returns></returns>
         [UserSpaceAuthorize]
@@ -907,7 +907,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
         /// <summary>
-        /// 用户创建的群组页
+        /// 用户创建的专题页
         /// </summary>
         /// <returns></returns>
         [UserSpaceAuthorize]
@@ -948,12 +948,12 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 标签显示群组列表
+        /// 标签显示专题列表
         /// </summary>
         public ActionResult ListByTag(string tagName, SortBy_Topic sortBy = SortBy_Topic.DateCreated_Desc, int pageIndex = 1)
         {
             tagName = WebUtility.UrlDecode(tagName);
-            var tag = new TagService(TenantTypeIds.Instance().Group()).Get(tagName);
+            var tag = new TagService(TenantTypeIds.Instance().Topic()).Get(tagName);
 
             if (tag == null)
             {
@@ -973,10 +973,10 @@ namespace SpecialTopic.Topic.Controllers
 
 
         /// <summary>
-        /// 顶部群组导航
+        /// 顶部专题导航
         /// </summary>
         /// <returns></returns>
-        public ActionResult _GroupGlobalNavigations()
+        public ActionResult _TopicGlobalNavigations()
         {
             IUser CurrentUser = UserContext.CurrentUser;
             IEnumerable<TopicEntity> groups = null;
@@ -987,18 +987,18 @@ namespace SpecialTopic.Topic.Controllers
                 if (groups.Count() >= 9)
                     return View(groups.Take(9));
 
-                PagingDataSet<TopicEntity> joinedGroups = topicService.GetMyJoinedTopics(CurrentUser.UserId);
-                groups = groups.Union(joinedGroups).Take(9);
+                PagingDataSet<TopicEntity> joinedTopics = topicService.GetMyJoinedTopics(CurrentUser.UserId);
+                groups = groups.Union(joinedTopics).Take(9);
             }
 
             return View(groups);
         }
 
         /// <summary>
-        /// 群组排行内容块
+        /// 专题排行内容块
         /// </summary>
         [DonutOutputCache(CacheProfile = "Stable")]
-        public ActionResult _TopTopics(int topNumber, string areaCode, long? categoryId, SortBy_Topic? sortBy, string viewName = "_TopGroups_List")
+        public ActionResult _TopTopics(int topNumber, string areaCode, long? categoryId, SortBy_Topic? sortBy, string viewName = "_TopTopics_List")
         {
             var groups = topicService.GetTops(topNumber, areaCode, categoryId, sortBy ?? SortBy_Topic.DateCreated_Desc);
 
@@ -1010,21 +1010,21 @@ namespace SpecialTopic.Topic.Controllers
 
 
         /// <summary>
-        /// 群组分类导航内容块（包含1、2级）
+        /// 专题分类导航内容块（包含1、2级）
         /// </summary>
         /// <returns></returns>
         [DonutOutputCache(CacheProfile = "Stable")]
         public ActionResult _CategoryTopics()
         {
-            IEnumerable<Category> categories = categoryService.GetRootCategories(TenantTypeIds.Instance().Group());
+            IEnumerable<Category> categories = categoryService.GetRootCategories(TenantTypeIds.Instance().Topic());
             return PartialView(categories);
         }
 
         /// <summary>
-        /// 群组地区导航内容块
+        /// 专题地区导航内容块
         /// </summary>
         /// <returns></returns>
-        public ActionResult _AreaGroups(int topNumber, string areaCode, long? categoryId, SortBy_Topic sortBy = SortBy_Topic.DateCreated_Desc)
+        public ActionResult _AreaTopics(int topNumber, string areaCode, long? categoryId, SortBy_Topic sortBy = SortBy_Topic.DateCreated_Desc)
         {
             IUser iUser = (User)UserContext.CurrentUser;
             User user = null;
@@ -1036,8 +1036,8 @@ namespace SpecialTopic.Topic.Controllers
             {
                 user = userService.GetFullUser(iUser.UserId);
             }
-            if (string.IsNullOrEmpty(areaCode) && Request.Cookies["AreaGroupCookie" + user.UserId] != null && !string.IsNullOrEmpty(Request.Cookies["AreaGroupCookie" + user.UserId].Value))
-                areaCode = Request.Cookies["AreaGroupCookie" + user.UserId].Value;
+            if (string.IsNullOrEmpty(areaCode) && Request.Cookies["AreaTopicCookie" + user.UserId] != null && !string.IsNullOrEmpty(Request.Cookies["AreaTopicCookie" + user.UserId].Value))
+                areaCode = Request.Cookies["AreaTopicCookie" + user.UserId].Value;
 
             if (string.IsNullOrEmpty(areaCode))
             {
@@ -1061,7 +1061,7 @@ namespace SpecialTopic.Topic.Controllers
 
             IEnumerable<TopicEntity> groups = topicService.GetTops(topNumber, areaCode, categoryId, sortBy);
 
-            HttpCookie cookie = new HttpCookie("AreaGroupCookie" + user.UserId, areaCode);
+            HttpCookie cookie = new HttpCookie("AreaTopicCookie" + user.UserId, areaCode);
             Response.Cookies.Add(cookie);
 
             return PartialView(groups);
@@ -1072,7 +1072,7 @@ namespace SpecialTopic.Topic.Controllers
         /// </summary>
         /// <returns></returns>
         [DonutOutputCache(CacheProfile = "Frequently")]
-        public ActionResult _RecommendedGroupOwners(int topNumber = 5, string recommendTypeId = null)
+        public ActionResult _RecommendedTopicOwners(int topNumber = 5, string recommendTypeId = null)
         {
             IEnumerable<RecommendItem> recommendUsers = recommendService.GetTops(topNumber, recommendTypeId);
 

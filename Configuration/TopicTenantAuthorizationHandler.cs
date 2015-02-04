@@ -16,12 +16,12 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组租户权限验证处理器
     /// </summary>
-    public class GroupTenantAuthorizationHandler : ITenantAuthorizationHandler
+    public class TopicTenantAuthorizationHandler : ITenantAuthorizationHandler
     {
 
         public string TenantTypeId
         {
-            get { return TenantTypeIds.Instance().Group(); }
+            get { return TenantTypeIds.Instance().Topic(); }
         }
 
         /// <summary>

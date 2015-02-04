@@ -17,26 +17,26 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 扩展权限方法
     /// </summary>
-    public static class AuthorizerGroupExtension
+    public static class AuthorizerTopicExtension
     {
         /// <summary>
-        /// 是否具有创建Group的权限
+        /// 是否具有创建Topic的权限
         /// </summary>
         /// <param name="authorizer"></param>
         /// <returns></returns>
-        public static bool Group_Create(this Authorizer authorizer)
+        public static bool Topic_Create(this Authorizer authorizer)
         {
             string errorMessage = string.Empty;
-            return authorizer.Group_Create(out errorMessage);
+            return authorizer.Topic_Create(out errorMessage);
         }
 
         /// <summary>
-        /// 是否具有创建Group的权限
+        /// 是否具有创建Topic的权限
         /// </summary>        
         /// <param name="authorizer"></param>
         /// <param name="errorMessage">无权信息提示</param>
         /// <returns></returns>
-        public static bool Group_Create(this Authorizer authorizer, out string errorMessage)
+        public static bool Topic_Create(this Authorizer authorizer, out string errorMessage)
         {
             errorMessage = string.Empty;
             IUser currentUser = UserContext.CurrentUser;
@@ -63,9 +63,9 @@ namespace SpecialTopic.Topic
         /// <param name="authorizer"></param>
         /// <param name="groupId">帖群id</param>
         /// <returns>是否拥有设置管理员的权限</returns>
-        public static bool Group_SetManager(this Authorizer authorizer, long groupId)
+        public static bool Topic_SetManager(this Authorizer authorizer, long groupId)
         {
-            return authorizer.Group_SetManager(new TopicService().Get(groupId));
+            return authorizer.Topic_SetManager(new TopicService().Get(groupId));
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace SpecialTopic.Topic
         /// <param name="authorizer"></param>
         /// <param name="group"></param>
         /// <returns></returns>
-        public static bool Group_SetManager(this Authorizer authorizer, TopicEntity group)
+        public static bool Topic_SetManager(this Authorizer authorizer, TopicEntity group)
         {
             if (group == null)
                 return false;
@@ -94,15 +94,15 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 是否具有管理Group的权限
+        /// 是否具有管理Topic的权限
         /// </summary>
         /// <param name="authorizer"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public static bool Group_Manage(this Authorizer authorizer, long groupId)
+        public static bool Topic_Manage(this Authorizer authorizer, long groupId)
         {
             TopicEntity group = new TopicService().Get(groupId);
-            return Group_Manage(authorizer, group);
+            return Topic_Manage(authorizer, group);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace SpecialTopic.Topic
         /// <param name="groupId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool Group_DeleteVisitor(this Authorizer authorizer, long groupId, long userId)
+        public static bool Topic_DeleteVisitor(this Authorizer authorizer, long groupId, long userId)
         {
             bool result = false;
             TopicEntity group = new TopicService().Get(groupId);
@@ -123,7 +123,7 @@ namespace SpecialTopic.Topic
             }
             else
             {
-                result = Group_Manage(authorizer, group);
+                result = Topic_Manage(authorizer, group);
             }
             return result;
         }
@@ -134,7 +134,7 @@ namespace SpecialTopic.Topic
         /// <param name="group"></param>
         /// <param name="userId">被删除的用户Id</param>
         /// <returns>是否拥有删除群组成员的权限</returns>
-        public static bool Group_DeleteMember(this Authorizer authorizer, TopicEntity group, long userId)
+        public static bool Topic_DeleteMember(this Authorizer authorizer, TopicEntity group, long userId)
         {
             if (group == null)
                 return false;
@@ -165,12 +165,12 @@ namespace SpecialTopic.Topic
         /// <param name="authorizer"></param>
         /// <param name="activity"></param>
         /// <returns></returns>
-        public static bool Group_DeleteGroupActivity(this Authorizer authorizer, Activity activity)
+        public static bool Topic_DeleteTopicActivity(this Authorizer authorizer, Activity activity)
         {
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return false;
-            if (authorizer.Group_Manage(activity.OwnerId))
+            if (authorizer.Topic_Manage(activity.OwnerId))
                 return true;
             if (currentUser.UserId == activity.UserId)
                 return true;
@@ -178,11 +178,11 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 是否具有管理Group的权限
+        /// 是否具有管理Topic的权限
         /// </summary>
-        /// <param name="Group"></param>
+        /// <param name="Topic"></param>
         /// <returns></returns>
-        public static bool Group_Manage(this Authorizer authorizer, TopicEntity group)
+        public static bool Topic_Manage(this Authorizer authorizer, TopicEntity group)
         {
 
 
@@ -217,7 +217,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        public static bool Group_Invite(this Authorizer authorizer, TopicEntity group)
+        public static bool Topic_Invite(this Authorizer authorizer, TopicEntity group)
         {
             if (group == null)
                 return false;
@@ -225,7 +225,7 @@ namespace SpecialTopic.Topic
                 return false;
 
             TopicService groupService = new TopicService();
-            if (authorizer.Group_Manage(group))
+            if (authorizer.Topic_Manage(group))
                 return true;
             if (group.EnableMemberInvite && groupService.IsMember(group.TopicId, UserContext.CurrentUser.UserId))
                 return true;
@@ -238,7 +238,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
-        public static bool Group_View(this Authorizer authorizer, TopicEntity group)
+        public static bool Topic_View(this Authorizer authorizer, TopicEntity group)
         {
             if (group == null)
                 return false;
@@ -251,7 +251,7 @@ namespace SpecialTopic.Topic
                 if (UserContext.CurrentUser == null)
                     return false;
 
-                if (authorizer.Group_Manage(group))
+                if (authorizer.Topic_Manage(group))
                     return true;
 
                 TopicService groupService = new TopicService();

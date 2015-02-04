@@ -15,24 +15,24 @@ namespace SpecialTopic.Blog.EventModules
     /// <summary>
     /// 处理群组索引的EventMoudle
     /// </summary>
-    public class GroupIndexEventModule : IEventMoudle
+    public class TopicIndexEventModule : IEventMoudle
     {
         private TopicService topicService = new TopicService();
         private CategoryService categoryService = new CategoryService();
-        private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
+        private TagService tagService = new TagService(TenantTypeIds.Instance().Topic());
 
-        //因为EventModule.RegisterEventHandler()在web启动时初始化，而GroupSearcher的构造函数依赖于WCF服务（分布式搜索部署情况下），此时WCF服务尚无法连接，因此GroupSearcher不能在此处构建，只能再下面的方法中构建
+        //因为EventModule.RegisterEventHandler()在web启动时初始化，而TopicSearcher的构造函数依赖于WCF服务（分布式搜索部署情况下），此时WCF服务尚无法连接，因此TopicSearcher不能在此处构建，只能再下面的方法中构建
         private TopicSearcher groupSearcher = null;
 
         public void RegisterEventHandler()
         {
-            EventBus<TopicEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(GroupEntity_After);
+            EventBus<TopicEntity>.Instance().After += new CommonEventHandler<TopicEntity, CommonEventArgs>(TopicEntity_After);
 
-            EventBus<string, TagEventArgs>.Instance().BatchAfter += new BatchEventHandler<string, TagEventArgs>(AddTagsToGroup_BatchAfter);
+            EventBus<string, TagEventArgs>.Instance().BatchAfter += new BatchEventHandler<string, TagEventArgs>(AddTagsToTopic_BatchAfter);
             EventBus<Tag>.Instance().Before += new CommonEventHandler<Tag, CommonEventArgs>(DeleteUpdateTags_Before);
             EventBus<ItemInTag>.Instance().After += new CommonEventHandler<ItemInTag, CommonEventArgs>(DeleteItemInTags);
 
-            EventBus<string, TagEventArgs>.Instance().BatchAfter += new BatchEventHandler<string, TagEventArgs>(AddCategoriesToGroup_BatchAfter);
+            EventBus<string, TagEventArgs>.Instance().BatchAfter += new BatchEventHandler<string, TagEventArgs>(AddCategoriesToTopic_BatchAfter);
             EventBus<Category>.Instance().Before += new CommonEventHandler<Category, CommonEventArgs>(DeleteUpdateCategories_Before);
         }
 
@@ -41,9 +41,9 @@ namespace SpecialTopic.Blog.EventModules
         /// <summary>
         /// 为群组添加分类时触发
         /// </summary>
-        private void AddCategoriesToGroup_BatchAfter(IEnumerable<string> senders, TagEventArgs eventArgs)
+        private void AddCategoriesToTopic_BatchAfter(IEnumerable<string> senders, TagEventArgs eventArgs)
         {
-            if (eventArgs.TenantTypeId == TenantTypeIds.Instance().Group())
+            if (eventArgs.TenantTypeId == TenantTypeIds.Instance().Topic())
             {
                 long groupId = eventArgs.ItemId;
                 if (groupSearcher == null)
@@ -59,7 +59,7 @@ namespace SpecialTopic.Blog.EventModules
         /// </summary>
         private void DeleteUpdateCategories_Before(Category sender, CommonEventArgs eventArgs)
         {
-            if (sender.TenantTypeId == TenantTypeIds.Instance().Group())
+            if (sender.TenantTypeId == TenantTypeIds.Instance().Topic())
             {
                 if (eventArgs.EventOperationType == EventOperationType.Instance().Delete() || eventArgs.EventOperationType == EventOperationType.Instance().Update())
                 {
@@ -68,7 +68,7 @@ namespace SpecialTopic.Blog.EventModules
                     {
                         groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                     }
-                    groupSearcher.Update(topicService.GetGroupEntitiesByIds(groupIds));
+                    groupSearcher.Update(topicService.GetTopicEntitiesByIds(groupIds));
                 }
             }
         }
@@ -78,9 +78,9 @@ namespace SpecialTopic.Blog.EventModules
         /// <summary>
         /// 为群组添加标签时触发
         /// </summary>
-        private void AddTagsToGroup_BatchAfter(IEnumerable<string> senders, TagEventArgs eventArgs)
+        private void AddTagsToTopic_BatchAfter(IEnumerable<string> senders, TagEventArgs eventArgs)
         {
-            if (eventArgs.TenantTypeId == TenantTypeIds.Instance().Group())
+            if (eventArgs.TenantTypeId == TenantTypeIds.Instance().Topic())
             {
                 long groupId = eventArgs.ItemId;
                 if (groupSearcher == null)
@@ -95,7 +95,7 @@ namespace SpecialTopic.Blog.EventModules
         /// </summary>
         private void DeleteUpdateTags_Before(Tag sender, CommonEventArgs eventArgs)
         {
-            if (sender.TenantTypeId == TenantTypeIds.Instance().Group())
+            if (sender.TenantTypeId == TenantTypeIds.Instance().Topic())
             {
                 if (eventArgs.EventOperationType == EventOperationType.Instance().Delete() || eventArgs.EventOperationType == EventOperationType.Instance().Update())
                 {
@@ -105,13 +105,13 @@ namespace SpecialTopic.Blog.EventModules
                     {
                         groupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                     }
-                    groupSearcher.Update(topicService.GetGroupEntitiesByIds(groupIds));
+                    groupSearcher.Update(topicService.GetTopicEntitiesByIds(groupIds));
                 }
             }
         }
         private void DeleteItemInTags(ItemInTag sender, CommonEventArgs eventArgs)
         {
-            if (sender.TenantTypeId == TenantTypeIds.Instance().Group())
+            if (sender.TenantTypeId == TenantTypeIds.Instance().Topic())
             {
                 long groupId = sender.ItemId;
                 if (groupSearcher == null)
@@ -127,7 +127,7 @@ namespace SpecialTopic.Blog.EventModules
         /// <summary>
         /// 群组增量索引
         /// </summary>
-        private void GroupEntity_After(TopicEntity group, CommonEventArgs eventArgs)
+        private void TopicEntity_After(TopicEntity group, CommonEventArgs eventArgs)
         {
             if (group == null)
             {

@@ -10,14 +10,14 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组用户内容数
     /// </summary>
-    public class GroupOwnerDataGetter : IOwnerDataGetter
+    public class TopicOwnerDataGetter : IOwnerDataGetter
     {
         /// <summary>
         /// datakey
         /// </summary>
         public string DataKey
         {
-            get { return OwnerDataKeys.Instance().CreatedGroupCount(); }
+            get { return OwnerDataKeys.Instance().CreatedTopicCount(); }
         }
 
 
@@ -40,7 +40,7 @@ namespace SpecialTopic.Topic
             if (string.IsNullOrEmpty(spaceKey) && ownerId.HasValue)
                 spaceKey = UserIdToUserNameDictionary.GetUserName(ownerId.Value);
 
-            return SiteUrls.Instance().UserCreatedGroups(spaceKey);
+            return SiteUrls.Instance().UserCreatedTopics(spaceKey);
         }
 
         /// <summary>

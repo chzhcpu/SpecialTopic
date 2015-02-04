@@ -20,15 +20,15 @@ namespace SpecialTopic.Topic.EventModules
     /// <summary>
     /// 处理群组成员退出群组通知的EventMoudle
     /// </summary>
-    public class GroupMemberEventModule : IEventMoudle
+    public class TopicMemberEventModule : IEventMoudle
     {
         /// <summary>
         /// 注册EventHandler
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberActivityModule_After);
-            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(GroupMemberNoticeModule_After);
+            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(TopicMemberActivityModule_After);
+            EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(TopicMemberNoticeModule_After);
             EventBus<TopicMember>.Instance().After += new CommonEventHandler<TopicMember, CommonEventArgs>(SetManagerNoticeEventModule_After);
         }
 
@@ -37,7 +37,7 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         /// <param name="groupMember"></param>
         /// <param name="eventArgs"></param>
-        private void GroupMemberActivityModule_After(TopicMember groupMember, CommonEventArgs eventArgs)
+        private void TopicMemberActivityModule_After(TopicMember groupMember, CommonEventArgs eventArgs)
         {
             ActivityService activityService = new ActivityService();
             if (eventArgs.EventOperationType == EventOperationType.Instance().Create())
@@ -45,41 +45,41 @@ namespace SpecialTopic.Topic.EventModules
                 //生成动态
                 if (groupMember == null)
                     return;
-                var group = new TopicService().Get(groupMember.GroupId);
+                var group = new TopicService().Get(groupMember.TopicId);
                 if (group == null)
                     return;
                 //生成Owner为群组的动态
-                Activity actvityOfGroup = Activity.New();
-                actvityOfGroup.ActivityItemKey = ActivityItemKeys.Instance().CreateGroupMember();
-                actvityOfGroup.ApplicationId = TopicConfig.Instance().ApplicationId;
-                actvityOfGroup.IsOriginalThread = true;
-                actvityOfGroup.IsPrivate = !group.IsPublic;
-                actvityOfGroup.UserId = groupMember.UserId;
-                actvityOfGroup.ReferenceId = 0;
-                actvityOfGroup.ReferenceTenantTypeId = string.Empty;
-                actvityOfGroup.SourceId = groupMember.Id;
-                actvityOfGroup.TenantTypeId = TenantTypeIds.Instance().User();
-                actvityOfGroup.OwnerId = group.TopicId;
-                actvityOfGroup.OwnerName = group.TopicName;
-                actvityOfGroup.OwnerType = ActivityOwnerTypes.Instance().Group();
+                Activity actvityOfTopic = Activity.New();
+                actvityOfTopic.ActivityItemKey = ActivityItemKeys.Instance().CreateTopicMember();
+                actvityOfTopic.ApplicationId = TopicConfig.Instance().ApplicationId;
+                actvityOfTopic.IsOriginalThread = true;
+                actvityOfTopic.IsPrivate = !group.IsPublic;
+                actvityOfTopic.UserId = groupMember.UserId;
+                actvityOfTopic.ReferenceId = 0;
+                actvityOfTopic.ReferenceTenantTypeId = string.Empty;
+                actvityOfTopic.SourceId = groupMember.Id;
+                actvityOfTopic.TenantTypeId = TenantTypeIds.Instance().User();
+                actvityOfTopic.OwnerId = group.TopicId;
+                actvityOfTopic.OwnerName = group.TopicName;
+                actvityOfTopic.OwnerType = ActivityOwnerTypes.Instance().Topic();
 
-                activityService.Generate(actvityOfGroup, false);
+                activityService.Generate(actvityOfTopic, false);
 
                 //生成Owner为用户的动态
                 Activity actvityOfUser = Activity.New();
-                actvityOfUser.ActivityItemKey = ActivityItemKeys.Instance().JoinGroup();
-                actvityOfUser.ApplicationId = actvityOfGroup.ApplicationId;
-                actvityOfUser.HasImage = actvityOfGroup.HasImage;
-                actvityOfUser.HasMusic = actvityOfGroup.HasMusic;
-                actvityOfUser.HasVideo = actvityOfGroup.HasVideo;
-                actvityOfUser.IsOriginalThread = actvityOfGroup.IsOriginalThread;
-                actvityOfUser.IsPrivate = actvityOfGroup.IsPrivate;
-                actvityOfUser.UserId = actvityOfGroup.UserId;
-                actvityOfUser.ReferenceId = actvityOfGroup.ReferenceId;
-                actvityOfGroup.ReferenceTenantTypeId = actvityOfGroup.ReferenceTenantTypeId;
-                actvityOfUser.SourceId = actvityOfGroup.SourceId;
+                actvityOfUser.ActivityItemKey = ActivityItemKeys.Instance().JoinTopic();
+                actvityOfUser.ApplicationId = actvityOfTopic.ApplicationId;
+                actvityOfUser.HasImage = actvityOfTopic.HasImage;
+                actvityOfUser.HasMusic = actvityOfTopic.HasMusic;
+                actvityOfUser.HasVideo = actvityOfTopic.HasVideo;
+                actvityOfUser.IsOriginalThread = actvityOfTopic.IsOriginalThread;
+                actvityOfUser.IsPrivate = actvityOfTopic.IsPrivate;
+                actvityOfUser.UserId = actvityOfTopic.UserId;
+                actvityOfUser.ReferenceId = actvityOfTopic.ReferenceId;
+                actvityOfTopic.ReferenceTenantTypeId = actvityOfTopic.ReferenceTenantTypeId;
+                actvityOfUser.SourceId = actvityOfTopic.SourceId;
 
-                actvityOfUser.TenantTypeId = actvityOfGroup.TenantTypeId;
+                actvityOfUser.TenantTypeId = actvityOfTopic.TenantTypeId;
                 actvityOfUser.OwnerId = groupMember.UserId;
                 actvityOfUser.OwnerName = groupMember.User.DisplayName;
                 actvityOfUser.OwnerType = ActivityOwnerTypes.Instance().User();
@@ -97,12 +97,12 @@ namespace SpecialTopic.Topic.EventModules
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void GroupMemberNoticeModule_After(TopicMember sender, CommonEventArgs eventArgs)
+        private void TopicMemberNoticeModule_After(TopicMember sender, CommonEventArgs eventArgs)
         {
             if (eventArgs.EventOperationType != EventOperationType.Instance().Delete() && eventArgs.EventOperationType != EventOperationType.Instance().Create() && sender != null)
                 return;
             TopicService groupService = new TopicService();
-            TopicEntity entity = groupService.Get(sender.GroupId);
+            TopicEntity entity = groupService.Get(sender.TopicId);
             if (entity == null)
                 return;
 
@@ -130,7 +130,7 @@ namespace SpecialTopic.Topic.EventModules
                     notice.LeadingActorUserId = sender.UserId;
                     notice.LeadingActor = senderUser.DisplayName;
                     notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(sender.UserId));
-                    notice.RelativeObjectId = sender.GroupId;
+                    notice.RelativeObjectId = sender.TopicId;
                     notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
                     notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                     notice.TemplateName = NoticeTemplateNames.Instance().MemberQuit();
@@ -150,7 +150,7 @@ namespace SpecialTopic.Topic.EventModules
                     notice.LeadingActorUserId = sender.UserId;
                     notice.LeadingActor = senderUser.DisplayName;
                     notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(sender.UserId));
-                    notice.RelativeObjectId = sender.GroupId;
+                    notice.RelativeObjectId = sender.TopicId;
                     notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
                     notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                     notice.TemplateName = NoticeTemplateNames.Instance().MemberJoin();
@@ -160,14 +160,14 @@ namespace SpecialTopic.Topic.EventModules
 
                 //notice = Notice.New();
                 //notice.UserId = sender.UserId;
-                //notice.ApplicationId = GroupConfig.Instance().ApplicationId;
+                //notice.ApplicationId = TopicConfig.Instance().ApplicationId;
                 //notice.TypeId = NoticeTypeIds.Instance().Hint();
                 //notice.LeadingActorUserId = sender.UserId;
                 //notice.LeadingActor = senderUser.DisplayName;
                 //notice.LeadingActorUrl = SiteUrls.FullUrl(SiteUrls.Instance().SpaceHome(sender.UserId));
-                //notice.RelativeObjectId = sender.GroupId;
-                //notice.RelativeObjectName = StringUtility.Trim(entity.GroupName, 64);
-                //notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.GroupKey));
+                //notice.RelativeObjectId = sender.TopicId;
+                //notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
+                //notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
                 //notice.TemplateName = NoticeTemplateNames.Instance().MemberApplyApproved();
                 //noticeService.Create(notice);
             }
@@ -180,11 +180,11 @@ namespace SpecialTopic.Topic.EventModules
         /// <param name="eventArgs"></param>
         private void SetManagerNoticeEventModule_After(TopicMember sender, CommonEventArgs eventArgs)
         {
-            if (eventArgs.EventOperationType != EventOperationType.Instance().SetGroupManager() && eventArgs.EventOperationType != EventOperationType.Instance().CancelGroupManager())
+            if (eventArgs.EventOperationType != EventOperationType.Instance().SetTopicManager() && eventArgs.EventOperationType != EventOperationType.Instance().CancelTopicManager())
                 return;
 
             TopicService groupService = new TopicService();
-            TopicEntity entity = groupService.Get(sender.GroupId);
+            TopicEntity entity = groupService.Get(sender.TopicId);
             if (entity == null)
                 return;
 
@@ -201,17 +201,17 @@ namespace SpecialTopic.Topic.EventModules
             notice.LeadingActorUserId = 0;
             notice.LeadingActor = string.Empty;
             notice.LeadingActorUrl = string.Empty;
-            notice.RelativeObjectId = sender.GroupId;
+            notice.RelativeObjectId = sender.TopicId;
             notice.RelativeObjectName = StringUtility.Trim(entity.TopicName, 64);
             notice.RelativeObjectUrl = SiteUrls.FullUrl(SiteUrls.Instance().TopicHome(entity.TopicKey));
 
-            if (eventArgs.EventOperationType == EventOperationType.Instance().SetGroupManager())
+            if (eventArgs.EventOperationType == EventOperationType.Instance().SetTopicManager())
             {
-                notice.TemplateName = NoticeTemplateNames.Instance().SetGroupManager();
+                notice.TemplateName = NoticeTemplateNames.Instance().SetTopicManager();
             }
             else
             {
-                notice.TemplateName = NoticeTemplateNames.Instance().CannelGroupManager();
+                notice.TemplateName = NoticeTemplateNames.Instance().CannelTopicManager();
             }
             noticeService.Create(notice);
         }

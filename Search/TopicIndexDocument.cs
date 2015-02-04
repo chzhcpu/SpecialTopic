@@ -15,12 +15,12 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组索引文档
     /// </summary>
-    public class GroupIndexDocument
+    public class TopicIndexDocument
     {
         #region 索引字段
 
-        public static readonly string GroupId = "GroupId";
-        public static readonly string GroupName = "GroupName";
+        public static readonly string TopicId = "TopicId";
+        public static readonly string TopicName = "TopicName";
         public static readonly string Description = "Description";
         public static readonly string IsPublic = "IsPublic";
         public static readonly string AreaCode = "AreaCode";
@@ -36,36 +36,36 @@ namespace SpecialTopic.Topic
         #endregion
 
         /// <summary>
-        /// GroupEntity转换成<see cref="Lucene.Net.Documents.Document"/>
+        /// TopicEntity转换成<see cref="Lucene.Net.Documents.Document"/>
         /// </summary>
-        /// <param name="GroupEntity">群组实体</param>
+        /// <param name="TopicEntity">群组实体</param>
         /// <returns>Lucene.Net.Documents.Document</returns>
         public static Document Convert(TopicEntity group)
         {
             Document doc = new Document();
 
             //索引群组基本信息
-            doc.Add(new Field(GroupIndexDocument.GroupId, group.TopicId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.GroupName, group.TopicName, Field.Store.YES, Field.Index.ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.Description, group.Description, Field.Store.NO, Field.Index.ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.IsPublic, group.IsPublic==true ? "1" : "0", Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.AreaCode, group.AreaCode, Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.UserId, group.UserId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.AuditStatus, ((int)group.AuditStatus).ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.DateCreated, DateTools.DateToString(group.DateCreated, DateTools.Resolution.DAY), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.MemberCount,group.MemberCount.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-            doc.Add(new Field(GroupIndexDocument.GrowthValue, group.GrowthValue.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.TopicId, group.TopicId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.TopicName, group.TopicName, Field.Store.YES, Field.Index.ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.Description, group.Description, Field.Store.NO, Field.Index.ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.IsPublic, group.IsPublic==true ? "1" : "0", Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.AreaCode, group.AreaCode, Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.UserId, group.UserId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.AuditStatus, ((int)group.AuditStatus).ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.DateCreated, DateTools.DateToString(group.DateCreated, DateTools.Resolution.DAY), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.MemberCount,group.MemberCount.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+            doc.Add(new Field(TopicIndexDocument.GrowthValue, group.GrowthValue.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
             if (group.Category != null)
             {
-                doc.Add(new Field(GroupIndexDocument.CategoryName, group.Category.CategoryName, Field.Store.YES, Field.Index.ANALYZED));
-                doc.Add(new Field(GroupIndexDocument.CategoryId, group.Category.CategoryId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+                doc.Add(new Field(TopicIndexDocument.CategoryName, group.Category.CategoryName, Field.Store.YES, Field.Index.ANALYZED));
+                doc.Add(new Field(TopicIndexDocument.CategoryId, group.Category.CategoryId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
             }
 
             //索引群组tag
             foreach (string tagName in group.TagNames)
             {
-                doc.Add(new Field(GroupIndexDocument.Tag, tagName.ToLower(), Field.Store.YES, Field.Index.ANALYZED));
+                doc.Add(new Field(TopicIndexDocument.Tag, tagName.ToLower(), Field.Store.YES, Field.Index.ANALYZED));
             }
 
             return doc;

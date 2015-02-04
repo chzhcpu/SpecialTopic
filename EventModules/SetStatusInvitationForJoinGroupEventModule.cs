@@ -18,43 +18,43 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 更改状态的时候触发事件
     /// </summary>
-    public class SetStatusInvitationForJoinGroupEventModule : IEventMoudle
+    public class SetStatusInvitationForJoinTopicEventModule : IEventMoudle
     {
         /// <summary>
         /// 注册事件处理程序
         /// </summary>
         public void RegisterEventHandler()
         {
-            EventBus<Invitation>.Instance().After += new CommonEventHandler<Invitation, CommonEventArgs>(SetStatusInvitationnForJoinGroupEventModule_After);
+            EventBus<Invitation>.Instance().After += new CommonEventHandler<Invitation, CommonEventArgs>(SetStatusInvitationnForJoinTopicEventModule_After);
         }
 
-        void SetStatusInvitationnForJoinGroupEventModule_After(Invitation sender, CommonEventArgs eventArgs)
+        void SetStatusInvitationnForJoinTopicEventModule_After(Invitation sender, CommonEventArgs eventArgs)
         {
             if (eventArgs.EventOperationType == EventOperationType.Instance().Update())
             {
                 InvitationService invitationService = DIContainer.Resolve<InvitationService>();
                 Invitation invitation = invitationService.Get(sender.Id);
-                if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().InviteJoinGroup() && invitation.Status == InvitationStatus.Accept)
+                if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().InviteJoinTopic() && invitation.Status == InvitationStatus.Accept)
                 {
                     TopicService groupService = new TopicService();
                     TopicMember member=TopicMember.New();
-                    member.GroupId=sender.RelativeObjectId;
+                    member.TopicId=sender.RelativeObjectId;
                     member.UserId = sender.UserId;
                     member.IsManager = false;
                     groupService.CreateTopicMember(member);
                 }
-                else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinGroup() && invitation.Status == InvitationStatus.Accept)
+                else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinTopic() && invitation.Status == InvitationStatus.Accept)
                 {
                     TopicService groupService = new TopicService();
                     TopicMember member = TopicMember.New();
-                    member.GroupId = sender.RelativeObjectId;
+                    member.TopicId = sender.RelativeObjectId;
                     member.UserId = sender.SenderUserId;
                     member.IsManager = false;
                     groupService.CreateTopicMember(member);
                     IEnumerable<long> a = groupService.GetTopicMemberApplies(sender.RelativeObjectId, TopicMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);
                     groupService.ApproveTopicMemberApply(a,true);
                 }
-                else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinGroup() && invitation.Status == InvitationStatus.Refuse)
+                else if (invitation != null && invitation.InvitationTypeKey == InvitationTypeKeys.Instance().ApplyJoinTopic() && invitation.Status == InvitationStatus.Refuse)
                 {
                     TopicService groupService = new TopicService();
                     IEnumerable<long> a = groupService.GetTopicMemberApplies(sender.RelativeObjectId, TopicMemberApplyStatus.Pending, 20, 1).Where(n => n.UserId == sender.SenderUserId).Select(m => m.Id);

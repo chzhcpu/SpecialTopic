@@ -13,7 +13,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="ownerDataKeys"></param>
         /// <returns></returns>
-        public static string CreatedGroupCount(this OwnerDataKeys ownerDataKeys)
+        public static string CreatedTopicCount(this OwnerDataKeys ownerDataKeys)
         {
             return TopicConfig.Instance().ApplicationKey + "-ThreadCount";
         }
@@ -23,9 +23,9 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="ownerDataKeys"></param>
         /// <returns></returns>
-        public static string JoinedGroupCount(this OwnerDataKeys ownerDataKeys)
+        public static string JoinedTopicCount(this OwnerDataKeys ownerDataKeys)
         {
-            return TopicConfig.Instance().ApplicationKey + "JoinedGroupCount";
+            return TopicConfig.Instance().ApplicationKey + "JoinedTopicCount";
         }
        
         /// <summary>
@@ -33,9 +33,9 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="ownerDataKeys"></param>
         /// <returns></returns>
-        public static string GroupContentCount(this OwnerDataKeys ownerDataKeys)
+        public static string TopicContentCount(this OwnerDataKeys ownerDataKeys)
         {
-            return TopicConfig.Instance().ApplicationKey + "GroupContentCount";
+            return TopicConfig.Instance().ApplicationKey + "TopicContentCount";
         }
     }
 }

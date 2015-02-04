@@ -17,24 +17,24 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 创建群组动态项
         /// </summary>
-        public static string CreateGroup(this ActivityItemKeys activityItemKeys)
+        public static string CreateTopic(this ActivityItemKeys activityItemKeys)
         {
-            return "CreateGroup";
+            return "CreateTopic";
         }
 
         /// <summary>
         /// 新成员加入动态项
         /// </summary>
-        public static string CreateGroupMember(this ActivityItemKeys activityItemKeys)
+        public static string CreateTopicMember(this ActivityItemKeys activityItemKeys)
         {
-            return "CreateGroupMember";
+            return "CreateTopicMember";
         }
         /// <summary>
         /// 加入群组动态项
         /// </summary>
-        public static string JoinGroup(this ActivityItemKeys activityItemKeys)
+        public static string JoinTopic(this ActivityItemKeys activityItemKeys)
         {
-            return "JoinGroup";
+            return "JoinTopic";
         }
     }
 }

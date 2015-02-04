@@ -35,8 +35,8 @@ namespace SpecialTopic.Topic
             if (affectCount > 0)
             {
                 List<Sql> sqls = new List<Sql>();
-                sqls.Add(Sql.Builder.Append("update spb_Groups set MemberCount = MemberCount - 1 where GroupId = @0", entity.GroupId));
-                sqls.Add(Sql.Builder.Append("delete from spb_GroupMemberApplies where UserId = @0 and GroupId = @1", entity.UserId, entity.GroupId));
+                sqls.Add(Sql.Builder.Append("update spb_Groups set MemberCount = MemberCount - 1 where GroupId = @0", entity.TopicId));
+                sqls.Add(Sql.Builder.Append("delete from spb_GroupMemberApplies where UserId = @0 and GroupId = @1", entity.UserId, entity.TopicId));
                 CreateDAO().Execute(sqls);
 
                 //已修改
@@ -55,8 +55,8 @@ namespace SpecialTopic.Topic
 
 
             sql.Select("count(*)")
-                .From("spb_GroupMembers")
-                .Where("UserId = @0 and GroupId = @1", entity.UserId, entity.GroupId);
+                .From("spb_TopicMembers")
+                .Where("UserId = @0 and TopicId = @1", entity.UserId, entity.TopicId);
             int result = CreateDAO().FirstOrDefault<int>(sql);
             if (result > 0)
             {
@@ -65,7 +65,7 @@ namespace SpecialTopic.Topic
             else
             {
                 Sql updateSql = Sql.Builder;
-                updateSql.Append("update spb_Groups set MemberCount = MemberCount + 1 where GroupId = @0", entity.GroupId);
+                updateSql.Append("update spb_Groups set MemberCount = MemberCount + 1 where TopicId = @0", entity.TopicId);
                 CreateDAO().Execute(updateSql);
                 return base.Insert(entity);
             }
@@ -82,7 +82,7 @@ namespace SpecialTopic.Topic
 
             //已修改
 
-            string cacheKey = RealTimeCacheHelper.GetListCacheKeyPrefix(CacheVersionType.AreaVersion, "GroupId", groupId) + "SingleMember" + userId;
+            string cacheKey = RealTimeCacheHelper.GetListCacheKeyPrefix(CacheVersionType.AreaVersion, "TopicId", groupId) + "SingleMember" + userId;
             TopicMember groupMember = cacheService.Get<TopicMember>(cacheKey);
 
             if (groupMember == null)
@@ -187,7 +187,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public IEnumerable<TopicMember> GetTopicMembersAlsoIsMyFollowedUser(long groupId, long userId)
         {
-            string cacheKey = GetCacheKey_GroupMembersAlsoIsMyFollowedUser(groupId, userId);
+            string cacheKey = GetCacheKey_TopicMembersAlsoIsMyFollowedUser(groupId, userId);
             IEnumerable<long> groupMemberIds = cacheService.Get<IList<long>>(cacheKey);
 
             if (groupMemberIds == null)
@@ -212,7 +212,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public IEnumerable<TopicMember> GetOnlineTopicMembers(long groupId)
         {
-            string cacheKey = GetCacheKey_OnlineGroupMembers(groupId);
+            string cacheKey = GetCacheKey_OnlineTopicMembers(groupId);
             IEnumerable<long> groupMemberIds = cacheService.Get<IList<long>>(cacheKey);
             if (groupMemberIds == null)
             {
@@ -228,14 +228,14 @@ namespace SpecialTopic.Topic
             return PopulateEntitiesByEntityIds<long>(groupMemberIds);
         }
 
-        private string GetCacheKey_GroupMembersAlsoIsMyFollowedUser(long groupId, long userId)
+        private string GetCacheKey_TopicMembersAlsoIsMyFollowedUser(long groupId, long userId)
         {
             return string.Format("GroupMembersAlsoIsMyFollowedUser:groupId-{0}:userId-{1}", groupId, userId);
         }
 
-        private string GetCacheKey_OnlineGroupMembers(long groupId)
+        private string GetCacheKey_OnlineTopicMembers(long groupId)
         {
-            return string.Format("OnlineGroupMembers:groupId-{0}", groupId);
+            return string.Format("OnlineTopicMembers:groupId-{0}", groupId);
         }
 
 

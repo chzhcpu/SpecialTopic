@@ -18,3 +18,4 @@ E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\SpecialTo
 E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\Topic.csproj.GenerateResource.Cache
 E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\SpaceBuilder.Topic.dll
 E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\SpaceBuilder.Topic.pdb
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\bin\SpaceBuilder.Topic.xml

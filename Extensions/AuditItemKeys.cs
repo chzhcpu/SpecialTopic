@@ -16,9 +16,9 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 群组审核项
         /// </summary>
-        public static string Group(this AuditItemKeys auditItemKeys)
+        public static string Topic(this AuditItemKeys auditItemKeys)
         {
-            return "Group";
+            return "Topic";
         }
     }
 }

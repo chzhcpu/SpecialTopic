@@ -17,17 +17,17 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 设置管理员
         /// </summary>
-        public static string SetGroupManager(this EventOperationType EventOperationType)
+        public static string SetTopicManager(this EventOperationType EventOperationType)
         {
-            return "SetGroupManager";
+            return "SetTopicManager";
         }
 
         /// <summary>
         /// 取消管理员
         /// </summary>
-        public static string CancelGroupManager(this EventOperationType EventOperationType)
+        public static string CancelTopicManager(this EventOperationType EventOperationType)
         {
-            return "CancelGroupManager";
+            return "CancelTopicManager";
         }
 
     }

@@ -211,7 +211,7 @@
     <Compile Include="Controllers\GroupSpaceController.cs" />
     <Compile Include="Controllers\ChannelTopicController.cs" />
     <Compile Include="Controllers\ControlPanelGroupController.cs" />
-    <Compile Include="Controllers\GroupSpaceSettingsController.cs" />
+    <Compile Include="Controllers\TopicSpaceSettingsController.cs" />
     <Compile Include="Controllers\GroupSpaceThemeController.cs" />
     <Compile Include="EventModules\GroupOperationLogEventModule.cs" />
     <Compile Include="EventModules\GroupIndexEventModule.cs" />
@@ -220,6 +220,7 @@
     <Compile Include="EventModules\GroupMemberEventModule.cs" />
     <Compile Include="EventModules\SetStatusInvitationForJoinGroupEventModule.cs" />
     <Compile Include="Extensions\ActivityItemKeys.cs" />
+    <Compile Include="Extensions\ActivityOwnerTypesExtension.cs" />
     <Compile Include="Extensions\ApplicationStatisticDataKeys.cs" />
     <Compile Include="Extensions\AuditItemKeys.cs" />
     <Compile Include="Extensions\Authorizer.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="Extensions\TenantTypeIds.cs" />
     <Compile Include="Extensions\NoticeTemplateNames.cs" />
     <Compile Include="Extensions\OwnerDataKeys.cs" />
+    <Compile Include="Extensions\UserBlockServiceExtension.cs" />
     <Compile Include="Extensions\UserExtensionByTopic.cs" />
     <Compile Include="TopicApplication.cs" />
     <Compile Include="TopicConfig.cs" />
@@ -252,8 +254,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Search\GroupFullTextQuery.cs" />
-    <Compile Include="Search\GroupIndexDocument.cs" />
+    <Compile Include="Search\TopicFullTextQuery.cs" />
+    <Compile Include="Search\TopicIndexDocument.cs" />
     <Compile Include="Search\TopicSearcher.cs" />
     <Compile Include="Services\DefaultGroupIdToGroupKeyDictionary.cs" />
     <Compile Include="Services\GroupIdToGroupKeyDictionary.cs" />
@@ -261,7 +263,7 @@
     <Compile Include="Tasks\CalculateGrowthValuesTask.cs" />
     <Compile Include="UI\TopicSpaceThemeResolver.cs" />
     <Compile Include="UrlRoutingRegistration.cs" />
-    <Compile Include="ViewModels\GroupEditModel.cs.cs" />
+    <Compile Include="ViewModels\TopicEditModel.cs.cs" />
     <Compile Include="ViewModels\ManageGroupEditModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -320,7 +322,7 @@
     <Content Include="Views\ChannelTopic\_CategoryTopics.cshtml" />
     <Content Include="Views\ChannelTopic\_RecommendedGroupOwners.cshtml" />
     <Content Include="Views\ChannelTopic\FindTopic.cshtml" />
-    <Content Include="Views\ChannelTopic\_AreaGroups.cshtml" />
+    <Content Include="Views\ChannelTopic\_AreaTopics.cshtml" />
     <Content Include="Views\ControlPanelGroup\_ManageGroupSideMenu.cshtml" />
     <Content Include="Views\GroupSpaceSettings\ManageMemberApplies.cshtml" />
     <Content Include="Views\GroupSpaceSettings\ManageMembers.cshtml" />

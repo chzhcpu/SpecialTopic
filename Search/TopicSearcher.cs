@@ -22,7 +22,7 @@ namespace SpecialTopic.Topic
     public class TopicSearcher : ISearcher
     {
         private TopicService topicService = new TopicService();
-        private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
+        private TagService tagService = new TagService(TenantTypeIds.Instance().Topic());
         private CategoryService categoryService = new CategoryService();
         private AuditService auditService = new AuditService();
         private ISearchEngine searchEngine;
@@ -159,7 +159,7 @@ namespace SpecialTopic.Topic
                 //重建索引
                 List<TopicEntity> groupList = groups.ToList<TopicEntity>();
 
-                IEnumerable<Document> docs = GroupIndexDocument.Convert(groupList);
+                IEnumerable<Document> docs = TopicIndexDocument.Convert(groupList);
 
                 searchEngine.RebuildIndex(docs, isBeginning, isEndding);
 
@@ -172,7 +172,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 添加索引
         /// </summary>
-        /// <param name="GroupEntity">待添加的群组</param>
+        /// <param name="TopicEntity">待添加的群组</param>
         public void Insert(TopicEntity group)
         {
             Insert(new TopicEntity[] { group });
@@ -181,53 +181,53 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 添加索引
         /// </summary>
-        /// <param name="GroupEntitys">待添加的群组</param>
+        /// <param name="TopicEntitys">待添加的群组</param>
         public void Insert(IEnumerable<TopicEntity> groups)
         {
-            IEnumerable<Document> docs = GroupIndexDocument.Convert(groups);
+            IEnumerable<Document> docs = TopicIndexDocument.Convert(groups);
             searchEngine.Insert(docs);
         }
 
         /// <summary>
         /// 删除索引
         /// </summary>
-        /// <param name="GroupEntityId">待删除的群组Id</param>
+        /// <param name="TopicEntityId">待删除的群组Id</param>
         public void Delete(long groupId)
         {
-            searchEngine.Delete(groupId.ToString(), GroupIndexDocument.GroupId);
+            searchEngine.Delete(groupId.ToString(), TopicIndexDocument.TopicId);
         }
 
         /// <summary>
         /// 删除索引
         /// </summary>
-        /// <param name="GroupEntityIds">待删除的群组Id列表</param>
+        /// <param name="TopicEntityIds">待删除的群组Id列表</param>
         public void Delete(IEnumerable<long> groupIds)
         {
             foreach (var groupId in groupIds)
             {
-                searchEngine.Delete(groupId.ToString(), GroupIndexDocument.GroupId);
+                searchEngine.Delete(groupId.ToString(), TopicIndexDocument.TopicId);
             }
         }
 
         /// <summary>
         /// 更新索引
         /// </summary>
-        /// <param name="GroupEntity">待更新的群组</param>
+        /// <param name="TopicEntity">待更新的群组</param>
         public void Update(TopicEntity group)
         {
-            Document doc = GroupIndexDocument.Convert(group);
-            searchEngine.Update(doc, group.TopicId.ToString(), GroupIndexDocument.GroupId);
+            Document doc = TopicIndexDocument.Convert(group);
+            searchEngine.Update(doc, group.TopicId.ToString(), TopicIndexDocument.TopicId);
         }
 
         /// <summary>
         /// 更新索引
         /// </summary>
-        /// <param name="GroupEntitys">待更新的群组集合</param>
+        /// <param name="TopicEntitys">待更新的群组集合</param>
         public void Update(IEnumerable<TopicEntity> groups)
         {
-            IEnumerable<Document> docs = GroupIndexDocument.Convert(groups);
+            IEnumerable<Document> docs = TopicIndexDocument.Convert(groups);
             IEnumerable<string> groupIds = groups.Select(n => n.TopicId.ToString());
-            searchEngine.Update(docs, groupIds, GroupIndexDocument.GroupId);
+            searchEngine.Update(docs, groupIds, TopicIndexDocument.TopicId);
         }
 
         #endregion
@@ -241,11 +241,11 @@ namespace SpecialTopic.Topic
         /// 群组分页搜索
         /// </summary>
         /// <param name="groupQuery">搜索条件</param>
-        /// <param name="interestGroup">是否是查询可能感兴趣的群组</param>
+        /// <param name="interestTopic">是否是查询可能感兴趣的群组</param>
         /// <returns>符合搜索条件的分页集合</returns>
-        public PagingDataSet<TopicEntity> Search(GroupFullTextQuery groupQuery, bool interestGroup = false)
+        public PagingDataSet<TopicEntity> Search(TopicFullTextQuery groupQuery, bool interestTopic = false)
         {
-            if (!interestGroup)
+            if (!interestTopic)
             {
                 if (string.IsNullOrWhiteSpace(groupQuery.Keyword) && !groupQuery.KeywordIsNull)
                 {
@@ -253,7 +253,7 @@ namespace SpecialTopic.Topic
                 }
             }
 
-            LuceneSearchBuilder searchBuilder = BuildLuceneSearchBuilder(groupQuery, interestGroup);
+            LuceneSearchBuilder searchBuilder = BuildLuceneSearchBuilder(groupQuery, interestTopic);
 
             //使用LuceneSearchBuilder构建Lucene需要Query、Filter、Sort
             Query query = null;
@@ -274,14 +274,14 @@ namespace SpecialTopic.Topic
 
             foreach (Document doc in docs)
             {
-                long groupId = long.Parse(doc.Get(GroupIndexDocument.GroupId));
+                long groupId = long.Parse(doc.Get(TopicIndexDocument.TopicId));
                 groupIds.Add(groupId);
-                groupTags[groupId]=doc.GetValues(GroupIndexDocument.Tag).ToList<string>();
-                categoryNames[groupId]=doc.Get(GroupIndexDocument.CategoryName);
+                groupTags[groupId]=doc.GetValues(TopicIndexDocument.Tag).ToList<string>();
+                categoryNames[groupId]=doc.Get(TopicIndexDocument.CategoryName);
             }
 
             //根据群组ID列表批量查询群组实例
-            IEnumerable<TopicEntity> groupList = topicService.GetGroupEntitiesByIds(groupIds);
+            IEnumerable<TopicEntity> groupList = topicService.GetTopicEntitiesByIds(groupIds);
 
             foreach (var group in groupList)
             {
@@ -296,7 +296,7 @@ namespace SpecialTopic.Topic
             }
 
             //组装分页对象
-            PagingDataSet<TopicEntity> GroupEntitys = new PagingDataSet<TopicEntity>(groupList)
+            PagingDataSet<TopicEntity> TopicEntitys = new PagingDataSet<TopicEntity>(groupList)
             {
                 TotalRecords = searchResult.TotalRecords,
                 PageSize = searchResult.PageSize,
@@ -304,7 +304,7 @@ namespace SpecialTopic.Topic
                 QueryDuration = searchResult.QueryDuration
             };
 
-            return GroupEntitys;
+            return TopicEntitys;
         }
 
         /// <summary>
@@ -315,21 +315,21 @@ namespace SpecialTopic.Topic
         /// <returns>符合搜索条件的分页集合</returns>
         public IEnumerable<string> AutoCompleteSearch(string keyword, int topNumber)
         {
-            IEnumerable<TopicEntity> hotGroups = topicService.GetMatchTops(topNumber, keyword, null, null, SortBy_Topic.GrowthValue_Desc);
-            if (hotGroups.Count() > topNumber)
+            IEnumerable<TopicEntity> hotTopics = topicService.GetMatchTops(topNumber, keyword, null, null, SortBy_Topic.GrowthValue_Desc);
+            if (hotTopics.Count() > topNumber)
             {
-                hotGroups.Take(topNumber);
+                hotTopics.Take(topNumber);
             }
-            return hotGroups.Select(n => n.TopicName);
+            return hotTopics.Select(n => n.TopicName);
         }
 
         /// <summary>
         /// 根据帖吧搜索查询条件构建Lucene查询条件
         /// </summary>
         /// <param name="Query">搜索条件</param>
-        /// <param name="interestGroup">是否是查询可能感兴趣的群组</param>
+        /// <param name="interestTopic">是否是查询可能感兴趣的群组</param>
         /// <returns></returns>
-        private LuceneSearchBuilder BuildLuceneSearchBuilder(GroupFullTextQuery groupQuery, bool interestGroup = false)
+        private LuceneSearchBuilder BuildLuceneSearchBuilder(TopicFullTextQuery groupQuery, bool interestTopic = false)
         {
             LuceneSearchBuilder searchBuilder = new LuceneSearchBuilder();
             Dictionary<string, BoostLevel> fieldNameAndBoosts = new Dictionary<string, BoostLevel>();
@@ -337,9 +337,9 @@ namespace SpecialTopic.Topic
             if (groupQuery.KeywordIsNull)
             {
                 if (!string.IsNullOrEmpty(groupQuery.NowAreaCode))
-                    searchBuilder.WithField(GroupIndexDocument.AreaCode, groupQuery.NowAreaCode.TrimEnd('0'), false, BoostLevel.Hight, false);
+                    searchBuilder.WithField(TopicIndexDocument.AreaCode, groupQuery.NowAreaCode.TrimEnd('0'), false, BoostLevel.Hight, false);
                 else
-                    searchBuilder.WithFields(GroupIndexDocument.AreaCode, new string[] { "1", "2", "3" }, false, BoostLevel.Hight, false);
+                    searchBuilder.WithFields(TopicIndexDocument.AreaCode, new string[] { "1", "2", "3" }, false, BoostLevel.Hight, false);
             }
 
             if (!string.IsNullOrEmpty(groupQuery.Keyword))
@@ -347,40 +347,40 @@ namespace SpecialTopic.Topic
                 //范围
                 switch (groupQuery.Range)
                 {
-                    case GroupSearchRange.GROUPNAME:
-                        searchBuilder.WithPhrase(GroupIndexDocument.GroupName, groupQuery.Keyword, BoostLevel.Hight, false);
+                    case TopicSearchRange.GROUPNAME:
+                        searchBuilder.WithPhrase(TopicIndexDocument.TopicName, groupQuery.Keyword, BoostLevel.Hight, false);
                         break;
-                    case GroupSearchRange.DESCRIPTION:
-                        searchBuilder.WithPhrase(GroupIndexDocument.Description, groupQuery.Keyword, BoostLevel.Hight, false);
+                    case TopicSearchRange.DESCRIPTION:
+                        searchBuilder.WithPhrase(TopicIndexDocument.Description, groupQuery.Keyword, BoostLevel.Hight, false);
                         break;
-                    case GroupSearchRange.TAG:
-                        searchBuilder.WithPhrase(GroupIndexDocument.Tag, groupQuery.Keyword, BoostLevel.Hight, false);
+                    case TopicSearchRange.TAG:
+                        searchBuilder.WithPhrase(TopicIndexDocument.Tag, groupQuery.Keyword, BoostLevel.Hight, false);
                         break;
-                    case GroupSearchRange.CATEGORYNAME:
-                        searchBuilder.WithPhrase(GroupIndexDocument.CategoryName, groupQuery.Keyword, BoostLevel.Hight, false);
+                    case TopicSearchRange.CATEGORYNAME:
+                        searchBuilder.WithPhrase(TopicIndexDocument.CategoryName, groupQuery.Keyword, BoostLevel.Hight, false);
                         break;
                     default:
-                            fieldNameAndBoosts.Add(GroupIndexDocument.GroupName, BoostLevel.Hight);
-                            fieldNameAndBoosts.Add(GroupIndexDocument.Description, BoostLevel.Medium);
-                            fieldNameAndBoosts.Add(GroupIndexDocument.Tag, BoostLevel.Medium);
-                            fieldNameAndBoosts.Add(GroupIndexDocument.CategoryName, BoostLevel.Medium);
+                            fieldNameAndBoosts.Add(TopicIndexDocument.TopicName, BoostLevel.Hight);
+                            fieldNameAndBoosts.Add(TopicIndexDocument.Description, BoostLevel.Medium);
+                            fieldNameAndBoosts.Add(TopicIndexDocument.Tag, BoostLevel.Medium);
+                            fieldNameAndBoosts.Add(TopicIndexDocument.CategoryName, BoostLevel.Medium);
                             searchBuilder.WithPhrases(fieldNameAndBoosts, groupQuery.Keyword, BooleanClause.Occur.SHOULD, false);   
                         break;
                 }
             }
 
             //根据标签搜索可能感兴趣的群组
-            if (interestGroup)
+            if (interestTopic)
             {
-                searchBuilder.WithPhrases(GroupIndexDocument.Tag, groupQuery.Tags, BoostLevel.Hight, false);
-                searchBuilder.NotWithFields(GroupIndexDocument.GroupId, groupQuery.GroupIds);
+                searchBuilder.WithPhrases(TopicIndexDocument.Tag, groupQuery.Tags, BoostLevel.Hight, false);
+                searchBuilder.NotWithFields(TopicIndexDocument.TopicId, groupQuery.TopicIds);
             }
 
             //筛选
             //某地区
             if (!string.IsNullOrEmpty(groupQuery.NowAreaCode))
             {
-                searchBuilder.WithField(GroupIndexDocument.AreaCode, groupQuery.NowAreaCode.TrimEnd('0'), false, BoostLevel.Hight, true);
+                searchBuilder.WithField(TopicIndexDocument.AreaCode, groupQuery.NowAreaCode.TrimEnd('0'), false, BoostLevel.Hight, true);
             }
 
             //某分类
@@ -397,11 +397,11 @@ namespace SpecialTopic.Topic
                     categoryIds.AddRange(categories.Select(n => n.CategoryId.ToString()));
                 }
 
-                searchBuilder.WithFields(GroupIndexDocument.CategoryId, categoryIds, true, BoostLevel.Hight, true);
+                searchBuilder.WithFields(TopicIndexDocument.CategoryId, categoryIds, true, BoostLevel.Hight, true);
             }
 
             //公开的群组
-            searchBuilder.WithField(GroupIndexDocument.IsPublic, "1", true, BoostLevel.Hight, true);
+            searchBuilder.WithField(TopicIndexDocument.IsPublic, "1", true, BoostLevel.Hight, true);
 
             //过滤可以显示的群组
             switch (publiclyAuditStatus)
@@ -410,11 +410,11 @@ namespace SpecialTopic.Topic
                 case PubliclyAuditStatus.Fail:
                 case PubliclyAuditStatus.Pending:
                 case PubliclyAuditStatus.Success:
-                    searchBuilder.WithField(GroupIndexDocument.AuditStatus, ((int)publiclyAuditStatus).ToString(), true, BoostLevel.Hight, true);
+                    searchBuilder.WithField(TopicIndexDocument.AuditStatus, ((int)publiclyAuditStatus).ToString(), true, BoostLevel.Hight, true);
                     break;
                 case PubliclyAuditStatus.Again_GreaterThanOrEqual:
                 case PubliclyAuditStatus.Pending_GreaterThanOrEqual:
-                    searchBuilder.WithinRange(GroupIndexDocument.AuditStatus, ((int)publiclyAuditStatus).ToString(), ((int)PubliclyAuditStatus.Success).ToString(), true);
+                    searchBuilder.WithinRange(TopicIndexDocument.AuditStatus, ((int)publiclyAuditStatus).ToString(), ((int)PubliclyAuditStatus.Success).ToString(), true);
                     break;
             }
 
@@ -423,20 +423,20 @@ namespace SpecialTopic.Topic
                 switch (groupQuery.sortBy.Value)
                 {
                     case SortBy_Topic.DateCreated_Desc:
-                        searchBuilder.SortByString(GroupIndexDocument.DateCreated, true);
+                        searchBuilder.SortByString(TopicIndexDocument.DateCreated, true);
                         break;
                     case SortBy_Topic.MemberCount_Desc:
-                        searchBuilder.SortByString(GroupIndexDocument.MemberCount, true);
+                        searchBuilder.SortByString(TopicIndexDocument.MemberCount, true);
                         break;
                     case SortBy_Topic.GrowthValue_Desc:
-                        searchBuilder.SortByString(GroupIndexDocument.GrowthValue, true);
+                        searchBuilder.SortByString(TopicIndexDocument.GrowthValue, true);
                         break;
                 }
             }
             else
             {
                 //时间倒序排序
-                searchBuilder.SortByString(GroupIndexDocument.DateCreated, true);
+                searchBuilder.SortByString(TopicIndexDocument.DateCreated, true);
             }
 
             return searchBuilder;

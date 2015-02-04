@@ -46,7 +46,7 @@ namespace SpecialTopic.Topic
         ///<param name="TopicMemberApplyRepository">群组成员申请仓储</param>
         ///<param name="TopicMemberRepository">群组成员仓储</param>
         ///<param name="groupRepository">群组仓储</param>
-        /// <param name="GroupRepository"></param>
+        /// <param name="TopicRepository"></param>
         public TopicService(ITopicRepository groupRepository, ITopicMemberRepository TopicMemberRepository, ITopicMemberApplyRepository TopicMemberApplyRepository)
         {
             this.groupRepository = groupRepository;
@@ -71,7 +71,7 @@ namespace SpecialTopic.Topic
             //1、使用AuditService设置审核状态；
             //2、需要触发的事件参见《设计说明书-日志》     
             //3、单独调用标签服务设置标签
-            //4、使用 IdGenerator.Next() 生成GroupId
+            //4、使用 IdGenerator.Next() 生成TopicId
             EventBus<TopicEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Create()));
             //设置审核状态
             auditService.ChangeAuditStatusForCreate(userId, group);
@@ -84,7 +84,7 @@ namespace SpecialTopic.Topic
                 EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(null, group.AuditStatus));
                 //用户的创建群组数+1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedGroupCount(), 1);
+                ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedTopicCount(), 1);
             }
             return id > 0;
         }
@@ -130,7 +130,7 @@ namespace SpecialTopic.Topic
                 return;
 
             CategoryService categoryService = new CategoryService();
-            categoryService.ClearCategoriesFromItem(groupId, null, TenantTypeIds.Instance().Group());
+            categoryService.ClearCategoriesFromItem(groupId, null, TenantTypeIds.Instance().Topic());
 
 
             EventBus<TopicEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
@@ -138,15 +138,15 @@ namespace SpecialTopic.Topic
             if (affectCount > 0)
             {
                 //删除访客记录
-                new VisitService(TenantTypeIds.Instance().Group()).CleanByToObjectId(groupId);
+                new VisitService(TenantTypeIds.Instance().Topic()).CleanByToObjectId(groupId);
                 //用户的创建群组数-1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedGroupCount(), -1);
+                ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedTopicCount(), -1);
                 //删除Logo             
-                LogoService logoService = new LogoService(TenantTypeIds.Instance().Group());
+                LogoService logoService = new LogoService(TenantTypeIds.Instance().Topic());
                 logoService.DeleteLogo(groupId);
                 //删除群组下的成员
-                DeleteMembersByGroupId(groupId);
+                DeleteMembersByTopicId(groupId);
                 EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
                 EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(group.AuditStatus, null));
             }
@@ -156,7 +156,7 @@ namespace SpecialTopic.Topic
         /// 删除群组下的成员
         /// </summary>
         /// <param name="groupId"></param>
-        public void DeleteMembersByGroupId(long groupId)
+        public void DeleteMembersByTopicId(long groupId)
         {
             IEnumerable<TopicMember> TopicMembers = TopicMemberRepository.GetAllMembersOfTopic(groupId);
             foreach (var TopicMember in TopicMembers)
@@ -167,7 +167,7 @@ namespace SpecialTopic.Topic
                     EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
                     //用户的参与群组数-1
                     OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                    ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedGroupCount(), -1);
+                    ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedTopicCount(), -1);
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace SpecialTopic.Topic
                 {
                     Invitation invitation = Invitation.New();
                     invitation.ApplicationId = TopicConfig.Instance().ApplicationId;
-                    invitation.InvitationTypeKey = InvitationTypeKeys.Instance().InviteJoinGroup();
+                    invitation.InvitationTypeKey = InvitationTypeKeys.Instance().InviteJoinTopic();
                     invitation.UserId = userId;
                     invitation.SenderUserId = sender.UserId;
                     invitation.Sender = sender.DisplayName;
@@ -274,7 +274,7 @@ namespace SpecialTopic.Topic
             if (stream != null)
             {
                 TopicEntity group = this.Get(groupId);
-                LogoService logoService = new LogoService(TenantTypeIds.Instance().Group());
+                LogoService logoService = new LogoService(TenantTypeIds.Instance().Topic());
                 group.Logo = logoService.UploadLogo(groupId, stream);
                 groupRepository.Update(group);
                 EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Update()));
@@ -287,7 +287,7 @@ namespace SpecialTopic.Topic
         /// <param name="recommendId">群组Id</param>
         public void DeleteLogo(long groupId)
         {
-            LogoService logoService = new LogoService(TenantTypeIds.Instance().Group());
+            LogoService logoService = new LogoService(TenantTypeIds.Instance().Topic());
             logoService.DeleteLogo(groupId);
             TopicEntity group = Get(groupId);
             if (group == null)
@@ -302,13 +302,13 @@ namespace SpecialTopic.Topic
         #region 获取群组
 
         /// <summary>
-        /// 通过GroupKey获取群组
+        /// 通过TopicKey获取群组
         /// </summary>
         /// <param name="groupKey">群组标识</param>
         /// <returns></returns>
         public TopicEntity Get(string groupKey)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(groupKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(groupKey);
             return this.Get(groupId);
         }
 
@@ -430,7 +430,7 @@ namespace SpecialTopic.Topic
         /// <param name="userId">当前用户的userId</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> FollowedUserAlsoJoinedGroups(long userId, int topNumber)
+        public IEnumerable<TopicEntity> FollowedUserAlsoJoinedTopics(long userId, int topNumber)
         {
             return groupRepository.FollowedUserAlsoJoinedTopics(userId, topNumber);
         }
@@ -462,7 +462,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupIds"></param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> GetGroupEntitiesByIds(IEnumerable<long> groupIds)
+        public IEnumerable<TopicEntity> GetTopicEntitiesByIds(IEnumerable<long> groupIds)
         {
             return groupRepository.PopulateEntitiesByEntityIds(groupIds);
         }
@@ -509,7 +509,7 @@ namespace SpecialTopic.Topic
 
             if (TopicMemberApply == null)
                 return;
-            if (IsApplied(TopicMemberApply.UserId, TopicMemberApply.GroupId))
+            if (IsApplied(TopicMemberApply.UserId, TopicMemberApply.TopicId))
                 return;
             long id = 0;
             long.TryParse(TopicMemberApplyRepository.Insert(TopicMemberApply).ToString(), out id);
@@ -550,7 +550,7 @@ namespace SpecialTopic.Topic
                 {
                     TopicMember member = TopicMember.New();
                     member.UserId = apply.UserId;
-                    member.GroupId = apply.GroupId;
+                    member.TopicId = apply.TopicId;
                     CreateTopicMember(member);
                 }
             }
@@ -611,9 +611,9 @@ namespace SpecialTopic.Topic
             //设计要点：
             //1、同一个群组不允许用户重复加入
             //2、群主不允许成为群组成员
-            if (IsMember(TopicMember.GroupId, TopicMember.UserId))
+            if (IsMember(TopicMember.TopicId, TopicMember.UserId))
                 return;
-            if (IsOwner(TopicMember.GroupId, TopicMember.UserId))
+            if (IsOwner(TopicMember.TopicId, TopicMember.UserId))
                 return;
             long id = 0;
             long.TryParse(TopicMemberRepository.Insert(TopicMember).ToString(), out id);
@@ -623,7 +623,7 @@ namespace SpecialTopic.Topic
                 EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Create()));
                 //用户的参与群组数+1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedGroupCount(), 1);
+                ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedTopicCount(), 1);
             }
         }
 
@@ -649,7 +649,7 @@ namespace SpecialTopic.Topic
                 EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
                 //用户的参与群组数-1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-                ownerDataService.Change(userId, OwnerDataKeys.Instance().JoinedGroupCount(), -1);
+                ownerDataService.Change(userId, OwnerDataKeys.Instance().JoinedTopicCount(), -1);
             }
         }
 
@@ -687,11 +687,11 @@ namespace SpecialTopic.Topic
             TopicMemberRepository.Update(member);
             if (isManager)
             {
-                EventBus<TopicMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().SetGroupManager()));
+                EventBus<TopicMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().SetTopicManager()));
             }
             else
             {
-                EventBus<TopicMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().CancelGroupManager()));
+                EventBus<TopicMember>.Instance().OnAfter(member, new CommonEventArgs(EventOperationType.Instance().CancelTopicManager()));
             }
             return true;
         }
@@ -701,7 +701,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <param name="newOwnerUserId">新群主UserId</param>
-        public void ChangeGroupOwner(long groupId, long newOwnerUserId)
+        public void ChangeTopicOwner(long groupId, long newOwnerUserId)
         {
             //更换群主后，原群主转换成群组成员，如果新群主是群组成员则从成员中移除
             TopicEntity group = groupRepository.Get(groupId);
@@ -711,17 +711,17 @@ namespace SpecialTopic.Topic
 
             //原群主的群组数-1，加入群组数+1
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
-            ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().CreatedGroupCount(), -1);
-            ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().JoinedGroupCount(), 1);
+            ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().CreatedTopicCount(), -1);
+            ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().JoinedTopicCount(), 1);
 
             //原群主转换成群组成员
             TopicMember TopicMember = TopicMember.New();
-            TopicMember.GroupId = groupId;
+            TopicMember.TopicId = groupId;
             TopicMember.UserId = oldOwnerUserId;
             TopicMemberRepository.Insert(TopicMember);
 
             //新群主的群组数+1,加入群组数-1
-            ownerDataService.Change(newOwnerUserId, OwnerDataKeys.Instance().CreatedGroupCount(), 1);
+            ownerDataService.Change(newOwnerUserId, OwnerDataKeys.Instance().CreatedTopicCount(), 1);
 
             //如果新群主是群组成员则从成员中移除
             if (IsMember(groupId, newOwnerUserId))
@@ -814,7 +814,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <returns></returns>
-        public IEnumerable<long> GetUserIdsOfGroup(long groupId)
+        public IEnumerable<long> GetUserIdsOfTopic(long groupId)
         {
             TopicEntity group = groupRepository.Get(groupId);
             if (group == null)
@@ -831,7 +831,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <returns>若没有找到，则返回空集合</returns>
-        public IEnumerable<User> GetGroupManagers(long groupId)
+        public IEnumerable<User> GetTopicManagers(long groupId)
         {
             //设计要点：
             //1、需要缓存，并维护缓存的即时性

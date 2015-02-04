@@ -21,17 +21,17 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 创建群组
         /// </summary>
-        public static string Group_CreateGroup(this PointItemKeys pointItemKeys)
+        public static string Topic_CreateTopic(this PointItemKeys pointItemKeys)
         {
-            return "Group_CreateGroup";
+            return "Topic_CreateTopic";
         }
 
         /// <summary>
         /// 删除群组
         /// </summary>
-        public static string Group_DeleteGroup(this PointItemKeys pointItemKeys)
+        public static string Topic_DeleteTopic(this PointItemKeys pointItemKeys)
         {
-            return "Group_DeleteGroup";
+            return "Topic_DeleteTopic";
         }
        
     }

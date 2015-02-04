@@ -17,7 +17,7 @@ namespace SpecialTopic.Topic.EventModules
     /// <summary>
     /// 处理群组动态、积分的EventMoudle
     /// </summary>
-    public class GroupEventModule : IEventMoudle
+    public class TopicEventModule : IEventMoudle
     {
         /// <summary>
         /// 注册事件处理程序
@@ -50,7 +50,7 @@ namespace SpecialTopic.Topic.EventModules
 
                 //生成Owner为用户的动态
                 Activity actvityOfBar = Activity.New();
-                actvityOfBar.ActivityItemKey = ActivityItemKeys.Instance().CreateGroup();
+                actvityOfBar.ActivityItemKey = ActivityItemKeys.Instance().CreateTopic();
                 actvityOfBar.ApplicationId = TopicConfig.Instance().ApplicationId;
                 actvityOfBar.IsOriginalThread = true;
                 actvityOfBar.IsPrivate = !group.IsPublic;
@@ -58,7 +58,7 @@ namespace SpecialTopic.Topic.EventModules
                 actvityOfBar.ReferenceId = 0;//没有涉及到的实体
                 actvityOfBar.ReferenceTenantTypeId = string.Empty;
                 actvityOfBar.SourceId = group.TopicId;
-                actvityOfBar.TenantTypeId = TenantTypeIds.Instance().Group();
+                actvityOfBar.TenantTypeId = TenantTypeIds.Instance().Topic();
                 actvityOfBar.OwnerId = group.UserId;
                 actvityOfBar.OwnerName = group.User.DisplayName;
                 actvityOfBar.OwnerType = ActivityOwnerTypes.Instance().User();
@@ -67,7 +67,7 @@ namespace SpecialTopic.Topic.EventModules
             }
             else if (auditDirection == false) //删除动态
             {
-                activityService.DeleteSource(TenantTypeIds.Instance().Group(), group.TopicId);
+                activityService.DeleteSource(TenantTypeIds.Instance().Topic(), group.TopicId);
             }
         }
 
@@ -87,7 +87,7 @@ namespace SpecialTopic.Topic.EventModules
             bool? auditDirection = auditService.ResolveAuditDirection(eventArgs.OldAuditStatus, eventArgs.NewAuditStatus);
             if (auditDirection == true) //加积分
             {
-                pointItemKey = PointItemKeys.Instance().Group_CreateGroup();
+                pointItemKey = PointItemKeys.Instance().Topic_CreateTopic();
                 if (eventArgs.OldAuditStatus == null)
                     eventOperationType = EventOperationType.Instance().Create();
                 else
@@ -95,7 +95,7 @@ namespace SpecialTopic.Topic.EventModules
             }
             else if (auditDirection == false) //减积分
             {
-                pointItemKey = PointItemKeys.Instance().Group_DeleteGroup();
+                pointItemKey = PointItemKeys.Instance().Topic_DeleteTopic();
                 if (eventArgs.NewAuditStatus == null)
                     eventOperationType = EventOperationType.Instance().Delete();
                 else

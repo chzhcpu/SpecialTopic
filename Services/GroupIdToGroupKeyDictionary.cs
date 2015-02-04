@@ -10,12 +10,12 @@ using Tunynet;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// GroupId与GroupKey的查询器
+    /// TopicId与TopicKey的查询器
     /// </summary>
     public abstract class TopicIdToTopicKeyDictionary
     {
-        private static ConcurrentDictionary<long, string> dictionaryOfGroupIdToGroupKey = new ConcurrentDictionary<long, string>();
-        private static ConcurrentDictionary<string, long> dictionaryOfGroupKeyToGroupId = new ConcurrentDictionary<string, long>();
+        private static ConcurrentDictionary<long, string> dictionaryOfTopicIdToTopicKey = new ConcurrentDictionary<long, string>();
+        private static ConcurrentDictionary<string, long> dictionaryOfTopicKeyToTopicId = new ConcurrentDictionary<string, long>();
 
         #region Instance
 
@@ -23,7 +23,7 @@ namespace SpecialTopic.Topic
         private static readonly object lockObject = new object();
 
         /// <summary>
-        /// 获取GroupIdToGroupKeyAccessor实例
+        /// 获取TopicIdToTopicKeyAccessor实例
         /// </summary>
         /// <returns></returns>
         private static TopicIdToTopicKeyDictionary Instance()
@@ -36,7 +36,7 @@ namespace SpecialTopic.Topic
                     {
                         _defaultInstance = DIContainer.Resolve<TopicIdToTopicKeyDictionary>();
                         if (_defaultInstance == null)
-                            throw new ExceptionFacade("未在DIContainer注册GroupIdToGroupKeyDictionary的具体实现类");
+                            throw new ExceptionFacade("未在DIContainer注册TopicIdToTopicKeyDictionary的具体实现类");
                     }
                 }
             }
@@ -51,7 +51,7 @@ namespace SpecialTopic.Topic
         /// <returns>
         /// 群组Key
         /// </returns>
-        protected abstract string GetGroupKeyByGroupId(long groupId);
+        protected abstract string GetTopicKeyByTopicId(long groupId);
 
         /// <summary>
         /// 根据群组Key获取群组Id
@@ -59,23 +59,23 @@ namespace SpecialTopic.Topic
         /// <returns>
         /// 群组Id
         /// </returns>
-        protected abstract long GetGroupIdByGroupKey(string groupKey);
+        protected abstract long GetTopicIdByTopicKey(string groupKey);
 
 
         /// <summary>
         /// 通过groupId获取groupKey
         /// </summary>
-        /// <param name="GroupId">GroupId</param>
-        public static string GetGroupKey(long groupId)
+        /// <param name="TopicId">TopicId</param>
+        public static string GetTopicKey(long groupId)
         {
-            if (dictionaryOfGroupIdToGroupKey.ContainsKey(groupId))
-                return dictionaryOfGroupIdToGroupKey[groupId];
-            string groupKey = Instance().GetGroupKeyByGroupId(groupId);
+            if (dictionaryOfTopicIdToTopicKey.ContainsKey(groupId))
+                return dictionaryOfTopicIdToTopicKey[groupId];
+            string groupKey = Instance().GetTopicKeyByTopicId(groupId);
             if (!string.IsNullOrEmpty(groupKey))
             {
-                dictionaryOfGroupIdToGroupKey[groupId] = groupKey;
-                if (!dictionaryOfGroupKeyToGroupId.ContainsKey(groupKey))
-                    dictionaryOfGroupKeyToGroupId[groupKey] = groupId;
+                dictionaryOfTopicIdToTopicKey[groupId] = groupKey;
+                if (!dictionaryOfTopicKeyToTopicId.ContainsKey(groupKey))
+                    dictionaryOfTopicKeyToTopicId[groupKey] = groupId;
                 return groupKey;
             }
             return string.Empty;
@@ -84,40 +84,40 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 通过groupKey获取groupId
         /// </summary>
-        /// <param name="GroupKey"></param>
+        /// <param name="TopicKey"></param>
         /// <returns></returns>
-        public static long GetGroupId(string groupKey)
+        public static long GetTopicId(string groupKey)
         {
-            if (dictionaryOfGroupKeyToGroupId.ContainsKey(groupKey))
-                return dictionaryOfGroupKeyToGroupId[groupKey];
-            long groupId = Instance().GetGroupIdByGroupKey(groupKey);
+            if (dictionaryOfTopicKeyToTopicId.ContainsKey(groupKey))
+                return dictionaryOfTopicKeyToTopicId[groupKey];
+            long groupId = Instance().GetTopicIdByTopicKey(groupKey);
             if (groupId > 0)
             {
-                dictionaryOfGroupKeyToGroupId[groupKey] = groupId;
-                if (!dictionaryOfGroupIdToGroupKey.ContainsKey(groupId))
-                    dictionaryOfGroupIdToGroupKey[groupId] = groupKey;
+                dictionaryOfTopicKeyToTopicId[groupKey] = groupId;
+                if (!dictionaryOfTopicIdToTopicKey.ContainsKey(groupId))
+                    dictionaryOfTopicIdToTopicKey[groupId] = groupKey;
             }
             return groupId;
         }
 
         /// <summary>
-        /// 移除GroupId
+        /// 移除TopicId
         /// </summary>
         /// <param name="groupId">groupId</param>
-        internal static void RemoveGroupId(long groupId)
+        internal static void RemoveTopicId(long groupId)
         {
             string groupKey;
-            dictionaryOfGroupIdToGroupKey.TryRemove(groupId, out groupKey);
+            dictionaryOfTopicIdToTopicKey.TryRemove(groupId, out groupKey);
         }
 
         /// <summary>
-        /// 移除GroupKey
+        /// 移除TopicKey
         /// </summary>
         /// <param name="groupKey">groupKey</param>
-        internal static void RemoveGroupKey(string groupKey)
+        internal static void RemoveTopicKey(string groupKey)
         {
             long groupId;
-            dictionaryOfGroupKeyToGroupId.TryRemove(groupKey, out groupId);
+            dictionaryOfTopicKeyToTopicId.TryRemove(groupKey, out groupId);
         }
     }
 }

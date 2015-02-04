@@ -14,7 +14,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public string DataKey
         {
-            get { return OwnerDataKeys.Instance().JoinedGroupCount(); }
+            get { return OwnerDataKeys.Instance().JoinedTopicCount(); }
         }
 
 

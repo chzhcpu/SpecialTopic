@@ -32,7 +32,7 @@ namespace SpecialTopic.Topic
         private XElement tenantLogoSettingsElement;
 
         /// <summary>
-        /// 获取GroupConfig实例
+        /// 获取TopicConfig实例
         /// </summary>
         public static TopicConfig Instance()
         {
@@ -95,7 +95,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取GroupApplication实例
+        /// 获取TopicApplication实例
         /// </summary>
         public override Type ApplicationType
         {
@@ -113,20 +113,20 @@ namespace SpecialTopic.Topic
 
             //注册ResourceAccessor的应用资源
             ResourceAccessor.RegisterApplicationResourceManager(ApplicationId, "SpecialTopic.Topic.Resources.Resource", typeof(SpecialTopic.Topic.Resources.Resource).Assembly);
-            InvitationType.Register(new InvitationType { Key = InvitationTypeKeys.Instance().InviteJoinGroup(), Name = "邀请参加群组", Description = "" });
-            InvitationType.Register(new InvitationType { Key = InvitationTypeKeys.Instance().ApplyJoinGroup(), Name = "申请加入群组", Description = "" });
-            containerBuilder.Register(c => new GroupActivityReceiverGetter()).Named<IActivityReceiverGetter>(ActivityOwnerTypes.Instance().Group().ToString()).SingleInstance();
+            InvitationType.Register(new InvitationType { Key = InvitationTypeKeys.Instance().InviteJoinTopic(), Name = "邀请参加群组", Description = "" });
+            InvitationType.Register(new InvitationType { Key = InvitationTypeKeys.Instance().ApplyJoinTopic(), Name = "申请加入群组", Description = "" });
+            containerBuilder.Register(c => new TopicActivityReceiverGetter()).Named<IActivityReceiverGetter>(ActivityOwnerTypes.Instance().Topic().ToString()).SingleInstance();
             //groupId与groupKey的查询器
             containerBuilder.Register(c => new DefaultTopicIdToTopicKeyDictionary()).As<TopicIdToTopicKeyDictionary>().SingleInstance();
 
             //注册全文检索搜索器
-            containerBuilder.Register(c => new TopicSearcher("专题", "~/App_Data/IndexFiles/Group", true, 7)).As<ISearcher>().Named<ISearcher>(TopicSearcher.CODE).SingleInstance();
+            containerBuilder.Register(c => new TopicSearcher("专题", "~/App_Data/IndexFiles/Topic", true, 7)).As<ISearcher>().Named<ISearcher>(TopicSearcher.CODE).SingleInstance();
 
             ThemeService.RegisterThemeResolver(PresentAreaKeysOfBuiltIn.GroupSpace, new TopicSpaceThemeResolver());
 
             //群组推荐
             containerBuilder.Register(c => new TopicApplicationStatisticDataGetter()).Named<IApplicationStatisticDataGetter>(this.ApplicationKey).SingleInstance();
-            containerBuilder.Register(c => new GroupTenantAuthorizationHandler()).As<ITenantAuthorizationHandler>().SingleInstance();
+            containerBuilder.Register(c => new TopicTenantAuthorizationHandler()).As<ITenantAuthorizationHandler>().SingleInstance();
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace SpecialTopic.Topic
         public override void Load()
         {
             base.Load();
-            TagUrlGetterManager.RegisterGetter(TenantTypeIds.Instance().Topic(), new GroupTagUrlGetter());
+            TagUrlGetterManager.RegisterGetter(TenantTypeIds.Instance().Topic(), new TopicTagUrlGetter());
             //注册群组计数服务
             CountService countService = new CountService(TenantTypeIds.Instance().Topic());
             countService.RegisterCounts();//注册计数服务
@@ -143,11 +143,11 @@ namespace SpecialTopic.Topic
             countService.RegisterStageCount(CountTypes.Instance().HitTimes(), 7);
 
             OwnerDataSettings.RegisterStatisticsDataKeys(TenantTypeIds.Instance().User()
-                                                         , OwnerDataKeys.Instance().CreatedGroupCount()
-                                                         , OwnerDataKeys.Instance().JoinedGroupCount());
+                                                         , OwnerDataKeys.Instance().CreatedTopicCount()
+                                                         , OwnerDataKeys.Instance().JoinedTopicCount());
 
             //添加应用管理员角色
-            ApplicationAdministratorRoleNames.Add(applicationId, new List<string> { "GroupAdministrator" });
+            ApplicationAdministratorRoleNames.Add(applicationId, new List<string> { "TopicAdministrator" });
         }
     }
 }

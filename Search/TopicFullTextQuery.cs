@@ -13,7 +13,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组全文检索条件
     /// </summary>
-    public class GroupFullTextQuery
+    public class TopicFullTextQuery
     {
 
         /// <summary>
@@ -29,12 +29,12 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 用户已经加入的群组ID
         /// </summary>
-        public IEnumerable<string> GroupIds { get; set; }
+        public IEnumerable<string> TopicIds { get; set; }
 
         /// <summary>
         /// 筛选
         /// </summary>
-        public GroupSearchRange Range { get; set; }
+        public TopicSearchRange Range { get; set; }
 
         /// <summary>
         /// 关键字是否为空
@@ -79,7 +79,7 @@ namespace SpecialTopic.Topic
 
     }
 
-    public enum GroupSearchRange
+    public enum TopicSearchRange
     {
         /// <summary>
         /// 全部

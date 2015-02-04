@@ -60,7 +60,7 @@ namespace SpecialTopic.Topic
 
 
             //判断访问群组权限
-            if (!DIContainer.Resolve<Authorizer>().Group_View(Topic))
+            if (!DIContainer.Resolve<Authorizer>().Topic_View(Topic))
             {
                 if (currentUser == null)
                     filterContext.Result = new RedirectResult(SiteUrls.Instance().Login(true));
@@ -98,7 +98,7 @@ namespace SpecialTopic.Topic
                 return;
             }
 
-            if (DIContainer.Resolve<Authorizer>().Group_Manage(Topic))
+            if (DIContainer.Resolve<Authorizer>().Topic_Manage(Topic))
                 return;
             filterContext.Result = new RedirectResult(SiteUrls.Instance().SystemMessage(filterContext.Controller.TempData, new SystemMessageViewModel
             {

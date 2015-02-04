@@ -14,7 +14,7 @@ using Spacebuilder.Common;
 
 namespace SpecialTopic.Topic.Configuration
 {
-    public class GroupTagUrlGetter : ITagUrlGetter
+    public class TopicTagUrlGetter : ITagUrlGetter
     {
         /// <summary>
         /// 获取链接

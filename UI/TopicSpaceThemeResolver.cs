@@ -210,7 +210,7 @@ namespace SpecialTopic.Topic
             if (!pa.EnableThemes)
                 return false;
 
-            if (DIContainer.Resolve<Authorizer>().Group_Manage(new TopicService().Get(ownerId)))
+            if (DIContainer.Resolve<Authorizer>().Topic_Manage(new TopicService().Get(ownerId)))
                 return true;
             return false;
         }

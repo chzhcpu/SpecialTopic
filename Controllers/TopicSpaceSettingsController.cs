@@ -22,14 +22,14 @@ namespace SpecialTopic.Topic.Controllers
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
     [TopicSpaceAuthorize(RequireManager = true)]
-    public class GroupSpaceSettingsController : Controller
+    public class TopicSpaceSettingsController : Controller
     {
 
         public IPageResourceManager pageResourceManager { get; set; }
         public CategoryService categoryService { get; set; }
         public TopicService groupService { get; set; }
         public Authorizer authorizer { get; set; }
-        private TagService tagService = new TagService(TenantTypeIds.Instance().Group());
+        private TagService tagService = new TagService(TenantTypeIds.Instance().Topic());
 
         
         //这个多个地方用到
@@ -38,7 +38,7 @@ namespace SpecialTopic.Topic.Controllers
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
-        public ActionResult _GroupSettingRightMenu(string spaceKey)
+        public ActionResult _TopicSettingRightMenu(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
             PagingDataSet<TopicMemberApply> applys = groupService.GetTopicMemberApplies(group.TopicId, TopicMemberApplyStatus.Pending);
@@ -65,7 +65,7 @@ namespace SpecialTopic.Topic.Controllers
             //已修改
             PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetTopicMemberApplies(group.TopicId, applyStatus, pageSize, pageIndex);
             ViewData["groupId"] = group.TopicId;
-            TempData["GroupMenu"] = GroupMenu.ManageMember;
+            TempData["TopicMenu"] = TopicMenu.ManageMember;
 
             return View(groupMemberApplies);
         }
@@ -79,7 +79,7 @@ namespace SpecialTopic.Topic.Controllers
         {
             
             
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             groupService.ApproveTopicMemberApply(applyIds, isApproved);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
@@ -94,7 +94,7 @@ namespace SpecialTopic.Topic.Controllers
         {
             
             
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             groupService.DeleteTopicMemberApply(id);
             return Json(new StatusMessageData(StatusMessageType.Success, "操作成功"));
         }
@@ -119,7 +119,7 @@ namespace SpecialTopic.Topic.Controllers
 
             PagingDataSet<TopicMember> groupMembers = groupService.GetTopicMembers(group.TopicId, true, SortBy_TopicMember.DateCreated_Asc, pageSize, pageIndex);
             ViewData["group"] = group;
-            TempData["GroupMenu"] = GroupMenu.ManageMember;
+            TempData["TopicMenu"] = TopicMenu.ManageMember;
 
             return View(groupMembers);
         }
@@ -137,7 +137,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="userId">群主名称</param>
         /// <returns>更换群主</returns>
         [HttpGet]
-        public ActionResult _ChangeGroupOwner(string spaceKey, string returnUrl)
+        public ActionResult _ChangeTopicOwner(string spaceKey, string returnUrl)
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
@@ -157,7 +157,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="group">编辑群组对象</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult _ChangeGroupOwner(string spaceKey)
+        public ActionResult _ChangeTopicOwner(string spaceKey)
         {
             string returnUrl = Request.QueryString.Get<string>(WebUtility.UrlDecode("returnUrl"));
             
@@ -180,12 +180,12 @@ namespace SpecialTopic.Topic.Controllers
                 ViewData["returnUrl"] = returnUrl;
                 return View(group);
             }
-            if (!authorizer.Group_SetManager(group))
+            if (!authorizer.Topic_SetManager(group))
             {
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有更换群主的权限"));
             }
 
-            groupService.ChangeGroupOwner(group.TopicId, userId);
+            groupService.ChangeTopicOwner(group.TopicId, userId);
             return Json(new StatusMessageData(StatusMessageType.Success, "更换群主操作成功"));
         }
 
@@ -201,7 +201,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return HttpNotFound();
 
-            if (!authorizer.Group_SetManager(group))
+            if (!authorizer.Topic_SetManager(group))
                 return Json(new StatusMessageData(StatusMessageType.Error, "您没有设置管理员的权限"));
 
             bool result = groupService.SetManager(group.TopicId, userId, isManager);
@@ -230,7 +230,7 @@ namespace SpecialTopic.Topic.Controllers
                 return HttpNotFound();
             foreach (var userId in userIds)
             {
-                if (!authorizer.Group_DeleteMember(group, userId))
+                if (!authorizer.Topic_DeleteMember(group, userId))
                 {
                     return Json(new StatusMessageData(StatusMessageType.Error, "您没有删除群组成员的权限"));
                 }
@@ -249,7 +249,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="spaceKey"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult _DeleteGroupLogo(string spaceKey)
+        public ActionResult _DeleteTopicLogo(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
@@ -271,7 +271,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="spaceKey"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult EditGroup(string spaceKey)
+        public ActionResult EditTopic(string spaceKey)
         {
             TopicEntity group = groupService.Get(spaceKey);
             
@@ -284,9 +284,9 @@ namespace SpecialTopic.Topic.Controllers
             
             //编辑的时候需要显示已添加的标签
             IEnumerable<string> tags = group.TagNames;
-            GroupEditModel groupEditModel = group.AsEditModel();
+            TopicEditModel groupEditModel = group.AsEditModel();
             ViewData["tags"] = tags;
-            TempData["GroupMenu"] = GroupMenu.GroupSettings;
+            TempData["TopicMenu"] = TopicMenu.TopicSettings;
 
             return View(groupEditModel);
         }
@@ -296,17 +296,17 @@ namespace SpecialTopic.Topic.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult EditGroup(string spaceKey, GroupEditModel groupEditModel)
+        public ActionResult EditTopic(string spaceKey, TopicEditModel groupEditModel)
         {
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
             System.IO.Stream stream = null;
-            HttpPostedFileBase groupLogo = Request.Files["GroupLogo"];
+            HttpPostedFileBase groupLogo = Request.Files["TopicLogo"];
 
             if (groupLogo != null && !string.IsNullOrEmpty(groupLogo.FileName))
             {
-                TenantLogoSettings tenantLogoSettings = TenantLogoSettings.GetRegisteredSettings(TenantTypeIds.Instance().Group());
+                TenantLogoSettings tenantLogoSettings = TenantLogoSettings.GetRegisteredSettings(TenantTypeIds.Instance().Topic());
                 if (!tenantLogoSettings.ValidateFileLength(groupLogo.ContentLength))
                 {
                     ViewData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Error, string.Format("文件大小不允许超过{0}", Formatter.FormatFriendlyFileSize(tenantLogoSettings.MaxLogoLength * 1024)));
@@ -323,13 +323,13 @@ namespace SpecialTopic.Topic.Controllers
                 groupEditModel.Logo = groupLogo.FileName;
             }
 
-            TopicEntity group = groupEditModel.AsGroupEntity();
+            TopicEntity group = groupEditModel.AsTopicEntity();
 
 
             //设置分类
             if (groupEditModel.CategoryId > 0)
             {
-                categoryService.ClearCategoriesFromItem(group.TopicId, 0, TenantTypeIds.Instance().Group());
+                categoryService.ClearCategoriesFromItem(group.TopicId, 0, TenantTypeIds.Instance().Topic());
                 categoryService.AddItemsToCategory(new List<long>() { group.TopicId }, groupEditModel.CategoryId);
             }
 
@@ -349,13 +349,13 @@ namespace SpecialTopic.Topic.Controllers
 
             groupService.Update(currentUser.UserId, group);
             TempData["StatusMessageData"] = new StatusMessageData(StatusMessageType.Success, "更新成功！");
-            return Redirect(SiteUrls.Instance().EditGroup(group.TopicKey));
+            return Redirect(SiteUrls.Instance().EditTopic(group.TopicKey));
         }
 
         [HttpGet]
         public ActionResult _Menu_Manage(string spaceKey)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);

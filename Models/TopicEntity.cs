@@ -59,7 +59,7 @@ namespace SpecialTopic.Topic
         #region 需持久化属性
 
         /// <summary>
-        ///GroupId
+        ///TopicId
         /// </summary>
         public long TopicId { get; set; }
 
@@ -175,7 +175,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                return new TopicService().GetGroupManagers(this.TopicId);
+                return new TopicService().GetTopicManagers(this.TopicId);
             }
         }
 
@@ -200,7 +200,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                IEnumerable<Category> categories = new CategoryService().GetCategoriesOfItem(this.TopicId, null, TenantTypeIds.Instance().Group());
+                IEnumerable<Category> categories = new CategoryService().GetCategoriesOfItem(this.TopicId, null, TenantTypeIds.Instance().Topic());
                 return categories == null || categories.Count() == 0 ? null : categories.FirstOrDefault();
             }
         }
@@ -229,7 +229,7 @@ namespace SpecialTopic.Topic
             {
                 if (tagNames == null)
                 {
-                    TagService service = new TagService(TenantTypeIds.Instance().Group());
+                    TagService service = new TagService(TenantTypeIds.Instance().Topic());
                     IEnumerable<ItemInTag> tags = service.GetItemInTagsOfItem(this.TopicId);
                     if (tags == null)
                         return new List<string>();
@@ -286,7 +286,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public string AuditItemKey
         {
-            get { return AuditItemKeys.Instance().Group(); }
+            get { return AuditItemKeys.Instance().Topic(); }
         }
 
         #endregion
@@ -301,7 +301,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                CountService countService = new CountService(TenantTypeIds.Instance().Group());
+                CountService countService = new CountService(TenantTypeIds.Instance().Topic());
                 return countService.Get(CountTypes.Instance().HitTimes(), this.TopicId);
             }
         }
@@ -314,7 +314,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                CountService countService = new CountService(TenantTypeIds.Instance().Group());
+                CountService countService = new CountService(TenantTypeIds.Instance().Topic());
                 return countService.GetStageCount(CountTypes.Instance().HitTimes(), 7, this.TopicId);
             }
         }
@@ -327,7 +327,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().Group());
+                OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().Topic());
                 return ownerDataService.GetLong(this.TopicId, "Bar-ThreadCount") + ownerDataService.GetLong(this.TopicId, "Bar-PostCount");
             }
         }
@@ -340,7 +340,7 @@ namespace SpecialTopic.Topic
         {
             get
             {
-                string tenantTypeId = TenantTypeIds.Instance().Group();
+                string tenantTypeId = TenantTypeIds.Instance().Topic();
                 IEnumerable<string> dataKeys = OwnerDataSettings.GetDataKeys(tenantTypeId);
                 if (dataKeys != null && dataKeys.Count() > 0)
                 {

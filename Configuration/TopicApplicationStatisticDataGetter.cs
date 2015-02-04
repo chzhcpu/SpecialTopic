@@ -36,14 +36,14 @@ namespace SpecialTopic.Topic
                  "群组待审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicPendingCount()])
                 {
                     DescriptionPattern = "{0}个群组待审核",
-                    Url = SiteUrls.Instance().ManageGroups(auditStatus: AuditStatus.Pending)
+                    Url = SiteUrls.Instance().ManageTopics(auditStatus: AuditStatus.Pending)
                 });
             if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().TopicAgainCount()))
                 applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicAgainCount(), "群组",
                  "群组需再审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicAgainCount()])
                 {
                     DescriptionPattern = "{0}个群组需再审核",
-                    Url = SiteUrls.Instance().ManageGroups(auditStatus: AuditStatus.Again)
+                    Url = SiteUrls.Instance().ManageTopics(auditStatus: AuditStatus.Again)
                 });
             return applicationStatisticDatas;
         }
@@ -62,14 +62,14 @@ namespace SpecialTopic.Topic
                  "群组总数", barThreadStatisticDatas[ApplicationStatisticDataKeys.Instance().TotalCount()])
                 {
                     DescriptionPattern = "共{0}个群组",
-                    Url = SiteUrls.Instance().ManageGroups()
+                    Url = SiteUrls.Instance().ManageTopics()
                 });
             if (barThreadStatisticDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().Last24HCount()))
                 applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().Last24HCount(), "群组",
                  "群组24小时新增数", barThreadStatisticDatas[ApplicationStatisticDataKeys.Instance().Last24HCount()])
                 {
                     DescriptionPattern = "24小时新增{0}个群组",
-                    Url = SiteUrls.Instance().ManageGroups()
+                    Url = SiteUrls.Instance().ManageTopics()
                 });
             return applicationStatisticDatas;
         }

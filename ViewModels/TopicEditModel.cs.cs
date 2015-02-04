@@ -18,36 +18,36 @@ using System.Web.Mvc;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 编辑群组实体
+    /// 编辑专题实体
     /// </summary>
-    public class GroupEditModel
+    public class TopicEditModel
     {
         /// <summary>
-        ///GroupId
+        ///TopicId
         /// </summary>
-        public long GroupId { get; set; }
+        public long TopicId { get; set; }
 
         /// <summary>
-        ///群组名称
+        ///专题名称
         /// </summary>
         [Display(Name = "名称")]
-        [WaterMark(Content = "在此输入群组名称")]
-        [Required(ErrorMessage = "请输入群组名称")]
+        [WaterMark(Content = "在此输入专题名称")]
+        [Required(ErrorMessage = "请输入专题名称")]
         [StringLength(60, ErrorMessage = "最多允许输入60个字")]
         [DataType(DataType.Text)]
-        public string GroupName { get; set; }
+        public string TopicName { get; set; }
 
         /// <summary>
-        ///群组标识（个性网址的关键组成部分）
+        ///专题标识（个性网址的关键组成部分）
         /// </summary>
-        [Required(ErrorMessage = "请输入群组标识")]
+        [Required(ErrorMessage = "请输入专题标识")]
         [StringLength(16, MinimumLength = 4, ErrorMessage = "请输入4-16个字")]
         [DataType(DataType.Url)]
-        [Remote("ValidateGroupKey", "ChannelGroup", "Group", ErrorMessage = "此群组Key已存在", AdditionalFields = "GroupId")]
-        public string GroupKey { get; set; }
+        [Remote("ValidateTopicKey", "ChannelTopic", "Topic", ErrorMessage = "此专题Key已存在", AdditionalFields = "TopicId")]
+        public string TopicKey { get; set; }
 
         /// <summary>
-        ///群组介绍
+        ///专题介绍
         /// </summary>
         [Display(Name = "简介")]
         [StringLength(300, ErrorMessage = "最多可以输入300个字")]
@@ -67,7 +67,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         ///是否公开
         /// </summary>
-        [Required(ErrorMessage = "请选择群组类型")]
+        [Required(ErrorMessage = "请选择专题类型")]
         public bool IsPublic { get; set; }
 
         /// <summary>
@@ -116,27 +116,27 @@ namespace SpecialTopic.Topic
         /// 转换成groupEntity类型
         /// </summary>
         /// <returns></returns>
-        public TopicEntity AsGroupEntity()
+        public TopicEntity AsTopicEntity()
         {
             CategoryService categoryService = new CategoryService();
             TopicEntity groupEntity = null;
 
-            //创建群组
-            if (this.GroupId == 0)
+            //创建专题
+            if (this.TopicId == 0)
             {
                 groupEntity = TopicEntity.New();
                 groupEntity.UserId = UserContext.CurrentUser.UserId;
                 groupEntity.DateCreated = DateTime.UtcNow;
-                groupEntity.TopicKey = this.GroupKey;
+                groupEntity.TopicKey = this.TopicKey;
             }
-            //编辑群组
+            //编辑专题
             else
             {
                 TopicService groupService = new TopicService();
-                groupEntity = groupService.Get(this.GroupId);
+                groupEntity = groupService.Get(this.TopicId);
             }
             groupEntity.IsPublic = this.IsPublic;
-            groupEntity.TopicName = this.GroupName;
+            groupEntity.TopicName = this.TopicName;
             if (Logo != null)
             {
                 groupEntity.Logo = this.Logo;
@@ -155,23 +155,23 @@ namespace SpecialTopic.Topic
     }
 
     /// <summary>
-    /// 群组实体的扩展类
+    /// 专题实体的扩展类
     /// </summary>
-    public static class GroupEntityExtensions
+    public static class TopicEntityExtensions
     {
         /// <summary>
         /// 将数据库中的信息转换成EditModel实体
         /// </summary>
         /// <param name="groupEntity"></param>
         /// <returns></returns>
-        public static GroupEditModel AsEditModel(this TopicEntity groupEntity)
+        public static TopicEditModel AsEditModel(this TopicEntity groupEntity)
         {
-            return new GroupEditModel
+            return new TopicEditModel
             {
-                GroupId = groupEntity.TopicId,
+                TopicId = groupEntity.TopicId,
                 IsPublic = groupEntity.IsPublic,
-                GroupName = groupEntity.TopicName,
-                GroupKey = groupEntity.TopicKey,
+                TopicName = groupEntity.TopicName,
+                TopicKey = groupEntity.TopicKey,
                 Logo = groupEntity.Logo,
                 Description = Formatter.FormatMultiLinePlainTextForEdit(groupEntity.Description, true),
                 AreaCode = groupEntity.AreaCode,

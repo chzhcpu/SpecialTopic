@@ -29,8 +29,8 @@ namespace SpecialTopic.Topic.Controllers
         public FollowService followService { get; set; }
         public ActivityService activityService { get; set; }
         public ApplicationService applicationService { get; set; }
-        private VisitService visitService = new VisitService(TenantTypeIds.Instance().Group());
-        private SubscribeService subscribeService = new SubscribeService(TenantTypeIds.Instance().Group());
+        private VisitService visitService = new VisitService(TenantTypeIds.Instance().Topic());
+        private SubscribeService subscribeService = new SubscribeService(TenantTypeIds.Instance().Topic());
 
         /// <summary>
         /// 页头
@@ -87,7 +87,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="showManageButton">显示管理按钮</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult _GroupHeader(string spaceKey, bool showManageButton)
+        public ActionResult _TopicHeader(string spaceKey, bool showManageButton)
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
@@ -118,7 +118,7 @@ namespace SpecialTopic.Topic.Controllers
             pageResourceManager.InsertTitlePart(group.TopicName);
 
             //浏览计数
-            new CountService(TenantTypeIds.Instance().Group()).ChangeCount(CountTypes.Instance().HitTimes(), group.TopicId, group.UserId);
+            new CountService(TenantTypeIds.Instance().Topic()).ChangeCount(CountTypes.Instance().HitTimes(), group.TopicId, group.UserId);
 
             
             //1.为什么匿名用户就不让访问？
@@ -139,7 +139,7 @@ namespace SpecialTopic.Topic.Controllers
                 ViewData["isMember"] = isMember;
             }
             ViewData["isPublic"] = group.IsPublic;
-            TempData["GroupMenu"] = GroupMenu.Home;
+            TempData["TopicMenu"] = TopicMenu.Home;
             ViewData["applications"] = applications;
 
             return View(group);
@@ -153,7 +153,7 @@ namespace SpecialTopic.Topic.Controllers
         [HttpGet]
         public ActionResult _Menu_App(string spaceKey)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
@@ -196,7 +196,7 @@ namespace SpecialTopic.Topic.Controllers
         [HttpGet]
         public ActionResult _Menu_Main(string spaceKey)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
@@ -215,14 +215,14 @@ namespace SpecialTopic.Topic.Controllers
         /// <param name="showGroupLogo">显示群组Logo</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult _GroupInfo(string spaceKey, bool? showGroupLogo)
+        public ActionResult _TopicInfo(string spaceKey, bool? showTopicLogo)
         {
-            long groupId = TopicIdToTopicKeyDictionary.GetGroupId(spaceKey);
+            long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
             TopicEntity group = groupService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 
-            ViewData["showGroupLogo"] = showGroupLogo;
+            ViewData["showTopicLogo"] = showTopicLogo;
 
             return View(group);
         }

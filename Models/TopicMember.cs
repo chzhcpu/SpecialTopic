@@ -47,7 +47,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         ///群组Id
         /// </summary>
-        public long GroupId { get; set; }
+        public long TopicId { get; set; }
 
         /// <summary>
         ///用户Id
