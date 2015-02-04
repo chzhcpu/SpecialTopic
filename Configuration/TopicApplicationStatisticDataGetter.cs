@@ -31,16 +31,16 @@ namespace SpecialTopic.Topic
         {
             IList<ApplicationStatisticData> applicationStatisticDatas = new List<ApplicationStatisticData>();
             Dictionary<string, long> barSectionManageableDatas = groupService.GetManageableDatas(tenantTypeId);
-            if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().GroupPendingCount()))
-                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().GroupPendingCount(), "群组",
-                 "群组待审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().GroupPendingCount()])
+            if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().TopicPendingCount()))
+                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicPendingCount(), "群组",
+                 "群组待审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicPendingCount()])
                 {
                     DescriptionPattern = "{0}个群组待审核",
                     Url = SiteUrls.Instance().ManageGroups(auditStatus: AuditStatus.Pending)
                 });
-            if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().GroupAgainCount()))
-                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().GroupAgainCount(), "群组",
-                 "群组需再审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().GroupAgainCount()])
+            if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().TopicAgainCount()))
+                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicAgainCount(), "群组",
+                 "群组需再审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicAgainCount()])
                 {
                     DescriptionPattern = "{0}个群组需再审核",
                     Url = SiteUrls.Instance().ManageGroups(auditStatus: AuditStatus.Again)

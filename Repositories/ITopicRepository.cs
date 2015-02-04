@@ -26,7 +26,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupKey">群组Key</param>
         /// <returns>群组Id</returns>
-        long GetGroupIdByGroupKey(string groupKey);
+        long GetTopicIdByTopicKey(string groupKey);
 
         /// <summary>
         /// 获取前N个排行群组
@@ -64,7 +64,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <returns></returns>
-        IEnumerable<TopicEntity> GetMyCreatedGroups(long userId, bool ignoreAudit);
+        IEnumerable<TopicEntity> GetMyCreatedTopics(long userId, bool ignoreAudit);
 
         /// <summary>
         /// 分页获取排行数据
@@ -92,7 +92,7 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
         /// <returns></returns>
-        PagingDataSet<TopicEntity> GetMyJoinedGroups(long userId, int pageSize, int pageIndex);
+        PagingDataSet<TopicEntity> GetMyJoinedTopics(long userId, int pageSize, int pageIndex);
 
         /// <summary>
         /// 分页获取群组后台管理列表
@@ -115,7 +115,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="groupId">群组Id</param>
         /// <param name="newOwnerUserId">新群主UserId</param>
-        void ChangeGroupOwner(long groupId, long newOwnerUserId);
+        void ChangeTopicOwner(long groupId, long newOwnerUserId);
 
         /// <summary>
         /// 更换皮肤
@@ -168,7 +168,7 @@ namespace SpecialTopic.Topic
         /// <param name="userId">当前用户的userId</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
-        IEnumerable<TopicEntity> FollowedUserAlsoJoinedGroups(long userId, int topNumber);
+        IEnumerable<TopicEntity> FollowedUserAlsoJoinedTopics(long userId, int topNumber);
 
     }
 }

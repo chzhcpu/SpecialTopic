@@ -390,10 +390,10 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <returns></returns>
-        public IEnumerable<TopicEntity> GetMyCreatedGroups(long userId, bool ignoreAudit)
+        public IEnumerable<TopicEntity> GetMyCreatedTopics(long userId, bool ignoreAudit)
         {
             //需维护缓存即时性
-            return groupRepository.GetMyCreatedGroups(userId, ignoreAudit);
+            return groupRepository.GetMyCreatedTopics(userId, ignoreAudit);
         }
 
         /// <summary>
@@ -403,10 +403,10 @@ namespace SpecialTopic.Topic
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
         /// <returns></returns>
-        public PagingDataSet<TopicEntity> GetMyJoinedGroups(long userId, int pageSize = 20, int pageIndex = 1)
+        public PagingDataSet<TopicEntity> GetMyJoinedTopics(long userId, int pageSize = 20, int pageIndex = 1)
         {
             //需维护缓存即时性
-            return groupRepository.GetMyJoinedGroups(userId, pageSize, pageIndex);
+            return groupRepository.GetMyJoinedTopics(userId, pageSize, pageIndex);
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace SpecialTopic.Topic
         /// <returns></returns>
         public IEnumerable<TopicEntity> FollowedUserAlsoJoinedGroups(long userId, int topNumber)
         {
-            return groupRepository.FollowedUserAlsoJoinedGroups(userId, topNumber);
+            return groupRepository.FollowedUserAlsoJoinedTopics(userId, topNumber);
         }
 
         /// <summary>
@@ -707,7 +707,7 @@ namespace SpecialTopic.Topic
             TopicEntity group = groupRepository.Get(groupId);
             long oldOwnerUserId = group.UserId;
             group.UserId = newOwnerUserId;
-            groupRepository.ChangeGroupOwner(groupId, newOwnerUserId);
+            groupRepository.ChangeTopicOwner(groupId, newOwnerUserId);
 
             //原群主的群组数-1，加入群组数+1
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());

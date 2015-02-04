@@ -22,17 +22,17 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 群组待审核数
         /// </summary>
-        public static string GroupPendingCount(this ApplicationStatisticDataKeys applicationStatisticDataKeys)
+        public static string TopicPendingCount(this ApplicationStatisticDataKeys applicationStatisticDataKeys)
         {
-            return "GroupPendingCount";
+            return "TopicPendingCount";
         }
 
         /// <summary>
         /// 群组需再审核数
         /// </summary>
-        public static string GroupAgainCount(this ApplicationStatisticDataKeys applicationStatisticDataKeys)
+        public static string TopicAgainCount(this ApplicationStatisticDataKeys applicationStatisticDataKeys)
         {
-            return "GroupAgainCount";
+            return "TopicAgainCount";
         }
 
     }

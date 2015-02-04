@@ -51,7 +51,7 @@ namespace SpecialTopic.Topic
         /// </returns>
         protected override long GetGroupIdByGroupKey(string groupKey)
         {
-            return groupRepository.GetGroupIdByGroupKey(groupKey);
+            return groupRepository.GetTopicIdByTopicKey(groupKey);
         }
     }
 }

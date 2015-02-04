@@ -306,7 +306,7 @@ namespace SpecialTopic.Topic.Controllers
                 query.PageIndex = 1;
                 query.Range = GroupSearchRange.TAG;
                 query.Tags = tagService.GetTopTagsOfItem(currentUser.UserId, 100).Select(n => n.TagName);
-                query.GroupIds = topicService.GetMyJoinedGroups(currentUser.UserId, 100, 1).Select(n => n.TopicId.ToString());
+                query.GroupIds = topicService.GetMyJoinedTopics(currentUser.UserId, 100, 1).Select(n => n.TopicId.ToString());
                 //调用搜索器进行搜索
                 TopicSearcher GroupSearcher = (TopicSearcher)SearcherFactory.GetSearcher(TopicSearcher.CODE);
                 IEnumerable<TopicEntity> groupsTag = null;
@@ -877,7 +877,7 @@ namespace SpecialTopic.Topic.Controllers
             }
 
 
-            PagingDataSet<TopicEntity> groups = topicService.GetMyJoinedGroups(spaceUser.UserId, pageIndex: pageIndex);
+            PagingDataSet<TopicEntity> groups = topicService.GetMyJoinedTopics(spaceUser.UserId, pageIndex: pageIndex);
             if (Request.IsAjaxRequest())
                 return PartialView("_List", groups);
 
@@ -936,7 +936,7 @@ namespace SpecialTopic.Topic.Controllers
             }
 
             pageResourceManager.InsertTitlePart(title);
-            var groups = topicService.GetMyCreatedGroups(spaceUser.UserId, ignoreAudit);
+            var groups = topicService.GetMyCreatedTopics(spaceUser.UserId, ignoreAudit);
             if (Request.IsAjaxRequest())
                 return PartialView("_List", groups);
 
@@ -982,12 +982,12 @@ namespace SpecialTopic.Topic.Controllers
             IEnumerable<TopicEntity> groups = null;
             if (CurrentUser != null)
             {
-                groups = topicService.GetMyCreatedGroups(CurrentUser.UserId, true);
+                groups = topicService.GetMyCreatedTopics(CurrentUser.UserId, true);
 
                 if (groups.Count() >= 9)
                     return View(groups.Take(9));
 
-                PagingDataSet<TopicEntity> joinedGroups = topicService.GetMyJoinedGroups(CurrentUser.UserId);
+                PagingDataSet<TopicEntity> joinedGroups = topicService.GetMyJoinedTopics(CurrentUser.UserId);
                 groups = groups.Union(joinedGroups).Take(9);
             }
 

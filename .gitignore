@@ -42,7 +42,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-.dll
-.obj
-.pdb
-.cache
+*.dll
+*.obj
+*.pdb
+*.cache

@@ -6,3 +6,15 @@ F:\coding\Spacebuilder_4.2.0.0_src\Web\bin\SpaceBuilder.Topic.pdb
 F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\SpaceBuilder.Topic.dll
 F:\coding\Spacebuilder_4.2.0.0_src\Web\Applications\Topic\obj\Debug\SpaceBuilder.Topic.pdb
 F:\coding\Spacebuilder_4.2.0.0_src\Web\bin\SpaceBuilder.Topic.xml
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\SpecialTopic\obj\Debug\Topic.csprojResolveAssemblyReference.cache
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\SpecialTopic\obj\Debug\SpecialTopic.Topic.Resources.Resource.resources
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\SpecialTopic\obj\Debug\Topic.csproj.GenerateResource.Cache
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\SpecialTopic\obj\Debug\SpaceBuilder.Topic.dll
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\SpecialTopic\obj\Debug\SpaceBuilder.Topic.pdb
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\bin\SpaceBuilder.Topic.dll
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\bin\SpaceBuilder.Topic.pdb
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\Topic.csprojResolveAssemblyReference.cache
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\SpecialTopic.Topic.Resources.Resource.resources
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\Topic.csproj.GenerateResource.Cache
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\SpaceBuilder.Topic.dll
+E:\F\coding\Spacebuilder_V4.2.0.0_Src\Web\Applications\Topic\obj\Debug\SpaceBuilder.Topic.pdb

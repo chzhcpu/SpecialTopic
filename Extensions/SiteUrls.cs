@@ -454,7 +454,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string GroupGlobalSearch(this SiteUrls siteUrls)
+        public static string TopicGlobalSearch(this SiteUrls siteUrls)
         {
             return CachedUrlHelper.Action("_GlobalSearch", "ChannelTopic", TopicAreaName);
         }
@@ -464,7 +464,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string GroupQuickSearch(this SiteUrls siteUrls)
+        public static string TopicQuickSearch(this SiteUrls siteUrls)
         {
             return CachedUrlHelper.Action("_QuickSearch", "ChannelTopic", TopicAreaName);
         }
@@ -474,7 +474,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string GroupPageSearch(this SiteUrls siteUrls, string keyword = "", string areaCode = "")
+        public static string TopicPageSearch(this SiteUrls siteUrls, string keyword = "", string areaCode = "")
         {
             keyword = WebUtility.UrlEncode(keyword);
             RouteValueDictionary dic = new RouteValueDictionary();
@@ -492,7 +492,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 群组搜索自动完成
         /// </summary>
-        public static string GroupSearchAutoComplete(this SiteUrls siteUrls)
+        public static string TopicSearchAutoComplete(this SiteUrls siteUrls)
         {
             return CachedUrlHelper.Action("SearchAutoComplete", "ChannelTopic", TopicAreaName);
         }
