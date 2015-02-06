@@ -20,6 +20,7 @@ using Tunynet.Common.Configuration;
 using System.Text.RegularExpressions;
 using Tunynet.Utilities;
 using DevTrends.MvcDonutCaching;
+using SpecialTopic.Topic;
 
 namespace SpecialTopic.Topic.Controllers 
 {
@@ -556,7 +557,7 @@ namespace SpecialTopic.Topic.Controllers
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
-            if (group.JoinWay != JoinWay.Direct)
+            if (group.JoinWay != TopicJoinWay.Direct)
                 return Json(new StatusMessageData(StatusMessageType.Error, "当前加入方式不是直接加入"));
 
             //已修改
@@ -613,7 +614,7 @@ namespace SpecialTopic.Topic.Controllers
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
-            if (group.JoinWay != JoinWay.ByApply)
+            if (group.JoinWay != TopicJoinWay.ByApply)
                 return Json(new StatusMessageData(StatusMessageType.Error, "当前加入方式不是需要申请"));
 
 
@@ -667,7 +668,7 @@ namespace SpecialTopic.Topic.Controllers
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
-            if (group.JoinWay != JoinWay.ByQuestion)
+            if (group.JoinWay != TopicJoinWay.ByQuestion)
                 return Json(new StatusMessageData(StatusMessageType.Error, "当前加入方式不是问题验证"));
 
 

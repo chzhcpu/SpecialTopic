@@ -102,7 +102,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         ///加入方式
         /// </summary>
-        public JoinWay JoinWay { get; set; }
+        public TopicJoinWay JoinWay { get; set; }
 
         /// <summary>
         ///是否允许成员邀请（一直允许群管理员邀请）

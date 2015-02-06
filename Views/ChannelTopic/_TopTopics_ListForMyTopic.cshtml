@@ -19,20 +19,20 @@
                         <li class="tn-list-item tn-helper-clearfix">
                             <div class="tn-list-item-area-left">
                                 <div class="tn-avatar">
-                                    <a href="@SiteUrls.Instance().GroupHome(item.GroupKey)" target="_blank" title="@item.GroupName">
-                                        <img src="@SiteUrls.Instance().LogoUrl(item.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@item.GroupName"/></a></div>
+                                    <a href="@SiteUrls.Instance().TopicHome(item.TopicKey)" target="_blank" title="@item.TopicName">
+                                        <img src="@SiteUrls.Instance().LogoUrl(item.Logo, TenantTypeIds.Instance().Topic(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@item.TopicName"/></a></div>
                             </div>
                             <div class="tn-list-item-area-main">
                                 <div class="tn-list-item-row tn-list-item-heading">
                                     <h5>
-                                        <a href="@SiteUrls.Instance().GroupHome(item.GroupKey)" target="_blank" title="@item.GroupName">@item.GroupName</a>
+                                        <a href="@SiteUrls.Instance().TopicHome(item.TopicKey)" target="_blank" title="@item.TopicName">@item.TopicName</a>
                                     </h5>
                                 </div>
                                 <div class="tn-list-item-row">
                                     <p>成员：@item.MemberCount</p>
                                 </div>
                                 <div class="tn-list-item-row">
-                                    @Html.Action("_ApplyJoinButton", "ChannelGroup", new { groupId = item.GroupId })
+                                    @Html.Action("_ApplyJoinButton", "ChannelTopic", new { groupId = item.TopicId })
                                 </div>
                             </div>
                         </li>

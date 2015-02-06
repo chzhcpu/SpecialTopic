@@ -15,12 +15,12 @@
       <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-count-box">
         <div class="tn-box-content tn-widget-content tn-corner-all">
             <ul class="spb-group-count tn-helper-clearfix">
-                <li class="tn-border-gray tn-border-right"><a href="@SiteUrls.Instance().UserCreatedGroups(spaceUser.UserName)"><strong class="tn-count">@spaceUser.CreatedGroupCount()</strong></a><span>创建的群组</span></li>
-                <li><a href="@SiteUrls.Instance().UserJoinedGroups(spaceUser.UserName)"><strong class="tn-count">@spaceUser.JoinedGroupCount()</strong></a><span>加入的群组</span></li>
+                <li class="tn-border-gray tn-border-right"><a href="@SiteUrls.Instance().UserCreatedTopics(spaceUser.UserName)"><strong class="tn-count">@spaceUser.CreatedTopicCount()</strong></a><span>创建的群组</span></li>
+                <li><a href="@SiteUrls.Instance().UserJoinedTopics(spaceUser.UserName)"><strong class="tn-count">@spaceUser.JoinedTopicCount()</strong></a><span>加入的群组</span></li>
             </ul>
         </div>
     </div>
-    @Html.Action("_TopGroups", "ChannelGroup", new { topNumber = 5, sortBy = SortBy_Topic.StageHitTimes, viewName = "_TopGroups_ListForMyGroup" })
+    @Html.Action("_TopTopics", "ChannelTopic", new { topNumber = 5, sortBy = SortBy_Topic.StageHitTimes, viewName = "_TopTopics_ListForMyTopic" })
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-belong">
     <div class="tn-box-content tn-widget-content tn-corner-all">
@@ -51,18 +51,18 @@
         </div>
         <div class="tn-tabs">
             <ul class="tn-tabs-nav tn-border-gray tn-border-bottom tn-helper-clearfix">
-                <li class="tn-widget-content tn-border-gray tn-border-trl"><a href="@SiteUrls.Instance().UserJoinedGroups(Url.SpaceKey())" title="@spaceUser.UserName">
+                <li class="tn-widget-content tn-border-gray tn-border-trl"><a href="@SiteUrls.Instance().UserJoinedTopics(Url.SpaceKey())" title="@spaceUser.UserName">
                     加入的群组</a> </li>
-                <li class="tn-widget-content tn-border-gray tn-border-trl tn-tabs-selected"><a href="@SiteUrls.Instance().UserCreatedGroups(Url.SpaceKey())" title="@spaceUser.UserName">
+                <li class="tn-widget-content tn-border-gray tn-border-trl tn-tabs-selected"><a href="@SiteUrls.Instance().UserCreatedTopics(Url.SpaceKey())" title="@spaceUser.UserName">
                     创建的群组</a> </li>
             </ul>
         </div>
         @if (Model != null && Model.Count() > 0)
         {
             <ul class="tn-list">
-                @foreach (var Group in Model)
+                @foreach (var Topic in Model)
                 {
-                    @Html.Partial("_Group", Group, new ViewDataDictionary { { "showJoinButton", currentUserIsSpaceUser } })
+                    @Html.Partial("_Topic", Topic, new ViewDataDictionary { { "showJoinButton", currentUserIsSpaceUser } })
                 }
             </ul>
         }

@@ -34,9 +34,9 @@
                 </div>
                 <div class="tnc-list-topic">
                     <div class="tn-avatar-mini">
-                        <a href="@SiteUrls.Instance().GroupHome(Model.ElementAt(i).GroupKey)" target="_blank"><img src="@SiteUrls.Instance().LogoUrl(Model.ElementAt(i).Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@Model.ElementAt(i).GroupName"/></a>
+                        <a href="@SiteUrls.Instance().TopicHome(Model.ElementAt(i).TopicKey)" target="_blank"><img src="@SiteUrls.Instance().LogoUrl(Model.ElementAt(i).Logo, TenantTypeIds.Instance().Topic(), ImageSizeTypeKeys.Instance().Medium())" width="50px" alt="@Model.ElementAt(i).TopicName"/></a>
                     </div>
-                    <a title="@Model.ElementAt(i).GroupName" target="_blank" href="@SiteUrls.Instance().GroupHome(Model.ElementAt(i).GroupKey)" class="tn-user-name">@StringUtility.Trim(Model.ElementAt(i).GroupName,8)</a>
+                    <a title="@Model.ElementAt(i).TopicName" target="_blank" href="@SiteUrls.Instance().TopicHome(Model.ElementAt(i).TopicKey)" class="tn-user-name">@StringUtility.Trim(Model.ElementAt(i).TopicName,8)</a>
                 </div>
                 <p class="tnc-list-number">
                    @Model.ElementAt(i).Last7DaysHitTimes

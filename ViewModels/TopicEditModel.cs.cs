@@ -74,7 +74,7 @@ namespace SpecialTopic.Topic
         ///加入方式
         /// </summary>
         [Required(ErrorMessage = "请选择加入方式")]
-        public JoinWay JoinWay { get; set; }
+        public TopicJoinWay JoinWay { get; set; }
 
         /// <summary>
         ///是否允许成员邀请（一直允许群管理员邀请）
@@ -145,7 +145,7 @@ namespace SpecialTopic.Topic
             groupEntity.AreaCode = this.AreaCode??string.Empty;
             groupEntity.JoinWay = this.JoinWay;
             groupEntity.EnableMemberInvite = this.EnableMemberInvite;
-            if (JoinWay == JoinWay.ByQuestion)
+            if (JoinWay == TopicJoinWay.ByQuestion)
             {
                 groupEntity.Question = this.Question;
                 groupEntity.Answer = this.Answer;

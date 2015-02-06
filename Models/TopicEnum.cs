@@ -60,7 +60,7 @@ namespace SpecialTopic.Topic
     /// <summary>
     /// 群组加入方式
     /// </summary>
-    public enum JoinWay
+    public enum TopicJoinWay
     {
         /// <summary>
         /// 直接加入
