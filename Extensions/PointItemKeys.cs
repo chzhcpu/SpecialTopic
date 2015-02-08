@@ -19,7 +19,7 @@ namespace SpecialTopic.Topic
     public static class PointItemKeysExtension
     {
         /// <summary>
-        /// 创建群组
+        /// 创建专题
         /// </summary>
         public static string Topic_CreateTopic(this PointItemKeys pointItemKeys)
         {
@@ -27,7 +27,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 删除群组
+        /// 删除专题
         /// </summary>
         public static string Topic_DeleteTopic(this PointItemKeys pointItemKeys)
         {

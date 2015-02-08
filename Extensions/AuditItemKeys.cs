@@ -9,12 +9,12 @@ using Tunynet.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组审核项
+    /// 专题审核项
     /// </summary>
     public static class AuditItemKeysExtension
     {
         /// <summary>
-        /// 群组审核项
+        /// 专题审核项
         /// </summary>
         public static string Topic(this AuditItemKeys auditItemKeys)
         {

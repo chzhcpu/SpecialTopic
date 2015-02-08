@@ -6,31 +6,31 @@
 {
     <li class="tn-list-item tn-helper-clearfix tn-border-gray tn-border-bottom">
         <div class="tn-list-item-area-left">
-            <a href="@SiteUrls.Instance().GroupHome(Model.GroupKey)" title="@Model.GroupName">
-                <img width="50" src="@SiteUrls.Instance().LogoUrl(Model.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Small())"/></a>
+            <a href="@SiteUrls.Instance().TopicHome(Model.TopicKey)" title="@Model.TopicName">
+                <img width="50" src="@SiteUrls.Instance().LogoUrl(Model.Logo, TenantTypeIds.Instance().Topic(), ImageSizeTypeKeys.Instance().Small())"/></a>
         </div>
         <div class="tn-list-item-area-main">
             @Html.ActivityOperation(activity.ActivityId)
             <div class="tnc-dynamic-title">
-                群组 @Html.Link(Model.GroupName, SiteUrls.Instance().GroupHome(Model.GroupKey), Model.GroupName, new { @class = "tnc-mlrf" })中有新成员加入
+                专题 @Html.Link(Model.TopicName, SiteUrls.Instance().TopicHome(Model.TopicKey), Model.TopicName, new { @class = "tnc-mlrf" })中有新成员加入
             </div>
             @{
-    IEnumerable<TopicMember> groupMembers = ViewData.Get<IEnumerable<TopicMember>>("GroupMembers", new List<TopicMember>());
-    if (groupMembers.Count() > 0)
+    IEnumerable<TopicMember> topicMembers = ViewData.Get<IEnumerable<TopicMember>>("TopicMembers", new List<TopicMember>());
+    if (topicMembers.Count() > 0)
     {
-        groupMembers = groupMembers.Take(3);
+        topicMembers = topicMembers.Take(3);
     }
             }
-            @if (groupMembers == null || groupMembers.Count() <= 0)
+            @if (topicMembers == null || topicMembers.Count() <= 0)
             {
                 <div class="tn-no-data">
-                    暂时没有人加入此群组哦
+                    暂时没有人加入此专题哦
                 </div>
             }
             else
             {
                 <ul class="tnc-dynamic-mayknow">
-                    @foreach (var item in groupMembers)
+                    @foreach (var item in topicMembers)
                     {
                         <li class="tnc-mayknow-single">
                             <a data-user-card-url="@SiteUrls.Instance()._UserCard(item.UserId)" outerclass="tn-user-card" plugin="tipsyHoverCard" class="tnc-mayknow-img tn-helper-left" href="@SiteUrls.Instance().SpaceHome(item.UserId)">

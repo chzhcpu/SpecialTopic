@@ -15,15 +15,15 @@ namespace SpecialTopic.Topic
 {
 
     /// <summary>
-    /// 管理群组
+    /// 管理专题
     /// </summary>
-    public class ManageGroupEditModel
+    public class ManageTopicEditModel
     {
         /// <summary>
-        /// 群组Id
+        /// 专题Id
         /// </summary>
-        [Display(Name = "群组Id")]
-        public long GroupId { get; set; }
+        [Display(Name = "专题Id")]
+        public long TopicId { get; set; }
         /// <summary>
         /// 群主id
         /// </summary>
@@ -34,7 +34,7 @@ namespace SpecialTopic.Topic
         /// 名称关键字
         /// </summary>
         [Display(Name = "名称关键字")]
-        public string GroupNameKeyword { get; set; }
+        public string TopicNameKeyword { get; set; }
 
         /// <summary>
         /// 类别Id
@@ -82,7 +82,7 @@ namespace SpecialTopic.Topic
         /// 获取Query
         /// </summary>
         /// <returns></returns>
-        public TopicEntityQuery GetGroupQuery()
+        public TopicEntityQuery GetTopicQuery()
         {
             long? userIdLong = null;
 
@@ -103,9 +103,9 @@ namespace SpecialTopic.Topic
 
             return new TopicEntityQuery
             {
-                GroupId=this.GroupId,
+                TopicId=this.TopicId,
                 UserId = userIdLong,
-                GroupNameKeyword = this.GroupNameKeyword,
+                TopicNameKeyword = this.TopicNameKeyword,
                 CategoryId = this.CategoryId,
                 AuditStatus = this.AuditStatus,
                 StartDate = this.StartDate,

@@ -19,9 +19,9 @@ using Tunynet.Utilities;
 namespace SpecialTopic.Topic
 {
 
-    //已过滤掉加入方式为仅邀请加入的群组
+    //已过滤掉加入方式为仅邀请加入的专题
     /// <summary>
-    ///群组Repository
+    ///专题Repository
     /// </summary>
     public class TopicRepository : Repository<TopicEntity>, ITopicRepository
     {
@@ -33,11 +33,11 @@ namespace SpecialTopic.Topic
             this.publiclyAuditStatus = publiclyAuditStatus;
         }
 
-        #region 维护群组
+        #region 维护专题
         /// <summary>
         /// 更换皮肤
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="isUseCustomStyle">是否使用自定义皮肤</param>
         /// <param name="themeAppearance">皮肤标识</param>
         public void ChangeThemeAppearance(long groupId, bool isUseCustomStyle, string themeAppearance)
@@ -60,7 +60,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 更换群主
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="newOwnerUserId">新群主UserId</param>
         public void ChangeTopicOwner(long groupId, long newOwnerUserId)
         {
@@ -81,7 +81,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 每天定时计算各个群组的成长值
+        /// 每天定时计算各个专题的成长值
         /// </summary>
         public void CalculateGrowthValues()
         {
@@ -95,9 +95,9 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 删除群组实体
+        /// 删除专题实体
         /// </summary>
-        /// <param name="entity">群组实体</param>
+        /// <param name="entity">专题实体</param>
         /// <returns></returns>
         public override int Delete(TopicEntity entity)
         {
@@ -111,9 +111,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 插入群组实体
+        /// 插入专题实体
         /// </summary>
-        /// <param name="entity">群组实体</param>
+        /// <param name="entity">专题实体</param>
         /// <returns></returns>
         public override object Insert(TopicEntity entity)
         {
@@ -123,13 +123,13 @@ namespace SpecialTopic.Topic
 
         #endregion
 
-        #region 获取群组
+        #region 获取专题
 
         /// <summary>
-        /// 根据群组Key获取群组Id
+        /// 根据专题Key获取专题Id
         /// </summary>
-        /// <param name="groupKey">群组Key</param>
-        /// <returns>群组Id</returns>
+        /// <param name="groupKey">专题Key</param>
+        /// <returns>专题Id</returns>
         public long GetTopicIdByTopicKey(string groupKey)
         {
             var sql_Select = Sql.Builder.Select("TopicId").From("spt_Topics").Where("TopicKey = @0", groupKey);
@@ -140,7 +140,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 获取前N个排行群组
+        /// 获取前N个排行专题
         /// </summary>
         /// <param name="topNumber">前多少个</param>
         /// <param name="areaCode">地区代码</param>
@@ -163,7 +163,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取匹配的前N个排行群组
+        /// 获取匹配的前N个排行专题
         /// </summary>
         /// <param name="topNumber">前多少个</param>
         /// <param name="keyword">关键字</param>
@@ -187,7 +187,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据标签名获取群组分页集合
+        /// 根据标签名获取专题分页集合
         /// </summary>
         /// <param name="tagName">标签名</param></param>
         /// <param name="sortBy">排序依据</param>
@@ -233,7 +233,7 @@ namespace SpecialTopic.Topic
 
         //已修改
         /// <summary>
-        /// 获取用户创建的群组列表
+        /// 获取用户创建的专题列表
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <param name="ignoreAudit">是否忽略审核状态（作者或管理员查看时忽略审核状态）</param>
@@ -309,9 +309,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组成员也加入的群组
+        /// 专题成员也加入的专题
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
         public IEnumerable<TopicEntity> TopicMemberAlsoJoinedTopics(long groupId, int topNumber)
@@ -335,7 +335,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取我关注的用户加入的群组
+        /// 获取我关注的用户加入的专题
         /// </summary>
         /// <param name="userId">当前用户的userId</param>
         /// <param name="topNumber">获取前多少条</param>
@@ -366,7 +366,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取用户加入的群组列表
+        /// 获取用户加入的专题列表
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <param name="pageSize">每页记录数</param>
@@ -396,7 +396,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 分页获取群组后台管理列表
+        /// 分页获取专题后台管理列表
         /// </summary>
         /// <param name="auditStatus">审核状态</param>
         /// <param name="categoryId">类别Id</param>
@@ -582,7 +582,7 @@ namespace SpecialTopic.Topic
                 //更改群主
                 sqls.Add(Sql.Builder.Append("update spt_Topics set UserId = @0 where UserId = @1", takeOver.UserId, userId));
 
-                //获取用户Id为userId创建的群组
+                //获取用户Id为userId创建的专题
                 Sql havedTopics = Sql.Builder;
                 havedTopics.Select("TopicId")
                     .From("spt_Topics")
@@ -590,7 +590,7 @@ namespace SpecialTopic.Topic
                 IEnumerable<long> groupIds = CreateDAO().Fetch<long>(havedTopics);
 
 
-                //获取我加入用户Id为userId创建的群组的群组ID
+                //获取我加入用户Id为userId创建的专题的专题ID
                 if (groupIds.Count() > 0)
                 {
                     Sql joinedTopics = Sql.Builder;
@@ -612,7 +612,7 @@ namespace SpecialTopic.Topic
                 { }
             }
 
-            //获取用户ID为userId加入的群组
+            //获取用户ID为userId加入的专题
             Sql userJoinedTopics = Sql.Builder;
             userJoinedTopics.Select("TopicId")
                 .From("spt_TopicMembers")
@@ -630,11 +630,11 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组应用可对外显示的审核状态
+        /// 专题应用可对外显示的审核状态
         /// </summary>
         private PubliclyAuditStatus? publiclyAuditStatus;
         /// <summary>
-        /// 群组应用可对外显示的审核状态
+        /// 专题应用可对外显示的审核状态
         /// </summary>
         protected PubliclyAuditStatus PubliclyAuditStatus
         {
@@ -654,7 +654,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据审核状态获取群组数
+        /// 根据审核状态获取专题数
         /// </summary>
         /// <returns></returns>
         public Dictionary<TopicManageableCountType, int> GetManageableCounts()
@@ -688,7 +688,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组管理数据
+        /// 获取专题管理数据
         /// </summary>
         /// <param name="tenantTypeId">租户类型Id（可以获取该应用下针对某种租户类型的统计计数，默认不进行筛选）</param>
         /// <returns></returns>
@@ -714,7 +714,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组统计数据
+        /// 获取专题统计数据
         /// </summary>
         /// <returns></returns>
         public Dictionary<string, long> GetStatisticDatas(string tenantTypeId = null)

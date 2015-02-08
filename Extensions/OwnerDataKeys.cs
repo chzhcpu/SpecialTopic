@@ -9,7 +9,7 @@ namespace SpecialTopic.Topic
     public static class OwnerDataKeysExtension
     {
         /// <summary>
-        /// 创建的群组数
+        /// 创建的专题数
         /// </summary>
         /// <param name="ownerDataKeys"></param>
         /// <returns></returns>
@@ -19,7 +19,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 加入的群组数
+        /// 加入的专题数
         /// </summary>
         /// <param name="ownerDataKeys"></param>
         /// <returns></returns>
@@ -29,7 +29,7 @@ namespace SpecialTopic.Topic
         }
        
         /// <summary>
-        /// 群组的内容数
+        /// 专题的内容数
         /// </summary>
         /// <param name="ownerDataKeys"></param>
         /// <returns></returns>

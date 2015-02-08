@@ -11,7 +11,7 @@ using System;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组应用
+    /// 专题应用
     /// </summary>
     [Serializable]
     public class TopicApplication : ApplicationBase
@@ -24,7 +24,7 @@ namespace SpecialTopic.Topic
         /// 删除用户在应用中的数据
         /// </summary>
         /// <param name="userId">用户Id</param>
-        /// <param name="takeOverUserName">用于接管删除用户时不能删除的内容(例如：用户创建的群组)</param>
+        /// <param name="takeOverUserName">用于接管删除用户时不能删除的内容(例如：用户创建的专题)</param>
         /// <param name="isTakeOver">是否接管被删除用户可被接管的内容</param>
         protected override void DeleteUser(long userId, string takeOverUserName, bool isTakeOver)
         {

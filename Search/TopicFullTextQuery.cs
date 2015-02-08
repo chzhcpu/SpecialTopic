@@ -11,7 +11,7 @@ using System.Web;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组全文检索条件
+    /// 专题全文检索条件
     /// </summary>
     public class TopicFullTextQuery
     {
@@ -27,7 +27,7 @@ namespace SpecialTopic.Topic
         public IEnumerable<string> Tags { get; set; }
 
         /// <summary>
-        /// 用户已经加入的群组ID
+        /// 用户已经加入的专题ID
         /// </summary>
         public IEnumerable<string> TopicIds { get; set; }
 
@@ -86,7 +86,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         ALL = 0,
         /// <summary>
-        /// 群组名
+        /// 专题名
         /// </summary>
         GROUPNAME = 1,
         /// <summary>

@@ -11,7 +11,7 @@
         <dd> 
             <span class="tn-icon-colorful tn-icon-colorful-manager tn-icon-inline" title="群主"></span>
             @Html.Link(user.DisplayName, SiteUrls.Instance().SpaceHome(user.UserName), user.DisplayName, navigateTarget: HyperLinkTarget._blank) <span>&nbsp;</span> 
-            @foreach (var manager in Model.GroupManagers)
+            @foreach (var manager in Model.TopicManagers)
             { 
                 @Html.Link(manager.DisplayName, SiteUrls.Instance().SpaceHome(manager.UserName), manager.DisplayName, navigateTarget: HyperLinkTarget._blank) 
                 <span>&nbsp;</span> 
@@ -26,14 +26,14 @@
           }
           else
           { 
-          @Html.Link(Model.Category.CategoryName, SiteUrls.Instance().FindGroup(categoryId: Model.Category.CategoryId), Model.Category.CategoryName, navigateTarget: HyperLinkTarget._blank)
+          @Html.Link(Model.Category.CategoryName, SiteUrls.Instance().FindTopic(categoryId: Model.Category.CategoryId), Model.Category.CategoryName, navigateTarget: HyperLinkTarget._blank)
           } </dd>
       </dl>
       <dl>
-        <dt>群组标签：</dt>
+        <dt>专题标签：</dt>
         <dd> @foreach (var tagName in Model.TagNames)
           { 
-          @Html.Link(tagName, SiteUrls.Instance().ListByTag(tagName, null), tagName, navigateTarget: HyperLinkTarget._blank) <span>&nbsp;</span> } </dd>
+          @Html.Link(tagName, SiteUrls.Instance().ListByTagOfTopic(tagName, null), tagName, navigateTarget: HyperLinkTarget._blank) <span>&nbsp;</span> } </dd>
       </dl>
       <dl>
         <dt>创建日期：</dt>

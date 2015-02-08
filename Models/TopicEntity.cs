@@ -27,7 +27,7 @@ namespace SpecialTopic.Topic
 
 
     /// <summary>
-    /// 群组实体
+    /// 专题实体
     /// </summary>
     [TableName("spt_Topics")]
     [PrimaryKey("TopicId", autoIncrement = false)]
@@ -36,7 +36,7 @@ namespace SpecialTopic.Topic
     public class TopicEntity : SerializablePropertiesBase, IAuditable, IEntity
     {
         /// <summary>
-        /// 群组实体
+        /// 专题实体
         /// </summary>
         public static TopicEntity New()
         {
@@ -64,17 +64,17 @@ namespace SpecialTopic.Topic
         public long TopicId { get; set; }
 
         /// <summary>
-        ///群组名称
+        ///专题名称
         /// </summary>
         public string TopicName { get; set; }
 
         /// <summary>
-        ///群组标识（个性网址的关键组成部分）
+        ///专题标识（个性网址的关键组成部分）
         /// </summary>
         public string TopicKey { get; set; }
 
         /// <summary>
-        ///群组介绍
+        ///专题介绍
         /// </summary>
         public string Description { get; set; }
 
@@ -193,7 +193,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组分类
+        /// 专题分类
         /// </summary>
         [Ignore]
         public Category Category
@@ -207,7 +207,7 @@ namespace SpecialTopic.Topic
 
         private string categoryName;
         /// <summary>
-        /// 群组分类名
+        /// 专题分类名
         /// </summary>
         /// 
         [Ignore]

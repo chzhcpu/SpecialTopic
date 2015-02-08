@@ -18,14 +18,14 @@ using Tunynet;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组链接管理
+    /// 专题链接管理
     /// </summary>
     public static class SiteUrlsTopicExtension
     {
         private static readonly string TopicAreaName = TopicConfig.Instance().ApplicationKey;
 
         /// <summary>
-        /// 频道群组首页
+        /// 频道专题首页
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace SpecialTopic.Topic
 
         
         /// <summary>
-        /// 创建群组
+        /// 创建专题
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -44,10 +44,10 @@ namespace SpecialTopic.Topic
         {
             return CachedUrlHelper.Action("Create", "ChannelTopic", TopicAreaName);
         }
-        #region 群组频道
+        #region 专题频道
 
         /// <summary>
-        /// 用户加入群组（群组无验证时）
+        /// 用户加入专题（专题无验证时）
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
@@ -57,9 +57,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 退出群组
+        /// 退出专题
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         public static string _QuitTopic(this SiteUrls siteUrls, long groupId)
         {
@@ -67,30 +67,30 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 用户加入群组（群组有验证时）
+        /// 用户加入专题（专题有验证时）
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string _EditApply(this SiteUrls siteUrls, long groupId)
+        public static string _EditApplyOfTopic(this SiteUrls siteUrls, long topicId)
         {
-            return CachedUrlHelper.Action("_EditApply", "ChannelTopic", TopicAreaName, new RouteValueDictionary { { "groupId", groupId } });
+            return CachedUrlHelper.Action("_EditApply", "ChannelTopic", TopicAreaName, new RouteValueDictionary { { "topicId", topicId } });
         }
 
         /// <summary>
-        /// 用户加入群组（通过问题验证）
+        /// 用户加入专题（通过问题验证）
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
-        public static string _ValidateQuestion(this SiteUrls siteUrls, long groupId)
+        public static string _ValidateQuestionOfTopic(this SiteUrls siteUrls, long groupId)
         {
             return CachedUrlHelper.Action("_ValidateQuestion", "ChannelTopic", TopicAreaName, new RouteValueDictionary { { "groupId", groupId } });
         }
 
         #endregion
 
-        #region 群组空间
+        #region 专题空间
 
         /// <summary>
         ///  查询自lastActivityId以后又有多少动态进入用户的时间线
@@ -108,8 +108,8 @@ namespace SpecialTopic.Topic
         {
             return CachedUrlHelper.Action("GetNewerTopicActivityCount", "TopicSpace", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey }, { "applicationId", applicationId } });
         }
-       
-        public static string _ListActivities(this SiteUrls siteUrls, string spaceKey, int? pageIndex = 1, int? applicationId = null, MediaType? mediaType = null, bool? isOriginal = null, long? userId = null)
+
+        public static string _ListActivitiesOfTopic(this SiteUrls siteUrls, string spaceKey, int? pageIndex = 1, int? applicationId = null, MediaType? mediaType = null, bool? isOriginal = null, long? userId = null)
         {
             RouteValueDictionary dic = new RouteValueDictionary();
             dic.Add("spaceKey", spaceKey);
@@ -137,7 +137,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 删除群组动态
+        /// 删除专题动态
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
@@ -148,7 +148,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组空间首页
+        /// 专题空间首页
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -161,7 +161,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 群组空间首页
+        /// 专题空间首页
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -178,7 +178,7 @@ namespace SpecialTopic.Topic
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
-        public static string _EditAnnouncement(this SiteUrls siteUrls, string spaceKey)
+        public static string _EditAnnouncementOfTopic(this SiteUrls siteUrls, string spaceKey)
         {
             return CachedUrlHelper.Action("_EditAnnouncement", "TopicSpace", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey } });
         }
@@ -195,9 +195,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组资料
+        /// 专题资料
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         public static string _TopicProfile(this SiteUrls siteUrls, string spaceKey)
         {
@@ -211,7 +211,7 @@ namespace SpecialTopic.Topic
         /// <param name="spaceKey"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public static string BatchRemoveMember(this SiteUrls siteUrls, string spaceKey)
+        public static string BatchRemoveMemberOfTopic(this SiteUrls siteUrls, string spaceKey)
         {
             return CachedUrlHelper.Action("DeleteMember", "TopicSpaceSettings", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey } });
         }
@@ -223,7 +223,7 @@ namespace SpecialTopic.Topic
         /// <param name="spaceKey"></param>
         /// <param name="isApproved"></param>
         /// <returns></returns>
-        public static string BatchUpdateMemberAuditStatus(this SiteUrls siteUrls, string spaceKey, bool isApproved)
+        public static string BatchUpdateMemberAuditStatusOfTopic(this SiteUrls siteUrls, string spaceKey, bool isApproved)
         {
             return CachedUrlHelper.Action("ApproveMemberApply", "TopicSpaceSettings", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey }, { "isApproved", isApproved } });
         }
@@ -235,7 +235,7 @@ namespace SpecialTopic.Topic
         /// <param name="spaceKey"></param>
         /// <param name="id">申请Id</param>
         /// <returns>删除申请链接</returns>
-        public static string DeleteMemberApply(this SiteUrls siteUrls, string spaceKey, long id)
+        public static string DeleteMemberApplyOfTopic(this SiteUrls siteUrls, string spaceKey, long id)
         {
             return CachedUrlHelper.Action("DeleteMemberApply", "TopicSpaceSettings", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey }, { "id", id } });
         }
@@ -246,7 +246,7 @@ namespace SpecialTopic.Topic
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
-        public static string _Invite(this SiteUrls siteUrls, string spaceKey)
+        public static string _InviteOfTopic(this SiteUrls siteUrls, string spaceKey)
         {
             return CachedUrlHelper.Action("_Invite", "TopicSpace", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey } });
         }
@@ -258,7 +258,7 @@ namespace SpecialTopic.Topic
         /// <param name="spaceKey"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public static string ManageMembers(this SiteUrls siteUrls, string spaceKey)
+        public static string ManageMembersOfTopic(this SiteUrls siteUrls, string spaceKey)
         {
             return CachedUrlHelper.Action("ManageMembers", "TopicSpaceSettings", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey } });
         }
@@ -271,7 +271,7 @@ namespace SpecialTopic.Topic
         /// <param name="groupId"></param>
         /// <param name="applyStatus"></param>
         /// <returns></returns>
-        public static string ManageMemberApplies(this SiteUrls siteUrls, string spaceKey, TopicMemberApplyStatus? applyStatus = null)
+        public static string ManageMemberAppliesOfTopic(this SiteUrls siteUrls, string spaceKey, TopicMemberApplyStatus? applyStatus = null)
         {
             RouteValueDictionary route = new RouteValueDictionary();
             route.Add("spaceKey", spaceKey);
@@ -286,7 +286,7 @@ namespace SpecialTopic.Topic
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
-        public static string Members(this SiteUrls siteUrls, string spaceKey)
+        public static string MembersOfTopic(this SiteUrls siteUrls, string spaceKey)
         {
             return CachedUrlHelper.Action("Members", "TopicSpace", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey } });
         }
@@ -297,7 +297,7 @@ namespace SpecialTopic.Topic
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
-        public static string MyFollowedUsers(this SiteUrls siteUrls, string spaceKey)
+        public static string MyFollowedUsersOfTopic(this SiteUrls siteUrls, string spaceKey)
         {
             return CachedUrlHelper.Action("MyFollowedUsers", "TopicSpace", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey } });
         }
@@ -309,20 +309,20 @@ namespace SpecialTopic.Topic
         /// <param name="groupId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static string DeleteManager(this SiteUrls siteUrls, string spaceKey, long userId)
+        public static string DeleteManagerOfTopic(this SiteUrls siteUrls, string spaceKey, long userId)
         {
             return CachedUrlHelper.Action("DeleteManager", "TopicSpace", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey }, { "userId", userId } });
         }
 
         #endregion
 
-        #region 群组空间设置
+        #region 专题空间设置
 
         /// <summary>
-        /// 删除群组logo
+        /// 删除专题logo
         /// </summary>
         /// <param name="siteUrls"></param>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         public static string _DeleteTopicLogo(this SiteUrls siteUrls, string spaceKey)
         {
@@ -330,7 +330,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 编辑群组
+        /// 编辑专题
         /// </summary>
         /// <returns></returns>
         public static string EditTopic(this SiteUrls siteUrls, string spaceKey)
@@ -340,7 +340,7 @@ namespace SpecialTopic.Topic
         #endregion
 
         /// <summary>
-        /// 用户群组页
+        /// 用户专题页
         /// </summary>
         /// <param name="siteUrls"></param>
         public static string _CreateTopic(this SiteUrls siteUrls)
@@ -349,7 +349,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组地区导航内容块
+        /// 专题地区导航内容块
         /// </summary>
         /// <returns></returns>
         public static string _AreaTopics(this SiteUrls siteUrls, long topNumber = 5, string areaCode = null, long? categoryId = null, SortBy_Topic? sortBy = null)
@@ -368,7 +368,7 @@ namespace SpecialTopic.Topic
             return CachedUrlHelper.Action("_AreaTopics", "ChannelTopic", TopicAreaName, routeValueDictionary);
         }
         /// <summary>
-        /// 发现群组
+        /// 发现专题
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="nameKeyword"></param>
@@ -391,13 +391,13 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 标签下的群组
+        /// 标签下的专题
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="tagName"></param>
         /// <param name="sortBy"></param>
         /// <returns></returns>
-        public static string ListByTag(this SiteUrls siteUrls, string tagName, SortBy_Topic? sortBy = null)
+        public static string ListByTagOfTopic(this SiteUrls siteUrls, string tagName, SortBy_Topic? sortBy = null)
         {
             RouteValueDictionary routeValueDictionary = new RouteValueDictionary();
             if (sortBy.HasValue)
@@ -408,7 +408,7 @@ namespace SpecialTopic.Topic
             return CachedUrlHelper.Action("ListByTag", "ChannelTopic", TopicAreaName, routeValueDictionary);
         }
         /// <summary>
-        /// 用户加入的群组
+        /// 用户加入的专题
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
@@ -425,7 +425,7 @@ namespace SpecialTopic.Topic
             return CachedUrlHelper.Action("UserJoinedTopics", "ChannelTopic", TopicAreaName, dic);
         }
         /// <summary>
-        /// 用户创建的群组
+        /// 用户创建的专题
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="spaceKey"></param>
@@ -448,9 +448,9 @@ namespace SpecialTopic.Topic
         {
             return CachedUrlHelper.Action("TopicTagMap", "ChannelTopic", TopicAreaName);
         }
-        #region 群组搜索
+        #region 专题搜索
         /// <summary>
-        /// 群组全局搜索
+        /// 专题全局搜索
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -460,7 +460,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组快捷搜索
+        /// 专题快捷搜索
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -470,7 +470,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组搜索
+        /// 专题搜索
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <returns></returns>
@@ -490,7 +490,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组搜索自动完成
+        /// 专题搜索自动完成
         /// </summary>
         public static string TopicSearchAutoComplete(this SiteUrls siteUrls)
         {
@@ -509,7 +509,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 批量设置群组的审核状态（后台）
+        /// 批量设置专题的审核状态（后台）
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="isApproved">是否通过</param>
@@ -522,7 +522,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 设置群组的审核状态
+        /// 设置专题的审核状态
         /// </summary>
         /// <param name="siteUrls"></param>
         /// <param name="isApproved">是否通过</param>
@@ -536,11 +536,11 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 删除群组
+        /// 删除专题
         /// </summary>
         /// <param name="siteUrls"></param>
-        /// <param name="groupId">群组Id</param>
-        /// <returns>删除群组的链接</returns>
+        /// <param name="groupId">专题Id</param>
+        /// <returns>删除专题的链接</returns>
         public static string DeleteTopic(this SiteUrls siteUrls, long groupId)
         {
             RouteValueDictionary dictionary = new RouteValueDictionary();
@@ -570,27 +570,27 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        ///  设置/取消 群组管理员
+        ///  设置/取消 专题管理员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
         /// <param name="isManager">是/否管理员</param>
         /// <returns></returns>
-        public static string SetManager(this SiteUrls siteUrls, long userId, bool isManager, string spaceKey)
+        public static string SetManagerOfTopic(this SiteUrls siteUrls, long userId, bool isManager, string spaceKey)
         {
             return CachedUrlHelper.Action("SetManager", "TopicSpaceSettings", TopicAreaName, new RouteValueDictionary { { "spaceKey", spaceKey }, { "userId", userId }, { "isManager", isManager } });
         }
 
         #endregion
 
-        #region 屏蔽群组
+        #region 屏蔽专题
 
         /// <summary>
-        /// 屏蔽用户群组页面
+        /// 屏蔽用户专题页面
         /// </summary>
         /// <param name="spaceKey">用户空间名</param>
-        /// <param name="blockTopicIds">被屏蔽的群组名</param>
-        /// <returns>屏蔽用户群组链接</returns>
+        /// <param name="blockTopicIds">被屏蔽的专题名</param>
+        /// <returns>屏蔽用户专题链接</returns>
         public static string BlockTopics1(this SiteUrls siteUrls, string spaceKey, string blockTopicIds = null)
         {
             RouteValueDictionary routeValueDictionary = new RouteValueDictionary();

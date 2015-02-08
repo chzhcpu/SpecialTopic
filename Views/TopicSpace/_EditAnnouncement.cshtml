@@ -1,7 +1,7 @@
 ﻿@{
     string announcement = ViewData.Get<string>("announcement", string.Empty);
 }
-@using (Html.BeginAjaxForm("_EditAnnouncement", "GroupSpace", new { spaceKey = Url.SpaceKey() }, FormMethod.Post, new AjaxFormOptions { OnSuccessCallBack = "success" }, new { id = "editAnnouncement" }))
+@using (Html.BeginAjaxForm("_EditAnnouncement", "TopicSpace", new { spaceKey = Url.SpaceKey() }, FormMethod.Post, new AjaxFormOptions { OnSuccessCallBack = "success" }, new { id = "editAnnouncement" }))
 {    
     <div class="tnc-edit-intro">
         <div class="tnc-dailog-pd">

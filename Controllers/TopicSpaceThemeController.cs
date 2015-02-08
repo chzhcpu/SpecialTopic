@@ -17,13 +17,13 @@ using Tunynet.Utilities;
 
 namespace SpecialTopic.Topic.Controllers
 {
-    [Themed(PresentAreaKeysOfBuiltIn.GroupSpace, IsApplication = false)]
+    [Themed("TopicSpace", IsApplication = false)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
     [TopicSpaceAuthorize]
-    public class GroupSpaceThemeController : Controller
+    public class TopicSpaceThemeController : Controller
     {
-        public TopicService groupService { get; set; }
+        public TopicService topicService { get; set; }
         public IPageResourceManager pageResourceManager { get; set; }
         public IUserService userService { get; set; }
         public FollowService followService { get; set; }
@@ -81,7 +81,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组头部信息
+        /// 专题头部信息
         /// </summary>
         /// <param name="spaceKey">用户标识</param>
         /// <param name="showManageButton">显示管理按钮</param>
@@ -89,7 +89,7 @@ namespace SpecialTopic.Topic.Controllers
         [HttpGet]
         public ActionResult _TopicHeader(string spaceKey, bool showManageButton)
         {
-            TopicEntity group = groupService.Get(spaceKey);
+            TopicEntity group = topicService.Get(spaceKey);
             if (group == null)
             {
                 return HttpNotFound();
@@ -99,32 +99,32 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组空间主页
+        /// 专题空间主页
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         public ActionResult Home(string spaceKey)
         {
-            TopicEntity group = groupService.Get(spaceKey);
+            TopicEntity topic = topicService.Get(spaceKey);
             
             //已修改
-            if (group == null)
+            if (topic == null)
                 return HttpNotFound();
 
-            IEnumerable<ApplicationBase> applications = applicationService.GetInstalledApplicationsOfOwner(PresentAreaKeysOfBuiltIn.GroupSpace, group.TopicId);
+            IEnumerable<ApplicationBase> applications = applicationService.GetInstalledApplicationsOfOwner(PresentAreaKeysOfExtension.TopicSpace, topic.TopicId);
             
 
-            //这里先判断group是否为空，再插入了群组名
-            pageResourceManager.InsertTitlePart(group.TopicName);
+            //这里先判断group是否为空，再插入了专题名
+            pageResourceManager.InsertTitlePart(topic.TopicName);
 
             //浏览计数
-            new CountService(TenantTypeIds.Instance().Topic()).ChangeCount(CountTypes.Instance().HitTimes(), group.TopicId, group.UserId);
+            new CountService(TenantTypeIds.Instance().Topic()).ChangeCount(CountTypes.Instance().HitTimes(), topic.TopicId, topic.UserId);
 
             
             //1.为什么匿名用户就不让访问？
-            //2.这里有个大问题，私密群组应该不允许非群组成员访问，
+            //2.这里有个大问题，私密专题应该不允许非专题成员访问，
             //可以参考Common\Mvc\Attributes\UserSpaceAuthorizeAttribute.cs，在Group\Extensions\增加一个GroupSpaceAuthorizeAttribute
-            //3.当设置为私密群组并且允许用户申请加入时，应允许用户浏览群组首页，但只能看部分信息，具体需求可找宝声确认；
+            //3.当设置为私密专题并且允许用户申请加入时，应允许用户浏览专题首页，但只能看部分信息，具体需求可找宝声确认；
             
             //当前用户
             IUser user = UserContext.CurrentUser;
@@ -134,27 +134,27 @@ namespace SpecialTopic.Topic.Controllers
                 //ok，传递这些结果可以吗？
                 //已修改
                 //这样做很不好，直接用Authorizer
-                bool isMember = groupService.IsMember(group.TopicId, user.UserId);
-                visitService.CreateVisit(user.UserId, user.DisplayName, group.TopicId, group.TopicName);
+                bool isMember = topicService.IsMember(topic.TopicId, user.UserId);
+                visitService.CreateVisit(user.UserId, user.DisplayName, topic.TopicId, topic.TopicName);
                 ViewData["isMember"] = isMember;
             }
-            ViewData["isPublic"] = group.IsPublic;
+            ViewData["isPublic"] = topic.IsPublic;
             TempData["TopicMenu"] = TopicMenu.Home;
             ViewData["applications"] = applications;
 
-            return View(group);
+            return View(topic);
         }
 
         /// <summary>
-        /// 群组空间主导航
+        /// 专题空间主导航
         /// </summary>
-        /// <param name="spaceKey">群组空间标识</param>
+        /// <param name="spaceKey">专题空间标识</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _Menu_App(string spaceKey)
         {
             long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
-            TopicEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 
@@ -162,7 +162,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
             NavigationService navigationService = new NavigationService();
-            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfBuiltIn.GroupSpace, currentNavigationId, group.TopicId);
+            Navigation navigation = navigationService.GetNavigation(PresentAreaKeysOfExtension.TopicSpace, currentNavigationId, group.TopicId);
 
             IEnumerable<Navigation> navigations = new List<Navigation>();
             if (navigation != null)
@@ -178,7 +178,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
                 ManagementOperationService managementOperationService = new ManagementOperationService();
-                IEnumerable<ApplicationManagementOperation> applicationManagementOperations = managementOperationService.GetShortcuts(PresentAreaKeysOfBuiltIn.GroupSpace, false);
+                IEnumerable<ApplicationManagementOperation> applicationManagementOperations = managementOperationService.GetShortcuts(PresentAreaKeysOfExtension.TopicSpace, false);
                 if (applicationManagementOperations != null)
                 {
                     ViewData["ApplicationManagementOperations"] = applicationManagementOperations.Where(n => n.ApplicationId == navigation.ApplicationId);
@@ -189,36 +189,36 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组空间主导航
+        /// 专题空间主导航
         /// </summary>
-        /// <param name="spaceKey">群组空间标识</param>
+        /// <param name="spaceKey">专题空间标识</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _Menu_Main(string spaceKey)
         {
             long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
-            TopicEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 
             ManagementOperationService managementOperationService = new ManagementOperationService();
-            ViewData["ApplicationManagementOperations"] = managementOperationService.GetShortcuts(PresentAreaKeysOfBuiltIn.GroupSpace, false);
+            ViewData["ApplicationManagementOperations"] = managementOperationService.GetShortcuts(PresentAreaKeysOfExtension.TopicSpace, false);
 
             NavigationService navigationService = new NavigationService();
-            return View(navigationService.GetRootNavigations(PresentAreaKeysOfBuiltIn.GroupSpace, group.TopicId));
+            return View(navigationService.GetRootNavigations(PresentAreaKeysOfExtension.TopicSpace, group.TopicId));
         }
 
         /// <summary>
-        /// 群组信息
+        /// 专题信息
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
-        /// <param name="showGroupLogo">显示群组Logo</param>
+        /// <param name="spaceKey">专题标识</param>
+        /// <param name="showGroupLogo">显示专题Logo</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _TopicInfo(string spaceKey, bool? showTopicLogo)
         {
             long groupId = TopicIdToTopicKeyDictionary.GetTopicId(spaceKey);
-            TopicEntity group = groupService.Get(groupId);
+            TopicEntity group = topicService.Get(groupId);
             if (group == null)
                 return Content(string.Empty);
 

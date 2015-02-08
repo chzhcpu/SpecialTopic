@@ -14,7 +14,7 @@ namespace SpecialTopic.Topic
     public static class InvitationTypeKeysExtension
     {
         /// <summary>
-        /// 邀请加入群组
+        /// 邀请加入专题
         /// </summary>
         /// <param name="invitationTypeKeys">invitationTypeKeys</param>
         public static string InviteJoinTopic(this InvitationTypeKeys invitationTypeKeys)
@@ -23,7 +23,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 申请加入群组
+        /// 申请加入专题
         /// </summary>
         /// <param name="invitationTypeKeys">invitationTypeKeys</param>
         public static string ApplyJoinTopic(this InvitationTypeKeys invitationTypeKeys)

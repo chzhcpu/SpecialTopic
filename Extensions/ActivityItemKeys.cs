@@ -10,12 +10,12 @@ namespace SpecialTopic.Topic
 {
 
     /// <summary>
-    /// 群组动态项
+    /// 专题动态项
     /// </summary>
     public static class ActivityItemKeysExtension
     {
         /// <summary>
-        /// 创建群组动态项
+        /// 创建专题动态项
         /// </summary>
         public static string CreateTopic(this ActivityItemKeys activityItemKeys)
         {
@@ -30,7 +30,7 @@ namespace SpecialTopic.Topic
             return "CreateTopicMember";
         }
         /// <summary>
-        /// 加入群组动态项
+        /// 加入专题动态项
         /// </summary>
         public static string JoinTopic(this ActivityItemKeys activityItemKeys)
         {

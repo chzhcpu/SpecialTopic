@@ -8,15 +8,15 @@
             @switch (sortBy)
             {
                 case SortBy_Topic.DateCreated_Desc:
-                @:最新群组
+                @:最新专题
                     break;
                 case SortBy_Topic.StageHitTimes:
                 case SortBy_Topic.HitTimes:
-                @:热门群组
+                @:热门专题
                     break;
                 case SortBy_Topic.MemberCount_Desc:
                 case SortBy_Topic.GrowthValue_Desc:
-                @:活跃群组
+                @:活跃专题
                 break;
             }
         </h3>
@@ -26,7 +26,7 @@
             @if (Model.Count() <= 0)
             {
                 <div class="tn-no-data">
-                    暂无群组</div> 
+                    暂无专题</div> 
             }
             else
             {

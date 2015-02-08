@@ -18,7 +18,7 @@ using Tunynet.Utilities;
 
 namespace SpecialTopic.Topic.Controllers
 {
-    [Themed(PresentAreaKeysOfBuiltIn.GroupSpace, IsApplication = true)]
+    [Themed(PresentAreaKeysOfExtension.TopicSpace, IsApplication = true)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
     [TopicSpaceAuthorize(RequireManager = true)]
@@ -48,7 +48,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 管理群组成员申请页
+        /// 管理专题成员申请页
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <param name="pageIndex"></param>
@@ -60,7 +60,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.TopicName);
-            pageResourceManager.InsertTitlePart("管理群组成员申请页");
+            pageResourceManager.InsertTitlePart("管理专题成员申请页");
             
             //已修改
             PagingDataSet<TopicMemberApply> groupMemberApplies = groupService.GetTopicMemberApplies(group.TopicId, applyStatus, pageSize, pageIndex);
@@ -71,7 +71,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 接受/拒绝群组加入申请
+        /// 接受/拒绝专题加入申请
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -86,7 +86,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
         /// <summary>
-        /// 删除群组加入申请
+        /// 删除专题加入申请
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -100,7 +100,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 管理群组成员页
+        /// 管理专题成员页
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <param name="pageIndex"></param>
@@ -112,7 +112,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.TopicName);
-            pageResourceManager.InsertTitlePart("管理群组成员页");
+            pageResourceManager.InsertTitlePart("管理专题成员页");
 
 
 
@@ -133,7 +133,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 创建更换群主模式框
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">群主名称</param>
         /// <returns>更换群主</returns>
         [HttpGet]
@@ -154,7 +154,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 更换群主
         /// </summary>
-        /// <param name="group">编辑群组对象</param>
+        /// <param name="group">编辑专题对象</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult _ChangeTopicOwner(string spaceKey)
@@ -190,7 +190,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        ///  设置/取消 群组管理员
+        ///  设置/取消 专题管理员
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -219,7 +219,7 @@ namespace SpecialTopic.Topic.Controllers
         
         
         /// <summary>
-        /// 批量移除群组成员
+        /// 批量移除专题成员
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -232,7 +232,7 @@ namespace SpecialTopic.Topic.Controllers
             {
                 if (!authorizer.Topic_DeleteMember(group, userId))
                 {
-                    return Json(new StatusMessageData(StatusMessageType.Error, "您没有删除群组成员的权限"));
+                    return Json(new StatusMessageData(StatusMessageType.Error, "您没有删除专题成员的权限"));
                 }
             }
 
@@ -244,7 +244,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 删除群组logo
+        /// 删除专题logo
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
@@ -253,20 +253,20 @@ namespace SpecialTopic.Topic.Controllers
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "没有该群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "没有该专题！"));
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return Json(new StatusMessageData(StatusMessageType.Error, "您尚未登录！"));
             
             //已修改
-            //这个功能属于编辑群组，在编辑群组已做权限验证，这边还需要做验证吗？
+            //这个功能属于编辑专题，在编辑专题已做权限验证，这边还需要做验证吗？
             
             groupService.DeleteLogo(group.TopicId);
-            return Json(new StatusMessageData(StatusMessageType.Success, "删除群组Logo成功！"));
+            return Json(new StatusMessageData(StatusMessageType.Success, "删除专题Logo成功！"));
         }
 
         /// <summary>
-        /// 编辑群组页
+        /// 编辑专题页
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
@@ -279,7 +279,7 @@ namespace SpecialTopic.Topic.Controllers
             if (group == null)
                 return HttpNotFound();
             pageResourceManager.InsertTitlePart(group.TopicName);
-            pageResourceManager.InsertTitlePart("编辑群组");
+            pageResourceManager.InsertTitlePart("编辑专题");
 
             
             //编辑的时候需要显示已添加的标签
@@ -292,7 +292,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 编辑群组
+        /// 编辑专题
         /// </summary>
         /// <returns></returns>
         [HttpPost]

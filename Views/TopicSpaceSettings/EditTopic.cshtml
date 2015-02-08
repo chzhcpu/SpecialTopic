@@ -1,24 +1,24 @@
-﻿@model GroupEditModel
+﻿@model TopicEditModel
 @{
     Layout = "manage-2cols";
 
     Html.ViewContext.RouteData.Values["CurrentNavigationId"] = 13900190;
     var joinWay = Model.JoinWay;
-    int groupNameLength = Model.GroupName == null ? 0 : Model.GroupName.Length;
+    int groupNameLength = Model.TopicName == null ? 0 : Model.TopicName.Length;
 }
 @Html.StatusMessage()
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-edit">
     <div class="tn-box-content tn-widget-content tn-corner-all">
         <div class="tn-main-heading tn-border-gray tn-border-bottom">
             <h2>
-                群组设置</h2>
+                专题设置</h2>
         </div>
-        @using (Html.BeginForm("EditGroup", "GroupSpaceSettings", new { spaceKey = Url.SpaceKey() }, FormMethod.Post, new { enctype = "MULTIPART/FORM-DATA", id = "form-group-edit" }))
+        @using (Html.BeginForm("EditTopic", "TopicSpaceSettings", new { spaceKey = Url.SpaceKey() }, FormMethod.Post, new { enctype = "MULTIPART/FORM-DATA", id = "form-group-edit" }))
         {
-            @Html.HiddenFor(n => n.GroupId)
-            @Html.ValidationMessageFor(n => n.GroupId)
-            @Html.HiddenFor(n => n.GroupKey)
-            @Html.ValidationMessageFor(n => n.GroupKey)
+            @Html.HiddenFor(n => n.TopicId)
+            @Html.ValidationMessageFor(n => n.TopicId)
+            @Html.HiddenFor(n => n.TopicKey)
+            @Html.ValidationMessageFor(n => n.TopicKey)
             <div class="tn-form-box">
                 <table>
                     <tr class="tn-name">
@@ -27,10 +27,10 @@
                             名称：
                         </th>
                         <td>                            
-                            @Html.TextBoxFor(n => n.GroupName, new { @class = "tn-textbox tn-border-gray" })
-                            <span id="GroupNameCount" class="tn-count tn-text-note">@groupNameLength/60</span>
+                            @Html.TextBoxFor(n => n.TopicName, new { @class = "tn-textbox tn-border-gray" })
+                            <span id="TopicNameCount" class="tn-count tn-text-note">@groupNameLength/60</span>
                         </td>
-                        <td>@Html.ValidationMessageFor(n => n.GroupName)
+                        <td>@Html.ValidationMessageFor(n => n.TopicName)
                         </td>
                     </tr>
                     <tr class="tn-intro">
@@ -47,7 +47,7 @@
                             logo：
                         </th>
                         <td>
-                            <input type="file" id="GroupLogo" name="GroupLogo" />
+                            <input type="file" id="TopicLogo" name="TopicLogo" />
                         </td>
                         <td>
                         </td>
@@ -59,8 +59,8 @@
                             </th>
                             <td>
                                 <div class="tn-figure">
-                                    <img alt="群组头像" src="@SiteUrls.Instance().LogoUrl(Model.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Medium())"/>
-                                    <a id="deleteGroupLogo" class="tn-edit" href="@SiteUrls.Instance()._DeleteGroupLogo(Url.SpaceKey())">
+                                    <img alt="专题头像" src="@SiteUrls.Instance().LogoUrl(Model.Logo, TenantTypeIds.Instance().Topic(), ImageSizeTypeKeys.Instance().Medium())"/>
+                                    <a id="deleteTopicLogo" class="tn-edit" href="@SiteUrls.Instance()._DeleteTopicLogo(Url.SpaceKey())">
                                         删除</a>
                                 </div>
                             </td>
@@ -74,7 +74,7 @@
                             类别：
                         </th>
                         <td>                        
-                        @Html.CategoryDropDownListFor(n => n.CategoryId, TenantTypeIds.Instance().Group(), 0)
+                        @Html.CategoryDropDownListFor(n => n.CategoryId, TenantTypeIds.Instance().Topic(), 0)
                         </td>
                         <td>@Html.ValidationMessageFor(n => n.CategoryId)
                         </td>
@@ -90,7 +90,7 @@
                     </tr>
                     <tr>
                         <th>
-                            群组类型：
+                            专题类型：
                         </th>
                         <td>
                             <ul class="tn-radiobutton-list">
@@ -113,7 +113,7 @@
                         <th>
                             标签：
                         </th>
-                        <td>@Html.TagSelector("RelatedTags", ViewData.Get<IEnumerable<string>>("tags", null), TenantTypeIds.Instance().Group(), Model.GroupId)
+                        <td>@Html.TagSelector("RelatedTags", ViewData.Get<IEnumerable<string>>("tags", null), TenantTypeIds.Instance().Topic(), Model.TopicId)
                         </td>
                         <td>
                         </td>
@@ -126,22 +126,22 @@
                             <ul class="tn-radiobutton-list" id="joinwaylist">
                                 <li id = "direct" class="tn-inline-list" @if (!Model.IsPublic) {<text>style="display:none"</text> }>
                                     <label>
-                                        @Html.RadioButton("JoinWay", JoinWay.Direct, Model.JoinWay == JoinWay.Direct, new { group = "joinWay", id = "isDirect" })
+                                        @Html.RadioButton("JoinWay", TopicJoinWay.Direct, Model.JoinWay == TopicJoinWay.Direct, new { group = "joinWay", id = "isDirect" })
                                         直接加入</label>
                                 </li>
                                 <li id="apply" class="tn-inline-list" @if (!Model.IsPublic) {<text>style="display:none"</text> }>
                                     <label>
-                                        @Html.RadioButton("JoinWay", JoinWay.ByApply, Model.JoinWay == JoinWay.ByApply, new { group = "joinWay", id = "isApply" })
+                                        @Html.RadioButton("JoinWay", TopicJoinWay.ByApply, Model.JoinWay == TopicJoinWay.ByApply, new { group = "joinWay", id = "isApply" })
                                         申请加入</label>
                                 </li>
                                 <li id="invite" class="tn-inline-list">
                                     <label>
-                                        @Html.RadioButton("JoinWay", JoinWay.ByInvite, Model.JoinWay == JoinWay.ByInvite, new { group = "joinWay", id = "isInvite" })
+                                        @Html.RadioButton("JoinWay", TopicJoinWay.ByInvite, Model.JoinWay == TopicJoinWay.ByInvite, new { group = "joinWay", id = "isInvite" })
                                         邀请加入</label>
                                 </li>
                                 <li id="question" class="tn-inline-list"  @if (!Model.IsPublic) {<text>style="display:none"</text> }>
                                     <label>
-                                        @Html.RadioButton("JoinWay", JoinWay.ByQuestion, Model.JoinWay == JoinWay.ByQuestion, new { group = "joinWay", id = "isQuestion" })
+                                        @Html.RadioButton("JoinWay", TopicJoinWay.ByQuestion, Model.JoinWay == TopicJoinWay.ByQuestion, new { group = "joinWay", id = "isQuestion" })
                                         问题验证</label>
                                 </li>
                             </ul>
@@ -233,7 +233,7 @@
                     <tr>
                         <th>
                         </th>
-                        <td>@Html.Button("保存", buttonType: ButtonTypes.Submit, highlightStyle: HighlightStyles.Primary, htmlAttributes: new { id = "editGroupButton" })
+                        <td>@Html.Button("保存", buttonType: ButtonTypes.Submit, highlightStyle: HighlightStyles.Primary, htmlAttributes: new { id = "editTopicButton" })
                         </td>
                         <td>
                         </td>
@@ -255,9 +255,9 @@
         validatorSettings.ignore = "input:hidden[type='text']";
         //        获取填写的字数
         var form = $('form#form-group-edit');
-        $("#GroupName", form).GetTextCount('GroupNameCount', 60, true);
+        $("#TopicName", form).GetTextCount('TopicNameCount', 60, true);
 
-        $("#deleteGroupLogo").click(function (e) {
+        $("#deleteTopicLogo").click(function (e) {
             e.preventDefault();
             var url = $(this).attr("href");
             art.dialog.confirm('您确认要删除logo吗？', function () {
@@ -287,7 +287,7 @@
             $("div.spb-group-bubble").eq(index).show();
         });
 
-        $("#editGroupButton").click(function (data) {
+        $("#editTopicButton").click(function (data) {
             if (!$("form#form-group-edit").valid())
                 return false;
         });

@@ -15,7 +15,7 @@ using Tunynet.UI;
 namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
-    /// 处理群组动态、积分的EventMoudle
+    /// 处理专题动态、积分的EventMoudle
     /// </summary>
     public class TopicEventModule : IEventMoudle
     {
@@ -103,13 +103,13 @@ namespace SpecialTopic.Topic.EventModules
             }
             if (!string.IsNullOrEmpty(pointItemKey))
             {
-                description = string.Format(ResourceAccessor.GetString("PointRecord_Pattern_" + eventOperationType), "群组", sender.TopicName);
+                description = string.Format(ResourceAccessor.GetString("PointRecord_Pattern_" + eventOperationType), "专题", sender.TopicName);
             }
             pointService.GenerateByRole(sender.UserId, pointItemKey, description, eventOperationType == EventOperationType.Instance().Create() || eventOperationType == EventOperationType.Instance().Delete() && eventArgs.OperatorInfo.OperatorUserId == sender.UserId);
         }
 
         /// <summary>
-        /// 自动安装群组的相关应用
+        /// 自动安装专题的相关应用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>

@@ -41,8 +41,8 @@ namespace SpecialTopic.Topic
         ///专题标识（个性网址的关键组成部分）
         /// </summary>
         [Required(ErrorMessage = "请输入专题标识")]
-        [StringLength(16, MinimumLength = 4, ErrorMessage = "请输入4-16个字")]
-        [DataType(DataType.Url)]
+        //[StringLength(16, MinimumLength = 4, ErrorMessage = "请输入4-16个字")]
+        //[DataType(DataType.Url)]
         [Remote("ValidateTopicKey", "ChannelTopic", "Topic", ErrorMessage = "此专题Key已存在", AdditionalFields = "TopicId")]
         public string TopicKey { get; set; }
 
@@ -119,38 +119,38 @@ namespace SpecialTopic.Topic
         public TopicEntity AsTopicEntity()
         {
             CategoryService categoryService = new CategoryService();
-            TopicEntity groupEntity = null;
+            TopicEntity topicEntity = null;
 
             //创建专题
             if (this.TopicId == 0)
             {
-                groupEntity = TopicEntity.New();
-                groupEntity.UserId = UserContext.CurrentUser.UserId;
-                groupEntity.DateCreated = DateTime.UtcNow;
-                groupEntity.TopicKey = this.TopicKey;
+                topicEntity = TopicEntity.New();
+                topicEntity.UserId = UserContext.CurrentUser.UserId;
+                topicEntity.DateCreated = DateTime.UtcNow;
+                topicEntity.TopicKey = this.TopicKey;
             }
             //编辑专题
             else
             {
-                TopicService groupService = new TopicService();
-                groupEntity = groupService.Get(this.TopicId);
+                TopicService topicService = new TopicService();
+                topicEntity = topicService.Get(this.TopicId);
             }
-            groupEntity.IsPublic = this.IsPublic;
-            groupEntity.TopicName = this.TopicName;
+            topicEntity.IsPublic = this.IsPublic;
+            topicEntity.TopicName = this.TopicName;
             if (Logo != null)
             {
-                groupEntity.Logo = this.Logo;
+                topicEntity.Logo = this.Logo;
             }
-            groupEntity.Description = Formatter.FormatMultiLinePlainTextForStorage(this.Description == null ? string.Empty : this.Description, true);
-            groupEntity.AreaCode = this.AreaCode??string.Empty;
-            groupEntity.JoinWay = this.JoinWay;
-            groupEntity.EnableMemberInvite = this.EnableMemberInvite;
+            topicEntity.Description = Formatter.FormatMultiLinePlainTextForStorage(this.Description == null ? string.Empty : this.Description, true);
+            topicEntity.AreaCode = this.AreaCode??string.Empty;
+            topicEntity.JoinWay = this.JoinWay;
+            topicEntity.EnableMemberInvite = this.EnableMemberInvite;
             if (JoinWay == TopicJoinWay.ByQuestion)
             {
-                groupEntity.Question = this.Question;
-                groupEntity.Answer = this.Answer;
+                topicEntity.Question = this.Question;
+                topicEntity.Answer = this.Answer;
             }
-            return groupEntity;
+            return topicEntity;
         }
     }
 

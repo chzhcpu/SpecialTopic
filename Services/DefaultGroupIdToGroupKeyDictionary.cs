@@ -7,7 +7,7 @@
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 通过群组数据仓储实现查询
+    /// 通过专题数据仓储实现查询
     /// </summary>
     public class DefaultTopicIdToTopicKeyDictionary : TopicIdToTopicKeyDictionary
     {
@@ -29,10 +29,10 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据群组Id获取群组Key
+        /// 根据专题Id获取专题Key
         /// </summary>
         /// <returns>
-        /// 群组Id
+        /// 专题Id
         /// </returns>
         protected override string GetTopicKeyByTopicId(long groupId)
         {
@@ -43,11 +43,11 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据群组Key获取群组Id
+        /// 根据专题Key获取专题Id
         /// </summary>
-        /// <param name="groupKey">群组Key</param>
+        /// <param name="groupKey">专题Key</param>
         /// <returns>
-        /// 群组Id
+        /// 专题Id
         /// </returns>
         protected override long GetTopicIdByTopicKey(string groupKey)
         {

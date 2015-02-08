@@ -12,7 +12,7 @@
     string plugin = string.Empty;
     if (Model.JoinWay == TopicJoinWay.ByApply)
     {
-        url = SiteUrls.Instance()._EditApply(Model.TopicId);
+        url = SiteUrls.Instance()._EditApplyOfTopic(Model.TopicId);
         if (!isApplied)
         {
             plugin = "dialog";
@@ -24,7 +24,7 @@
     }
     if (Model.JoinWay == TopicJoinWay.ByQuestion)
     {
-        url = SiteUrls.Instance()._ValidateQuestion(Model.TopicId);
+        url = SiteUrls.Instance()._ValidateQuestionOfTopic(Model.TopicId);
         plugin = "dialog";
     }
     bool isPrivate = (Model.JoinWay == TopicJoinWay.ByInvite);

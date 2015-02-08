@@ -9,7 +9,7 @@
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 加入群组申请状态
+    /// 加入专题申请状态
     /// </summary>
     public enum TopicMemberApplyStatus
     {
@@ -31,23 +31,23 @@ namespace SpecialTopic.Topic
 
 
     /// <summary>
-    /// 群组成员角色
+    /// 专题成员角色
     /// </summary>
     public enum TopicMemberRole
     {
 
         /// <summary>
-        /// 非群组成员
+        /// 非专题成员
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// 群组成员
+        /// 专题成员
         /// </summary>
         Member = 1,
 
         /// <summary>
-        /// 群组管理员
+        /// 专题管理员
         /// </summary>
         Manager = 2,
 
@@ -58,7 +58,7 @@ namespace SpecialTopic.Topic
     }
 
     /// <summary>
-    /// 群组加入方式
+    /// 专题加入方式
     /// </summary>
     public enum TopicJoinWay
     {
@@ -86,7 +86,7 @@ namespace SpecialTopic.Topic
 
 
     /// <summary>
-    /// 群组排序字段
+    /// 专题排序字段
     /// </summary>
     public enum SortBy_Topic
     {
@@ -120,7 +120,7 @@ namespace SpecialTopic.Topic
     }
 
     /// <summary>
-    /// 群组成员排序字段
+    /// 专题成员排序字段
     /// </summary>
     public enum SortBy_TopicMember
     {
@@ -136,7 +136,7 @@ namespace SpecialTopic.Topic
     }
 
     /// <summary>
-    /// 群组待审核、需再审核
+    /// 专题待审核、需再审核
     /// </summary>
     public enum TopicManageableCountType
     {
@@ -151,7 +151,7 @@ namespace SpecialTopic.Topic
         Again = 2,
 
         /// <summary>
-        /// 总群组数
+        /// 总专题数
         /// </summary>
         IsAll = 3,
 

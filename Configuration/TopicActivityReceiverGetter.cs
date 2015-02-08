@@ -12,7 +12,7 @@ using Tunynet.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组动态接收人获取器
+    /// 专题动态接收人获取器
     /// </summary>
     public class TopicActivityReceiverGetter : IActivityReceiverGetter
     {
@@ -39,7 +39,7 @@ namespace SpecialTopic.Topic
         /// 检查用户是否接收动态
         /// </summary>
         /// <param name="activityService"></param>
-        /// <param name="isPublic">群组是否为公开群组</param>
+        /// <param name="isPublic">专题是否为公开专题</param>
         /// <param name="userId">UserId</param>
         /// <param name="activity">动态</param>
         /// <returns>接收动态返回true，否则返回false</returns>
@@ -52,7 +52,7 @@ namespace SpecialTopic.Topic
                 if (followService.IsFollowed(userId, activity.UserId))
                     return false;
             }
-            //检查用户是否已屏蔽群组
+            //检查用户是否已屏蔽专题
             if (new UserBlockService().IsBlockedTopic(userId, activity.OwnerId))
                 return false;
             //检查用户是否接收该动态项目

@@ -23,7 +23,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public string DataName
         {
-            get { return "加入的群组数"; }
+            get { return "加入的专题数"; }
         }
 
         /// <summary>

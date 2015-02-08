@@ -23,7 +23,7 @@ namespace SpecialTopic.Topic.Configuration
         /// <returns></returns>
         public string GetUrl(string tagName, long ownerId = 0)
         {
-            return SiteUrls.Instance().ListByTag(tagName,SortBy_Topic.DateCreated_Desc);
+            return SiteUrls.Instance().ListByTagOfTopic(tagName, SortBy_Topic.DateCreated_Desc);
         }
     }
 }

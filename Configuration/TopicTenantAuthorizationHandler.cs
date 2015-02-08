@@ -14,7 +14,7 @@ using Spacebuilder.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组租户权限验证处理器
+    /// 专题租户权限验证处理器
     /// </summary>
     public class TopicTenantAuthorizationHandler : ITenantAuthorizationHandler
     {

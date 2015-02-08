@@ -17,7 +17,7 @@ using Tunynet.Search;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组搜索器
+    /// 专题搜索器
     /// </summary>
     public class TopicSearcher : ISearcher
     {
@@ -150,7 +150,7 @@ namespace SpecialTopic.Topic
             bool isEndding = false;
             do
             {
-                //分页获取群组列表
+                //分页获取专题列表
                 PagingDataSet<TopicEntity> groups = topicService.GetsForAdmin(null, null, null, null, null, null, null, null, pageSize, pageIndex);
                 totalRecords = groups.TotalRecords;
 
@@ -172,7 +172,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 添加索引
         /// </summary>
-        /// <param name="TopicEntity">待添加的群组</param>
+        /// <param name="TopicEntity">待添加的专题</param>
         public void Insert(TopicEntity group)
         {
             Insert(new TopicEntity[] { group });
@@ -181,7 +181,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 添加索引
         /// </summary>
-        /// <param name="TopicEntitys">待添加的群组</param>
+        /// <param name="TopicEntitys">待添加的专题</param>
         public void Insert(IEnumerable<TopicEntity> groups)
         {
             IEnumerable<Document> docs = TopicIndexDocument.Convert(groups);
@@ -191,7 +191,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 删除索引
         /// </summary>
-        /// <param name="TopicEntityId">待删除的群组Id</param>
+        /// <param name="TopicEntityId">待删除的专题Id</param>
         public void Delete(long groupId)
         {
             searchEngine.Delete(groupId.ToString(), TopicIndexDocument.TopicId);
@@ -200,7 +200,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 删除索引
         /// </summary>
-        /// <param name="TopicEntityIds">待删除的群组Id列表</param>
+        /// <param name="TopicEntityIds">待删除的专题Id列表</param>
         public void Delete(IEnumerable<long> groupIds)
         {
             foreach (var groupId in groupIds)
@@ -212,7 +212,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 更新索引
         /// </summary>
-        /// <param name="TopicEntity">待更新的群组</param>
+        /// <param name="TopicEntity">待更新的专题</param>
         public void Update(TopicEntity group)
         {
             Document doc = TopicIndexDocument.Convert(group);
@@ -222,7 +222,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 更新索引
         /// </summary>
-        /// <param name="TopicEntitys">待更新的群组集合</param>
+        /// <param name="TopicEntitys">待更新的专题集合</param>
         public void Update(IEnumerable<TopicEntity> groups)
         {
             IEnumerable<Document> docs = TopicIndexDocument.Convert(groups);
@@ -238,10 +238,10 @@ namespace SpecialTopic.Topic
         
         //fixed by wanf
         /// <summary>
-        /// 群组分页搜索
+        /// 专题分页搜索
         /// </summary>
         /// <param name="groupQuery">搜索条件</param>
-        /// <param name="interestTopic">是否是查询可能感兴趣的群组</param>
+        /// <param name="interestTopic">是否是查询可能感兴趣的专题</param>
         /// <returns>符合搜索条件的分页集合</returns>
         public PagingDataSet<TopicEntity> Search(TopicFullTextQuery groupQuery, bool interestTopic = false)
         {
@@ -265,11 +265,11 @@ namespace SpecialTopic.Topic
             PagingDataSet<Document> searchResult = searchEngine.Search(query, filter, sort, groupQuery.PageIndex, groupQuery.PageSize);
             IEnumerable<Document> docs = searchResult.ToList<Document>();
 
-            //解析出搜索结果中的群组ID
+            //解析出搜索结果中的专题ID
             List<long> groupIds = new List<long>();
-            //获取索引中群组的标签
+            //获取索引中专题的标签
             Dictionary<long, IEnumerable<string>> groupTags = new Dictionary<long, IEnumerable<string>>();
-            //获取索引中群组的分类名
+            //获取索引中专题的分类名
             Dictionary<long, string> categoryNames = new Dictionary<long, string>();
 
             foreach (Document doc in docs)
@@ -280,7 +280,7 @@ namespace SpecialTopic.Topic
                 categoryNames[groupId]=doc.Get(TopicIndexDocument.CategoryName);
             }
 
-            //根据群组ID列表批量查询群组实例
+            //根据专题ID列表批量查询专题实例
             IEnumerable<TopicEntity> groupList = topicService.GetTopicEntitiesByIds(groupIds);
 
             foreach (var group in groupList)
@@ -308,7 +308,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取匹配的前几条热门群组
+        /// 获取匹配的前几条热门专题
         /// </summary>
         /// <param name="keyword">要匹配的关键字</param>
         /// <param name="topNumber">前N条</param>
@@ -327,7 +327,7 @@ namespace SpecialTopic.Topic
         /// 根据帖吧搜索查询条件构建Lucene查询条件
         /// </summary>
         /// <param name="Query">搜索条件</param>
-        /// <param name="interestTopic">是否是查询可能感兴趣的群组</param>
+        /// <param name="interestTopic">是否是查询可能感兴趣的专题</param>
         /// <returns></returns>
         private LuceneSearchBuilder BuildLuceneSearchBuilder(TopicFullTextQuery groupQuery, bool interestTopic = false)
         {
@@ -369,7 +369,7 @@ namespace SpecialTopic.Topic
                 }
             }
 
-            //根据标签搜索可能感兴趣的群组
+            //根据标签搜索可能感兴趣的专题
             if (interestTopic)
             {
                 searchBuilder.WithPhrases(TopicIndexDocument.Tag, groupQuery.Tags, BoostLevel.Hight, false);
@@ -387,7 +387,7 @@ namespace SpecialTopic.Topic
             if (groupQuery.CategoryId != 0)
             {
                 
-                //fixed by wanf:发现群组已经不再用全文检索了
+                //fixed by wanf:发现专题已经不再用全文检索了
 
                 CategoryService categoryService = new CategoryService();
                 IEnumerable<Category> categories = categoryService.GetDescendants(groupQuery.CategoryId);
@@ -400,10 +400,10 @@ namespace SpecialTopic.Topic
                 searchBuilder.WithFields(TopicIndexDocument.CategoryId, categoryIds, true, BoostLevel.Hight, true);
             }
 
-            //公开的群组
+            //公开的专题
             searchBuilder.WithField(TopicIndexDocument.IsPublic, "1", true, BoostLevel.Hight, true);
 
-            //过滤可以显示的群组
+            //过滤可以显示的专题
             switch (publiclyAuditStatus)
             {
                 case PubliclyAuditStatus.Again:

@@ -18,13 +18,13 @@ using Tunynet.Utilities;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    ///群组成员申请Repository
+    ///专题成员申请Repository
     /// </summary>
     public class TopicMemberApplyRepository : Repository<TopicMemberApply>, ITopicMemberApplyRepository
     {
 
         /// <summary>
-        /// 获取用户申请状态为待处理的群组ID集合
+        /// 获取用户申请状态为待处理的专题ID集合
         /// </summary>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
@@ -53,9 +53,9 @@ namespace SpecialTopic.Topic
         
         //已加
         /// <summary>
-        /// 获取群组的加入申请列表
+        /// 获取专题的加入申请列表
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="applyStatus">申请状态</param>
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
@@ -93,7 +93,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 获取成员请求书
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         public int GetMemberApplyCount(long groupId)
         {

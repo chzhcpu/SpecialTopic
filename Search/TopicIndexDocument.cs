@@ -13,7 +13,7 @@ using Tunynet.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组索引文档
+    /// 专题索引文档
     /// </summary>
     public class TopicIndexDocument
     {
@@ -38,13 +38,13 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// TopicEntity转换成<see cref="Lucene.Net.Documents.Document"/>
         /// </summary>
-        /// <param name="TopicEntity">群组实体</param>
+        /// <param name="TopicEntity">专题实体</param>
         /// <returns>Lucene.Net.Documents.Document</returns>
         public static Document Convert(TopicEntity group)
         {
             Document doc = new Document();
 
-            //索引群组基本信息
+            //索引专题基本信息
             doc.Add(new Field(TopicIndexDocument.TopicId, group.TopicId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
             doc.Add(new Field(TopicIndexDocument.TopicName, group.TopicName, Field.Store.YES, Field.Index.ANALYZED));
             doc.Add(new Field(TopicIndexDocument.Description, group.Description, Field.Store.NO, Field.Index.ANALYZED));
@@ -62,7 +62,7 @@ namespace SpecialTopic.Topic
 
             }
 
-            //索引群组tag
+            //索引专题tag
             foreach (string tagName in group.TagNames)
             {
                 doc.Add(new Field(TopicIndexDocument.Tag, tagName.ToLower(), Field.Store.YES, Field.Index.ANALYZED));

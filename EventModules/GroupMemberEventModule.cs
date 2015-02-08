@@ -18,7 +18,7 @@ using Tunynet;
 namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
-    /// 处理群组成员退出群组通知的EventMoudle
+    /// 处理专题成员退出专题通知的EventMoudle
     /// </summary>
     public class TopicMemberEventModule : IEventMoudle
     {
@@ -48,7 +48,7 @@ namespace SpecialTopic.Topic.EventModules
                 var group = new TopicService().Get(groupMember.TopicId);
                 if (group == null)
                     return;
-                //生成Owner为群组的动态
+                //生成Owner为专题的动态
                 Activity actvityOfTopic = Activity.New();
                 actvityOfTopic.ActivityItemKey = ActivityItemKeys.Instance().CreateTopicMember();
                 actvityOfTopic.ApplicationId = TopicConfig.Instance().ApplicationId;
@@ -116,7 +116,7 @@ namespace SpecialTopic.Topic.EventModules
             List<long> toUserIds = new List<long>();
             toUserIds.Add(entity.UserId);
             toUserIds.AddRange(entity.TopicManagers.Select(n => n.UserId));
-            //删除群组成员通知群管理员
+            //删除专题成员通知群管理员
             if (eventArgs.EventOperationType == EventOperationType.Instance().Delete())
             {
                 foreach (var toUserId in toUserIds)

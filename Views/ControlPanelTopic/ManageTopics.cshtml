@@ -1,19 +1,19 @@
-﻿@model ManageGroupEditModel
+﻿@model ManageTopicEditModel
 @{
     Layout = "_ControlPanel";
-    PagingDataSet<TopicEntity> groups = ViewData.Get<PagingDataSet<TopicEntity>>("Groups", null);
+    PagingDataSet<TopicEntity> groups = ViewData.Get<PagingDataSet<TopicEntity>>("Topics", null);
 }
 
 <div class="tn-block">
     <div class="tnc-main">
-        @Html.Partial("_ManageGroupSideMenu")
+        @Html.Partial("_ManageTopicSideMenu")
         <div class="tnc-ctn-center">
             <h1>
-                <span class="tn-selected">群组管理</span>
+                <span class="tn-selected">专题管理</span>
             </h1>
             <div class="tnc-ctnright-list">
                 <div class="tn-manager-search tn-helper-clearfix">
-                    @using (Html.BeginForm("ManageGroups", "ControlPanelGroup", FormMethod.Get))
+                    @using (Html.BeginForm("ManageTopics", "ControlPanelTopic", FormMethod.Get))
                     { 
                         <div class="tnc-search-adminform">
                             <div class="tn-form-row">
@@ -25,8 +25,8 @@
                                 @Html.UserSelector("UserId", userId)
                             </div>
                             <div class="tn-form-row">
-                                @Html.FormLabelFor(n => n.GroupNameKeyword)
-                                @Html.TextBoxFor(n => n.GroupNameKeyword, InputWidthTypes.Medium)
+                                @Html.FormLabelFor(n => n.TopicNameKeyword)
+                                @Html.TextBoxFor(n => n.TopicNameKeyword, InputWidthTypes.Medium)
                             </div>
                             <div class="tn-form-row">
                                 @Html.FormLabelFor(n => n.AuditStatus)
@@ -48,8 +48,8 @@
                             </div>
                             <div class="tn-form-row tn-form-row-clear">
                                 @Html.FormLabelFor(n => n.CategoryId)
-                                @*@Html.CategoryDropDownListFor(n => n.CategoryId ?? 0, TenantTypeIds.Instance().Group(), 9)*@
-                                @Html.CategoryDropDownListFor("CategoryId",Model.CategoryId ?? 0, TenantTypeIds.Instance().Group(), 9)
+                                @*@Html.CategoryDropDownListFor(n => n.CategoryId ?? 0, TenantTypeIds.Instance().Topic(), 9)*@
+                                @Html.CategoryDropDownListFor("CategoryId",Model.CategoryId ?? 0, TenantTypeIds.Instance().Topic(), 9)
                             </div>
                             <div class="tn-form-row">
                                 <label class="tn-form-label">
@@ -62,12 +62,12 @@
                 <div class="tnc-content-manage">
                     <div class="tn-list-header">
                         <div class="tn-toolbar-area tn-helper-clearfix">
-                            @Html.LinkButton("通过审核", SiteUrls.Instance().BatchUpdateGroupAuditStatus(), iconType: IconTypes.SmallAccept, htmlAttributes: new { id = "BatchSet-UpdateAuditStatus" })
-                            @Html.LinkButton("不通过审核", SiteUrls.Instance().BatchUpdateGroupAuditStatus(false), iconType: IconTypes.SmallStop, htmlAttributes: new { id = "BatchSet-UpdateAuditStatus-false" })
-                            @Html.LinkButton("添加群组", SiteUrls.Instance().CreateGroup(), iconType: IconTypes.SmallAdd, htmlAttributes: new { target = "_blank" })
+                            @Html.LinkButton("通过审核", SiteUrls.Instance().BatchUpdateTopicAuditStatus(), iconType: IconTypes.SmallAccept, htmlAttributes: new { id = "BatchSet-UpdateAuditStatus" })
+                            @Html.LinkButton("不通过审核", SiteUrls.Instance().BatchUpdateTopicAuditStatus(false), iconType: IconTypes.SmallStop, htmlAttributes: new { id = "BatchSet-UpdateAuditStatus-false" })
+                            @Html.LinkButton("添加专题", SiteUrls.Instance().CreateTopic(), iconType: IconTypes.SmallAdd, htmlAttributes: new { target = "_blank" })
                         </div>
                     </div>
-                    @Html.Partial("_PagingGroups", groups)
+                    @Html.Partial("_PagingTopics", groups)
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
         $("a[id^='BatchSet-']").click(function (e) {
             e.preventDefault();
             if (!$("input[name='groupIds']:checked").length) {
-                alert("至少选择一条群组信息操作");
+                alert("至少选择一条专题信息操作");
                 return false;
             }
 

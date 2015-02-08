@@ -42,7 +42,7 @@ namespace SpecialTopic.Topic
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
             {
-                errorMessage = "您需要先登录，才能创建群组";
+                errorMessage = "您需要先登录，才能创建专题";
                 return false;
             }
 
@@ -51,7 +51,7 @@ namespace SpecialTopic.Topic
 
             if (currentUser.Rank < TopicConfig.Instance().MinUserRankOfCreateTopic)
             {
-                errorMessage = string.Format("只有等级达到{0}级，才能创建群组，您现在的等级是{1}", TopicConfig.Instance().MinUserRankOfCreateTopic, currentUser.Rank);
+                errorMessage = string.Format("只有等级达到{0}级，才能创建专题，您现在的等级是{1}", TopicConfig.Instance().MinUserRankOfCreateTopic, currentUser.Rank);
                 return false;
             }
             return true;
@@ -128,12 +128,12 @@ namespace SpecialTopic.Topic
             return result;
         }
         /// <summary>
-        /// 是否拥有删除群组成员的权限
+        /// 是否拥有删除专题成员的权限
         /// </summary>
         /// <param name="authorizer"></param>
         /// <param name="group"></param>
         /// <param name="userId">被删除的用户Id</param>
-        /// <returns>是否拥有删除群组成员的权限</returns>
+        /// <returns>是否拥有删除专题成员的权限</returns>
         public static bool Topic_DeleteMember(this Authorizer authorizer, TopicEntity group, long userId)
         {
             if (group == null)
@@ -160,7 +160,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 是否具有删除群组动态的权限
+        /// 是否具有删除专题动态的权限
         /// </summary>
         /// <param name="authorizer"></param>
         /// <param name="activity"></param>
@@ -213,7 +213,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 是否具有邀请好友加入群组的权限
+        /// 是否具有邀请好友加入专题的权限
         /// </summary>
         /// <param name="group"></param>
         /// <returns></returns>
@@ -234,28 +234,28 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 是否具有浏览群组的权限
+        /// 是否具有浏览专题的权限
         /// </summary>
-        /// <param name="group"></param>
+        /// <param name="topic"></param>
         /// <returns></returns>
-        public static bool Topic_View(this Authorizer authorizer, TopicEntity group)
+        public static bool Topic_View(this Authorizer authorizer, TopicEntity topic)
         {
-            if (group == null)
+            if (topic == null)
                 return false;
 
-            if (group.AuditStatus == AuditStatus.Success)
+            if (topic.AuditStatus == AuditStatus.Success)
             {
-                if (group.IsPublic)
+                if (topic.IsPublic)
                     return true;
 
                 if (UserContext.CurrentUser == null)
                     return false;
 
-                if (authorizer.Topic_Manage(group))
+                if (authorizer.Topic_Manage(topic))
                     return true;
 
                 TopicService groupService = new TopicService();
-                if (groupService.IsMember(group.TopicId, UserContext.CurrentUser.UserId))
+                if (groupService.IsMember(topic.TopicId, UserContext.CurrentUser.UserId))
                     return true;
             }
 

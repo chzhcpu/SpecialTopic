@@ -22,7 +22,7 @@ namespace SpecialTopic.Topic
 
 
     /// <summary>
-    /// 群组业务逻辑
+    /// 专题业务逻辑
     /// </summary>
     public class TopicService
     {
@@ -43,9 +43,9 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 构造函数
         /// </summary>
-        ///<param name="TopicMemberApplyRepository">群组成员申请仓储</param>
-        ///<param name="TopicMemberRepository">群组成员仓储</param>
-        ///<param name="groupRepository">群组仓储</param>
+        ///<param name="TopicMemberApplyRepository">专题成员申请仓储</param>
+        ///<param name="TopicMemberRepository">专题成员仓储</param>
+        ///<param name="groupRepository">专题仓储</param>
         /// <param name="TopicRepository"></param>
         public TopicService(ITopicRepository groupRepository, ITopicMemberRepository TopicMemberRepository, ITopicMemberApplyRepository TopicMemberApplyRepository)
         {
@@ -54,16 +54,16 @@ namespace SpecialTopic.Topic
             this.TopicMemberApplyRepository = TopicMemberApplyRepository;
         }
 
-        #region 维护群组
+        #region 维护专题
 
 
 
         /// <summary>
-        /// 创建群组
+        /// 创建专题
         /// </summary>
         /// <param name="userId">当前操作人</param>
         /// <param name="group"><see cref="TopicEntity"/></param>
-        /// <param name="logoFile">群组标识图</param>
+        /// <param name="logoFile">专题标识图</param>
         /// <returns>创建成功返回true，失败返回false</returns>
         public bool Create(long userId, TopicEntity group)
         {
@@ -82,7 +82,7 @@ namespace SpecialTopic.Topic
             {
                 EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Create()));
                 EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(null, group.AuditStatus));
-                //用户的创建群组数+1
+                //用户的创建专题数+1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                 ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedTopicCount(), 1);
             }
@@ -90,11 +90,11 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 更新群组
+        /// 更新专题
         /// </summary>
         /// <param name="userId">当前操作人</param>
         /// <param name="group"><see cref="TopicEntity"/></param>
-        /// <param name="logoFile">群组标识图</param>
+        /// <param name="logoFile">专题标识图</param>
         public void Update(long userId, TopicEntity group)
         {
             EventBus<TopicEntity>.Instance().OnBefore(group, new CommonEventArgs(EventOperationType.Instance().Update()));
@@ -118,13 +118,13 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 删除群组
+        /// 删除专题
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         public void Delete(long groupId)
         {
             //设计要点
-            //1、需要删除：群组成员、群组申请、Logo；
+            //1、需要删除：专题成员、专题申请、Logo；
             TopicEntity group = groupRepository.Get(groupId);
             if (group == null)
                 return;
@@ -139,13 +139,13 @@ namespace SpecialTopic.Topic
             {
                 //删除访客记录
                 new VisitService(TenantTypeIds.Instance().Topic()).CleanByToObjectId(groupId);
-                //用户的创建群组数-1
+                //用户的创建专题数-1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                 ownerDataService.Change(group.UserId, OwnerDataKeys.Instance().CreatedTopicCount(), -1);
                 //删除Logo             
                 LogoService logoService = new LogoService(TenantTypeIds.Instance().Topic());
                 logoService.DeleteLogo(groupId);
-                //删除群组下的成员
+                //删除专题下的成员
                 DeleteMembersByTopicId(groupId);
                 EventBus<TopicEntity>.Instance().OnAfter(group, new CommonEventArgs(EventOperationType.Instance().Delete()));
                 EventBus<TopicEntity, AuditEventArgs>.Instance().OnAfter(group, new AuditEventArgs(group.AuditStatus, null));
@@ -153,7 +153,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 删除群组下的成员
+        /// 删除专题下的成员
         /// </summary>
         /// <param name="groupId"></param>
         public void DeleteMembersByTopicId(long groupId)
@@ -165,7 +165,7 @@ namespace SpecialTopic.Topic
                 if (affectCount > 0)
                 {
                     EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
-                    //用户的参与群组数-1
+                    //用户的参与专题数-1
                     OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                     ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedTopicCount(), -1);
                 }
@@ -175,7 +175,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 发送加入群组邀请
+        /// 发送加入专题邀请
         /// </summary>
         /// <param name="group"><see cref="TopicEntity"/></param>
         /// <param name="sender">发送人</param>
@@ -206,15 +206,15 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 批准/不批准群组
+        /// 批准/不批准专题
         /// </summary>
-        /// <param name="groupId">待被更新的群组Id</param>
+        /// <param name="groupId">待被更新的专题Id</param>
         /// <param name="isApproved">是否通过审核</param>
         public void Approve(long groupId, bool isApproved)
         {
             //设计要点
             //1、审核状态未变化不用进行任何操作；
-            //2、需要触发的事件参见《设计说明书-群组》；
+            //2、需要触发的事件参见《设计说明书-专题》；
 
             TopicEntity group = groupRepository.Get(groupId);
 
@@ -232,15 +232,15 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 批量批准/不批准群组
+        /// 批量批准/不批准专题
         /// </summary>
-        /// <param name="groupIds">待处理的群组Id列表</param>
+        /// <param name="groupIds">待处理的专题Id列表</param>
         /// <param name="isApproved">是否通过审核</param>
         public void Approve(IEnumerable<long> groupIds, bool isApproved)
         {
             //设计要点
             //1、审核状态未变化不用进行任何操作；
-            //2、需要触发的事件参见《设计说明书-群组》；
+            //2、需要触发的事件参见《设计说明书-专题》；
 
             foreach (var threadId in groupIds)
             {
@@ -249,9 +249,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 更新群组公告
+        /// 更新专题公告
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="announcement">公告内容</param>
         public void UpdateAnnouncement(long groupId, string announcement)
         {
@@ -266,7 +266,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 上传Logo
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="stream">Logo文件流</param>
         public void UploadLogo(long groupId, Stream stream)
         {
@@ -284,7 +284,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 删除Logo
         /// </summary>
-        /// <param name="recommendId">群组Id</param>
+        /// <param name="recommendId">专题Id</param>
         public void DeleteLogo(long groupId)
         {
             LogoService logoService = new LogoService(TenantTypeIds.Instance().Topic());
@@ -299,12 +299,12 @@ namespace SpecialTopic.Topic
         #endregion
 
 
-        #region 获取群组
+        #region 获取专题
 
         /// <summary>
-        /// 通过TopicKey获取群组
+        /// 通过TopicKey获取专题
         /// </summary>
-        /// <param name="groupKey">群组标识</param>
+        /// <param name="groupKey">专题标识</param>
         /// <returns></returns>
         public TopicEntity Get(string groupKey)
         {
@@ -313,9 +313,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组
+        /// 获取专题
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         public TopicEntity Get(long groupId)
         {
@@ -323,7 +323,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取前N个排行群组
+        /// 获取前N个排行专题
         /// </summary>
         /// <param name="topNumber">前多少个</param>
         /// <param name="areaCode">地区代码</param>
@@ -340,7 +340,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取匹配的前N个排行群组
+        /// 获取匹配的前N个排行专题
         /// </summary>
         /// <param name="topNumber">前多少个</param>
         /// <param name="areaCode">地区代码</param>
@@ -369,7 +369,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据标签名获取群组分页集合
+        /// 根据标签名获取专题分页集合
         /// </summary>
         /// <param name="tagName">标签名</param></param>
         /// <param name="sortBy">排序依据</param>
@@ -386,7 +386,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 获取用户创建的群组列表
+        /// 获取用户创建的专题列表
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <returns></returns>
@@ -397,7 +397,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取用户加入的群组列表
+        /// 获取用户加入的专题列表
         /// </summary>
         /// <param name="userId">用户Id</param>
         /// <param name="pageSize">每页记录数</param>
@@ -410,22 +410,22 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组成员也加入的群组
+        /// 专题成员也加入的专题
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="topNumber">获取前多少条</param>
         /// <returns></returns>
         public IEnumerable<TopicEntity> TopicMemberAlsoJoinedTopics(long groupId, int topNumber)
         {
             //设计要点：
-            //1、获取群组成员也加入的其他不重复的群组，按群组成长值倒序；
+            //1、获取专题成员也加入的其他不重复的专题，按专题成长值倒序；
             //2、无需维护缓存即时性，缓存期限：常用集合
             return groupRepository.TopicMemberAlsoJoinedTopics(groupId, topNumber);
         }
 
 
         /// <summary>
-        /// 获取我关注的用户加入的群组
+        /// 获取我关注的用户加入的专题
         /// </summary>
         /// <param name="userId">当前用户的userId</param>
         /// <param name="topNumber">获取前多少条</param>
@@ -436,7 +436,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 分页获取群组后台管理列表
+        /// 分页获取专题后台管理列表
         /// </summary>
         /// <param name="auditStatus">审核状态</param>
         /// <param name="categoryId">类别Id</param>
@@ -458,7 +458,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据群组ID集合获取群组集合
+        /// 根据专题ID集合获取专题集合
         /// </summary>
         /// <param name="groupIds"></param>
         /// <returns></returns>
@@ -468,7 +468,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 根据审核状态获取群组数
+        /// 根据审核状态获取专题数
         /// </summary>
         /// <param name="Pending">待审核</param>
         /// <param name="Again">需再审核</param>
@@ -481,12 +481,12 @@ namespace SpecialTopic.Topic
         #endregion
 
 
-        #region 群组申请
+        #region 专题申请
 
 
 
         /// <summary>
-        /// 用户是否申请过加入群组，并且申请处于待处理状态
+        /// 用户是否申请过加入专题，并且申请处于待处理状态
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="groupId"></param>
@@ -498,13 +498,13 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 申请加入群组
+        /// 申请加入专题
         /// </summary>
-        /// <param name="TopicMemberApply">群组加入申请</param>
+        /// <param name="TopicMemberApply">专题加入申请</param>
         public void CreateTopicMemberApply(TopicMemberApply TopicMemberApply)
         {
             //设计要点：
-            //1、用户对同一个群组不允许有多个待处理的加入申请
+            //1、用户对同一个专题不允许有多个待处理的加入申请
 
 
             if (TopicMemberApply == null)
@@ -519,7 +519,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 接受/拒绝群组加入申请
+        /// 接受/拒绝专题加入申请
         /// </summary>
         /// <param name="groupIds">申请Id列表</param>
         /// <param name="isApproved">是否接受</param>
@@ -557,7 +557,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 删除群组加入申请
+        /// 删除专题加入申请
         /// </summary>
         /// <param name="id">申请Id</param>
         public void DeleteTopicMemberApply(long id)
@@ -573,9 +573,9 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 获取群组的加入申请列表
+        /// 获取专题的加入申请列表
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="applyStatus">申请状态</param>
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>       
@@ -590,7 +590,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         public int GetMemberApplyCount(long groupId)
         {
@@ -600,17 +600,17 @@ namespace SpecialTopic.Topic
         #endregion
 
 
-        #region 群组成员
+        #region 专题成员
 
         /// <summary>
-        /// 增加群组成员
+        /// 增加专题成员
         /// </summary>
         /// <param name="TopicMember"></param>
         public void CreateTopicMember(TopicMember TopicMember)
         {
             //设计要点：
-            //1、同一个群组不允许用户重复加入
-            //2、群主不允许成为群组成员
+            //1、同一个专题不允许用户重复加入
+            //2、群主不允许成为专题成员
             if (IsMember(TopicMember.TopicId, TopicMember.UserId))
                 return;
             if (IsOwner(TopicMember.TopicId, TopicMember.UserId))
@@ -621,7 +621,7 @@ namespace SpecialTopic.Topic
             if (id > 0)
             {
                 EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Create()));
-                //用户的参与群组数+1
+                //用户的参与专题数+1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                 ownerDataService.Change(TopicMember.UserId, OwnerDataKeys.Instance().JoinedTopicCount(), 1);
             }
@@ -630,9 +630,9 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 移除群组成员
+        /// 移除专题成员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
         public void DeleteTopicMember(long groupId, long userId)
         {
@@ -647,17 +647,17 @@ namespace SpecialTopic.Topic
             if (affectCount > 0)
             {
                 EventBus<TopicMember>.Instance().OnAfter(TopicMember, new CommonEventArgs(EventOperationType.Instance().Delete()));
-                //用户的参与群组数-1
+                //用户的参与专题数-1
                 OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
                 ownerDataService.Change(userId, OwnerDataKeys.Instance().JoinedTopicCount(), -1);
             }
         }
 
         /// <summary>
-        /// 批量移除群组成员
+        /// 批量移除专题成员
         /// </summary>
         /// <param name="userIds">待处理的成员用户Id列表</param>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         public void DeleteTopicMember(long groupId, IEnumerable<long> userIds)
         {
 
@@ -669,9 +669,9 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 设置/取消 群组管理员
+        /// 设置/取消 专题管理员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
         /// <param name="isManager">是否管理员</param>
         public bool SetManager(long groupId, long userId, bool isManager)
@@ -699,42 +699,42 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 更换群主
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="newOwnerUserId">新群主UserId</param>
         public void ChangeTopicOwner(long groupId, long newOwnerUserId)
         {
-            //更换群主后，原群主转换成群组成员，如果新群主是群组成员则从成员中移除
+            //更换群主后，原群主转换成专题成员，如果新群主是专题成员则从成员中移除
             TopicEntity group = groupRepository.Get(groupId);
             long oldOwnerUserId = group.UserId;
             group.UserId = newOwnerUserId;
             groupRepository.ChangeTopicOwner(groupId, newOwnerUserId);
 
-            //原群主的群组数-1，加入群组数+1
+            //原群主的专题数-1，加入专题数+1
             OwnerDataService ownerDataService = new OwnerDataService(TenantTypeIds.Instance().User());
             ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().CreatedTopicCount(), -1);
             ownerDataService.Change(oldOwnerUserId, OwnerDataKeys.Instance().JoinedTopicCount(), 1);
 
-            //原群主转换成群组成员
+            //原群主转换成专题成员
             TopicMember TopicMember = TopicMember.New();
             TopicMember.TopicId = groupId;
             TopicMember.UserId = oldOwnerUserId;
             TopicMemberRepository.Insert(TopicMember);
 
-            //新群主的群组数+1,加入群组数-1
+            //新群主的专题数+1,加入专题数-1
             ownerDataService.Change(newOwnerUserId, OwnerDataKeys.Instance().CreatedTopicCount(), 1);
 
-            //如果新群主是群组成员则从成员中移除
+            //如果新群主是专题成员则从成员中移除
             if (IsMember(groupId, newOwnerUserId))
                 DeleteTopicMember(groupId, newOwnerUserId);
         }
 
 
         /// <summary>
-        /// 是否群组成员
+        /// 是否专题成员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
-        /// <returns>是群组成员返回true，否则返回false</returns>
+        /// <returns>是专题成员返回true，否则返回false</returns>
         public bool IsMember(long groupId, long userId)
         {
             TopicMemberRole role = GetTopicMemberRole(groupId, userId);
@@ -745,11 +745,11 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 是否群组管理员
+        /// 是否专题管理员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
-        /// <returns>是群组管理员返回true，否则返回false</returns>
+        /// <returns>是专题管理员返回true，否则返回false</returns>
         public bool IsManager(long groupId, long userId)
         {
             TopicMemberRole role = GetTopicMemberRole(groupId, userId);
@@ -762,7 +762,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 是否群主
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
         /// <returns>是群主返回true，否则返回false</returns>
         public bool IsOwner(long groupId, long userId)
@@ -777,7 +777,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 是否群主
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
         /// <returns>是群主返回true，否则返回false</returns>
         public TopicMember GetTopicMember(long memberId)
@@ -786,9 +786,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 检测用户在群组中属于什么角色
+        /// 检测用户在专题中属于什么角色
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">用户Id</param>
         /// <returns><see cref="TopicMemberRole"/></returns>
         private TopicMemberRole GetTopicMemberRole(long groupId, long userId)
@@ -810,9 +810,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组所有成员用户Id集合(用于推送动态）
+        /// 获取专题所有成员用户Id集合(用于推送动态）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         public IEnumerable<long> GetUserIdsOfTopic(long groupId)
         {
@@ -827,9 +827,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组管理员
+        /// 获取专题管理员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns>若没有找到，则返回空集合</returns>
         public IEnumerable<User> GetTopicManagers(long groupId)
         {
@@ -840,14 +840,14 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组成员
+        /// 获取专题成员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="hasManager">是否包含管理员</param>
         /// <param name="sortBy">排序字段</param>
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>
-        /// <returns>群组成员分页数据</returns>
+        /// <returns>专题成员分页数据</returns>
         public PagingDataSet<TopicMember> GetTopicMembers(long groupId, bool hasManager = true, SortBy_TopicMember sortBy = SortBy_TopicMember.DateCreated_Asc, int pageSize = 20, int pageIndex = 1)
         {
             //设计要点：
@@ -857,9 +857,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取我关注的用户中同时加入某个群组的群组成员
+        /// 获取我关注的用户中同时加入某个专题的专题成员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">当前用户的userId</param>
         /// <returns></returns>
         public IEnumerable<TopicMember> GetTopicMembersAlsoIsMyFollowedUser(long groupId, long userId)
@@ -867,7 +867,7 @@ namespace SpecialTopic.Topic
             return TopicMemberRepository.GetTopicMembersAlsoIsMyFollowedUser(groupId, userId);
         }
         /// <summary>
-        /// 在线群组成员
+        /// 在线专题成员
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
@@ -891,10 +891,10 @@ namespace SpecialTopic.Topic
         public void DeleteUser(long userId, string takeOverUserName, bool takeOverAll)
         {
             //设计要点：
-            //1.利用sql转移给接管用户、删除群组成员、群组成员申请；
-            //2.删除群组成员时，维护群组的成员数；
+            //1.利用sql转移给接管用户、删除专题成员、专题成员申请；
+            //2.删除专题成员时，维护专题的成员数；
 
-            //如果没设置由谁接管群组，就把群组转给网站初始管理员
+            //如果没设置由谁接管专题，就把专题转给网站初始管理员
             long takeOverUserId = 0;
             if (string.IsNullOrEmpty(takeOverUserName))
             {
@@ -914,7 +914,7 @@ namespace SpecialTopic.Topic
         #endregion
 
         /// <summary>
-        /// 获取群组管理数据
+        /// 获取专题管理数据
         /// </summary>
         /// <param name="tenantTypeId">租户类型Id（可以获取该应用下针对某种租户类型的统计计数，默认不进行筛选）</param>
         /// <returns></returns>
@@ -924,7 +924,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组统计数据
+        /// 获取专题统计数据
         /// </summary>
         /// <param name="tenantTypeId">租户类型Id（可以获取该应用下针对某种租户类型的统计计数，默认不进行筛选）</param>
         /// <returns></returns>

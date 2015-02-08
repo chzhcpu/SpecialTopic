@@ -13,7 +13,7 @@ using SpecialTopic.Topic;
 namespace SpecialTopic.Blog.EventModules
 {
     /// <summary>
-    /// 处理群组索引的EventMoudle
+    /// 处理专题索引的EventMoudle
     /// </summary>
     public class TopicIndexEventModule : IEventMoudle
     {
@@ -39,7 +39,7 @@ namespace SpecialTopic.Blog.EventModules
         #region 分类增量索引
 
         /// <summary>
-        /// 为群组添加分类时触发
+        /// 为专题添加分类时触发
         /// </summary>
         private void AddCategoriesToTopic_BatchAfter(IEnumerable<string> senders, TagEventArgs eventArgs)
         {
@@ -76,7 +76,7 @@ namespace SpecialTopic.Blog.EventModules
 
         #region 标签增量索引
         /// <summary>
-        /// 为群组添加标签时触发
+        /// 为专题添加标签时触发
         /// </summary>
         private void AddTagsToTopic_BatchAfter(IEnumerable<string> senders, TagEventArgs eventArgs)
         {
@@ -99,7 +99,7 @@ namespace SpecialTopic.Blog.EventModules
             {
                 if (eventArgs.EventOperationType == EventOperationType.Instance().Delete() || eventArgs.EventOperationType == EventOperationType.Instance().Update())
                 {
-                    //根据标签获取所有使用该标签的(内容项)群组
+                    //根据标签获取所有使用该标签的(内容项)专题
                     IEnumerable<long> groupIds = tagService.GetItemIds(sender.TagName, null);
                     if (groupSearcher == null)
                     {
@@ -123,9 +123,9 @@ namespace SpecialTopic.Blog.EventModules
         }
         #endregion
 
-        #region 群组增量索引
+        #region 专题增量索引
         /// <summary>
-        /// 群组增量索引
+        /// 专题增量索引
         /// </summary>
         private void TopicEntity_After(TopicEntity group, CommonEventArgs eventArgs)
         {

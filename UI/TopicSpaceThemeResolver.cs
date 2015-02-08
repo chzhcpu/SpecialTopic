@@ -27,27 +27,27 @@ namespace SpecialTopic.Topic
         ThemeAppearance IThemeResolver.GetRequestTheme(RequestContext controllerContext)
         {
             string spaceKey = controllerContext.GetParameterFromRouteDataOrQueryString("SpaceKey");
-            TopicEntity group = new TopicService().Get(spaceKey);
-            if (group == null)
-                throw new ExceptionFacade("找不到群组");
+            TopicEntity topic = new TopicService().Get(spaceKey);
+            if (topic == null)
+                throw new ExceptionFacade("找不到专题");
 
             string themeKey = null;
             string appearanceKey = null;
-            PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfBuiltIn.GroupSpace);
+            PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfExtension.TopicSpace);
             if (pa == null)
-                throw new ExceptionFacade("找不到群组呈现区域");
+                throw new ExceptionFacade("找不到专题呈现区域");
 
             if (pa.EnableThemes)
             {
-                if (group.IsUseCustomStyle)
+                if (topic.IsUseCustomStyle)
                 {
                     themeKey = "Default";
                     appearanceKey = "Default";
                 }
                 else
                 {
-                    string[] themeAppearanceArray = group.ThemeAppearance.Split(',');
-                    var appearance = new ThemeService().GetThemeAppearance(PresentAreaKeysOfBuiltIn.GroupSpace, group.ThemeAppearance);
+                    string[] themeAppearanceArray = topic.ThemeAppearance.Split(',');
+                    var appearance = new ThemeService().GetThemeAppearance(PresentAreaKeysOfExtension.TopicSpace, topic.ThemeAppearance);
 
                     if (appearance != null && themeAppearanceArray.Count() == 2)
                     {
@@ -62,16 +62,16 @@ namespace SpecialTopic.Topic
                 appearanceKey = pa.DefaultAppearanceKey;
             }
 
-            return new ThemeService().GetThemeAppearance(PresentAreaKeysOfBuiltIn.GroupSpace, themeKey, appearanceKey);
+            return new ThemeService().GetThemeAppearance(PresentAreaKeysOfExtension.TopicSpace, themeKey, appearanceKey);
         }
 
         void IThemeResolver.IncludeStyle(RequestContext controllerContext)
         {
             string spaceKey = controllerContext.GetParameterFromRouteDataOrQueryString("SpaceKey");
-            TopicEntity group = new TopicService().Get(spaceKey);
-            if (group == null)
+            TopicEntity topic = new TopicService().Get(spaceKey);
+            if (topic == null)
                 return;
-            PresentArea presentArea = new PresentAreaService().Get(PresentAreaKeysOfBuiltIn.GroupSpace);
+            PresentArea presentArea = new PresentAreaService().Get(PresentAreaKeysOfExtension.TopicSpace);
             if (presentArea == null)
                 return;
 
@@ -90,16 +90,16 @@ namespace SpecialTopic.Topic
                 return;
             }
 
-            if (group.IsUseCustomStyle)
+            if (topic.IsUseCustomStyle)
             {
-                var customStyleEntity = new CustomStyleService().Get(presentArea.PresentAreaKey, group.TopicId);
+                var customStyleEntity = new CustomStyleService().Get(presentArea.PresentAreaKey, topic.TopicId);
                 if (customStyleEntity == null)
                     return;
                 CustomStyle customStyle = customStyleEntity.CustomStyle;
                 if (customStyle == null)
                     return;
                 string themeCssPath = string.Format("{0}/Custom/theme{1}.css", presentArea.ThemeLocation, customStyle.IsDark ? "-deep" : "");
-                string appearanceCssPath = SiteUrls.Instance().CustomStyle(presentArea.PresentAreaKey, group.TopicId);
+                string appearanceCssPath = SiteUrls.Instance().CustomStyle(presentArea.PresentAreaKey, topic.TopicId);
                 resourceManager.IncludeStyle(themeCssPath);
                 resourceManager.IncludeStyle(appearanceCssPath);
                 StringBuilder builder = new StringBuilder();
@@ -134,8 +134,8 @@ namespace SpecialTopic.Topic
             }
             else
             {
-                string[] themeAppearanceArray = group.ThemeAppearance.Split(',');
-                var appearance = new ThemeService().GetThemeAppearance(PresentAreaKeysOfBuiltIn.GroupSpace, group.ThemeAppearance);
+                string[] themeAppearanceArray = topic.ThemeAppearance.Split(',');
+                var appearance = new ThemeService().GetThemeAppearance(PresentAreaKeysOfExtension.TopicSpace, topic.ThemeAppearance);
 
                 if (appearance != null && themeAppearanceArray.Count() == 2)
                 {
@@ -163,29 +163,29 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 获取用户当前选中的皮肤
         /// </summary>
-        /// <param name="ownerId">拥有者Id（如：用户Id、群组Id）</param>
+        /// <param name="ownerId">拥有者Id（如：用户Id、专题Id）</param>
         /// <returns></returns>
         public string GetThemeAppearance(long ownerId)
         {
-            var groupService = new TopicService();
-            TopicEntity group = groupService.Get(ownerId);
-            if (group == null)
+            var topicService = new TopicService();
+            TopicEntity topic = topicService.Get(ownerId);
+            if (topic == null)
                 return string.Empty;
-            PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfBuiltIn.GroupSpace);
+            PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfExtension.TopicSpace);
             if (pa != null && !pa.EnableThemes)
             {
                 return pa.DefaultThemeKey + "," + pa.DefaultAppearanceKey;
             }
 
-            if (group.IsUseCustomStyle)
+            if (topic.IsUseCustomStyle)
             {
                 return "Default,Default";
             }
-            else if (!string.IsNullOrEmpty(group.ThemeAppearance))
+            else if (!string.IsNullOrEmpty(topic.ThemeAppearance))
             {
-                var appearance = new ThemeService().GetThemeAppearance(PresentAreaKeysOfBuiltIn.GroupSpace, group.ThemeAppearance);
+                var appearance = new ThemeService().GetThemeAppearance(PresentAreaKeysOfExtension.TopicSpace, topic.ThemeAppearance);
                 if (appearance != null)
-                    return group.ThemeAppearance;
+                    return topic.ThemeAppearance;
             }
 
             if (pa != null)
@@ -206,7 +206,7 @@ namespace SpecialTopic.Topic
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return false;
-            PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfBuiltIn.GroupSpace);
+            PresentArea pa = new PresentAreaService().Get(PresentAreaKeysOfExtension.TopicSpace);
             if (!pa.EnableThemes)
                 return false;
 
@@ -218,17 +218,17 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 更新皮肤
         /// </summary>
-        /// <param name="ownerId">拥有者Id（如：用户Id、群组Id）</param>
+        /// <param name="ownerId">拥有者Id（如：用户Id、专题Id）</param>
         /// <param name="isUseCustomStyle">是否使用自定义皮肤</param>
         /// <param name="themeAppearance">themeKey与appearanceKey用逗号关联</param>
         public void ChangeThemeAppearance(long ownerId, bool isUseCustomStyle, string themeAppearance)
         {
-            var groupService = new TopicService();
-            TopicEntity group = groupService.Get(ownerId);
-            if (group == null)
-                throw new ExceptionFacade("找不到群组");
+            var topicService = new TopicService();
+            TopicEntity topic = topicService.Get(ownerId);
+            if (topic == null)
+                throw new ExceptionFacade("找不到专题");
 
-            new ThemeService().ChangeThemeAppearanceUserCount(PresentAreaKeysOfBuiltIn.GroupSpace, group.IsUseCustomStyle ? string.Empty : group.ThemeAppearance, isUseCustomStyle ? string.Empty : themeAppearance);
+            new ThemeService().ChangeThemeAppearanceUserCount(PresentAreaKeysOfExtension.TopicSpace, topic.IsUseCustomStyle ? string.Empty : topic.ThemeAppearance, isUseCustomStyle ? string.Empty : themeAppearance);
             new TopicService().ChangeThemeAppearance(ownerId, isUseCustomStyle, themeAppearance);
         }
     }

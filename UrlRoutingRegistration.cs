@@ -8,7 +8,7 @@ using Tunynet.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组路由设置
+    /// 专题路由设置
     /// </summary>
     public class UrlRoutingRegistration : AreaRegistration
     {
@@ -100,14 +100,14 @@ namespace SpecialTopic.Topic
             context.MapRoute(
                 "TopicSpace_Member", // Route name
                 "t/{SpaceKey}/Members" + extensionForOldIIS, // URL with parameters
-                new { controller = "TopicSpace", action = "Members", CurrentNavigationId = "13900180" } // Parameter defaults
+                new { controller = "TopicSpace", action = "Members", CurrentNavigationId = "13900280" } // Parameter defaults
             );
 
             #endregion
 
             #region TopicSpaceTheme
 
-            //群组空间首页
+            //专题空间首页
             context.MapRoute(
                 "TopicSpaceTheme_Home", // Route name
                 "t/{SpaceKey}" + extensionForOldIIS, // URL with parameters

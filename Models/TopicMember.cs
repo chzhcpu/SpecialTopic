@@ -17,7 +17,7 @@ namespace SpecialTopic.Topic
     //1、缓存分区：GroupId、UserId；
 
     /// <summary>
-    /// 群组成员实体
+    /// 专题成员实体
     /// </summary>
     [TableName("spt_TopicMembers")]
     [PrimaryKey("Id", autoIncrement = true)]
@@ -26,7 +26,7 @@ namespace SpecialTopic.Topic
     public class TopicMember:IEntity
     {
         /// <summary>
-        /// 群组成员实体
+        /// 专题成员实体
         /// </summary>
         public static TopicMember New()
         {
@@ -45,7 +45,7 @@ namespace SpecialTopic.Topic
         public long Id { get; protected set; }
 
         /// <summary>
-        ///群组Id
+        ///专题Id
         /// </summary>
         public long TopicId { get; set; }
 
@@ -75,7 +75,7 @@ namespace SpecialTopic.Topic
         #endregion
 
         /// <summary>
-        /// 群组成员
+        /// 专题成员
         /// </summary>
         [Ignore]
         public User User

@@ -8,7 +8,7 @@ using Spacebuilder.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 群组用户内容数
+    /// 专题用户内容数
     /// </summary>
     public class TopicOwnerDataGetter : IOwnerDataGetter
     {
@@ -26,7 +26,7 @@ namespace SpecialTopic.Topic
         /// </summary>
         public string DataName
         {
-            get { return "创建的群组数"; }
+            get { return "创建的专题数"; }
         }
 
         /// <summary>

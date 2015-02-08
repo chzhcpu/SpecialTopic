@@ -2,19 +2,19 @@
 @{
     Layout = "list-2cols";
     Html.Style("~/Applications/Bar/Styles/app.css");
-    var group = ViewData.Get<TopicEntity>("Group", null);
+    var group = ViewData.Get<TopicEntity>("Topic", null);
 }
-@section GroupInfo{
+@section TopicInfo{
 }
 @section Aside{
-    @Html.Action("_GroupProfile", "GroupSpace", new { spaceKey = Url.SpaceKey() })
-    @Html.Action("_LastGroupVisitors", "GroupSpace", new { spaceKey = Url.SpaceKey() })
-    @Html.Action("_ListMembers", "GroupSpace", new { spaceKey = Url.SpaceKey(), topNumber = 10 })
+    @Html.Action("_TopicProfile", "TopicSpace", new { spaceKey = Url.SpaceKey() })
+    @Html.Action("_LastTopicVisitors", "TopicSpace", new { spaceKey = Url.SpaceKey() })
+    @Html.Action("_ListMembers", "TopicSpace", new { spaceKey = Url.SpaceKey(), topNumber = 10 })
 }
 @section ContentHeader{
     <div class="tn-box tn-widget tn-widget-content tn-corner-all">
         <div class="tn-box-content tn-widget-content tn-corner-all">
-            @Html.Action("_GroupHeader", "GroupSpaceTheme", new { spaceKey = Url.SpaceKey(), showManageButton = false })
+            @Html.Action("_TopicHeader", "TopicSpaceTheme", new { spaceKey = Url.SpaceKey(), showManageButton = false })
         </div>
     </div>
 }
@@ -22,15 +22,15 @@
     <div class="tn-box-content tn-widget-content tn-corner-all">
         <div class="tn-tabs">
             <ul class="tn-tabs-nav tn-border-gray tn-border-bottom tn-helper-clearfix">
-                <li class="tn-widget-content tn-border-gray tn-border-trl tn-tabs-selected"><a href="@SiteUrls.Instance().Members(Url.SpaceKey())">
+                <li class="tn-widget-content tn-border-gray tn-border-trl tn-tabs-selected"><a href="@SiteUrls.Instance().MembersOfTopic(Url.SpaceKey())">
                     全部</a> </li>
-                <li class="tn-widget-content tn-border-gray tn-border-trl"><a href="@SiteUrls.Instance().MyFollowedUsers(Url.SpaceKey())">
+                <li class="tn-widget-content tn-border-gray tn-border-trl"><a href="@SiteUrls.Instance().MyFollowedUsersOfTopic(Url.SpaceKey())">
                     我关注的人</a></li>
             </ul>
             <div class="tn-tabs-panel">
                 <div class="tn-content-heading tn-border-gray tn-border-bottom">
                     <h4>
-                        群组管理员</h4>
+                        专题管理员</h4>
                 </div>
                 <ul class="tn-avatar-list tnc-person-flow tn-helper-clearfix">
                     @if (group.User != null)
@@ -41,19 +41,19 @@
                             <span class="tn-icon-colorful tn-icon-colorful-manager tn-icon-inline" title="群主">
                             </span></li>                   
                     }
-                    @if (group.GroupManagers != null && group.GroupManagers.Count() > 0)
+                    @if (group.TopicManagers != null && group.TopicManagers.Count() > 0)
                     {
-                        foreach (var manager in group.GroupManagers)
+                        foreach (var manager in group.TopicManagers)
                         {
                         <li class="tn-avatar-item tn-hover" id="manager_@(manager.UserId)">
                             @Html.ShowUserAvatar(manager, SiteUrls.Instance().SpaceHome(manager.UserId), AvatarSizeType.Small, HyperLinkTarget._blank)
                             <a href="@SiteUrls.Instance().SpaceHome(manager.UserId)" title="@manager.DisplayName" class="tn-user-name" target="_blank">@manager.DisplayName</a>
-                            @if (DIContainer.Resolve<Authorizer>().Group_SetManager(group))
+                            @if (DIContainer.Resolve<Authorizer>().Topic_SetManager(group))
                             { 
                                 @Html.AjaxDeleteButton(new AjaxDeleteButton()
                                     .SetConfirm("确定要删除此管理员？")
                                     .SetIcon(IconTypes.SmallCross)
-                                    .SetUrl(SiteUrls.Instance().DeleteManager(Url.SpaceKey(), manager.UserId))
+                                    .SetUrl(SiteUrls.Instance().DeleteManagerOfTopic(Url.SpaceKey(), manager.UserId))
                                     .MergeHtmlAttribute("class", "tn-delete tn-state-hidden tn-in-pic")
                                     .MergeHtmlAttribute("title", "删除管理员")
                                     .MergeHtmlAttribute("name", "operate_" + manager.UserId)

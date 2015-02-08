@@ -9,7 +9,7 @@
                     @Html.CheckBox("groupIds-checkAll", false)
                 </td>
                 <th class="tn-border-gray tn-border-bottom tn-text-note">
-                    群组名称
+                    专题名称
                 </th>
                 <th class="tn-border-gray tn-border-bottom tn-text-note">
                     审核状态
@@ -18,7 +18,7 @@
                     群主
                 </th>
                 <th class="tn-border-gray tn-border-bottom tn-text-note">
-                    群组类别
+                    专题类别
                 </th>
                 <th class="tn-border-gray tn-border-bottom tn-text-note">
                     创建时间
@@ -32,12 +32,12 @@
             </tr>
             @foreach (var item in Model)
             {
-                <tr class="tn-table-grid-row" id="ajaxdelete-group-@item.GroupId">
+                <tr class="tn-table-grid-row" id="ajaxdelete-group-@item.TopicId">
                     <td class="tn-border-gray tn-border-bottom tn-width-check">
-                        <input type="checkbox" value="@item.GroupId" name="groupIds" id="groupIds-@item.GroupId" />
+                        <input type="checkbox" value="@item.TopicId" name="groupIds" id="groupIds-@item.TopicId" />
                     </td>
                     <td class="tn-border-gray tn-border-bottom tn-width-auto">
-                        @Html.Link(item.GroupName, SiteUrls.Instance().GroupHome(item.GroupKey), item.GroupName, null, HyperLinkTarget._blank)
+                        @Html.Link(item.TopicName, SiteUrls.Instance().TopicHome(item.TopicKey), item.TopicName, null, HyperLinkTarget._blank)
                     </td>
                     <td class="tn-border-gray tn-border-bottom tn-width-icon1">
                         @Html.AuditStatusIcon(item.AuditStatus)
@@ -46,7 +46,7 @@
                         @Html.Link(item.User == null ? " " : item.User.DisplayName, SiteUrls.Instance().SpaceHome(item.UserId), item.User == null ? " " : item.User.DisplayName, null, HyperLinkTarget._blank)
                     </td>
                     <td class="tn-border-gray tn-border-bottom tn-width-category tn-nowrap">
-                        @Html.Link(item.Category == null ? " " : item.Category.CategoryName, item.Category == null ? null : SiteUrls.Instance().FindGroup(categoryId: item.Category.CategoryId), item.Category == null ? " " : item.Category.CategoryName, navigateTarget: HyperLinkTarget._blank)
+                        @Html.Link(item.Category == null ? " " : item.Category.CategoryName, item.Category == null ? null : SiteUrls.Instance().FindTopic(categoryId: item.Category.CategoryId), item.Category == null ? " " : item.Category.CategoryName, navigateTarget: HyperLinkTarget._blank)
                     </td>
                     <td class="tn-border-gray tn-border-bottom tn-width-datetime tn-nowrap">
                         @item.DateCreated.ToFriendlyDate()
@@ -55,12 +55,12 @@
                         @item.MemberCount
                     </td>
                     <td class="tn-border-gray tn-border-bottom tn-width-action2 tn-nowrap">
-                        @Html.AjaxDeleteButton(new AjaxDeleteButton().SetText("删除").SetDeleteTarget("#ajaxdelete-group-" + item.GroupId).SetUrl(SiteUrls.Instance().DeleteGroup(item.GroupId)).SetConfirm("您确实要删除该群组吗？").SetOnSuccessCallBack("onDeleteSuccessCallBack"))
-                        @Html.Link("管理群组", SiteUrls.Instance().ManageMembers(item.GroupKey), "管理群组", null, HyperLinkTarget._blank)
-                        @Html.Link("更换群主", SiteUrls.Instance()._ChangeGroupOwner(GroupIdToGroupKeyDictionary.GetGroupKey(item.GroupId),Request.RawUrl ), "更换群主", htmlAttributes: new { plugin = "dialog" })
+                        @Html.AjaxDeleteButton(new AjaxDeleteButton().SetText("删除").SetDeleteTarget("#ajaxdelete-group-" + item.TopicId).SetUrl(SiteUrls.Instance().DeleteTopic(item.TopicId)).SetConfirm("您确实要删除该专题吗？").SetOnSuccessCallBack("onDeleteSuccessCallBack"))
+                        @Html.Link("管理专题", SiteUrls.Instance().ManageMembers(item.TopicKey), "管理专题", null, HyperLinkTarget._blank)
+                        @Html.Link("更换群主", SiteUrls.Instance()._ChangeTopicOwner(TopicIdToTopicKeyDictionary.GetTopicKey(item.TopicId),Request.RawUrl ), "更换群主", htmlAttributes: new { plugin = "dialog" })
                         @if(item.IsPublic)
                         {
-                            @Html.Link("推荐",SiteUrls.Instance()._RecommendItem(TenantTypeIds.Instance().Group(), item.GroupId, item.GroupName),"推荐",htmlAttributes: new { plugin = "dialog" })
+                            @Html.Link("推荐",SiteUrls.Instance()._RecommendItem(TenantTypeIds.Instance().Topic(), item.TopicId, item.TopicName),"推荐",htmlAttributes: new { plugin = "dialog" })
                         }
                     </td>
                 </tr>
@@ -77,7 +77,7 @@
 else
 {
     <div class="tn-no-data">
-        搜索不到群组</div>
+        搜索不到专题</div>
 }
 @Html.ScriptBlock(@<script language="javascript" type="text/javascript">
     function onDeleteSuccessCallBack(data) {

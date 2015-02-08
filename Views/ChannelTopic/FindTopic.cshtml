@@ -109,7 +109,7 @@
                         {
                         @Html.Hidden("NowAreaCode", currentArea.AreaCode)
                         }
-                        <input class="tn-search-input tn-input-medium tn-border-gray tn-border-tbl" type="text" watermark="请输入群组名称" name="Keyword" value="" />
+                        <input class="tn-search-input tn-input-medium tn-border-gray tn-border-tbl" type="text" watermark="请输入专题名称" name="Keyword" value="" />
                         <span class="tn-search-button tn-search-ico-button tn-border-gray tn-bg-gray">
                             <button type="submit">@Html.Icon(IconTypes.SmallFind)</button>
                         </span>
@@ -153,19 +153,19 @@
         $("#moreCategoryButton").click(function () {
             if ($(this).find(".tn-smallicon-triangle-down").length > 0)//更多
             {
-                $.cookie('ListGroupsMoreCategoryButtonIsOpen', true);
+                $.cookie('ListTopicsMoreCategoryButtonIsOpen', true);
                 $(this).find(".tn-smallicon-triangle-down").addClass("tn-smallicon-triangle-up").removeClass("tn-smallicon-triangle-down");
                 $(this).find("a").attr("title", "收起").text("收起");
                 $("#category").find("span.tn-directory-item:gt(15)").show();
             }
             else {
-                $.cookie('ListGroupsMoreCategoryButtonIsOpen', false);
+                $.cookie('ListTopicsMoreCategoryButtonIsOpen', false);
                 $(this).find(".tn-smallicon-triangle-up").addClass("tn-smallicon-triangle-down").removeClass("tn-smallicon-triangle-up");
                 $(this).find("a").attr("title", "更多").text("更多");
                 $("#category").find("span.tn-directory-item:gt(15):not(:last)").hide();
             }
         });
-        if ($.cookie('ListGroupsMoreCategoryButtonIsOpen') == "true") {
+        if ($.cookie('ListTopicsMoreCategoryButtonIsOpen') == "true") {
             $("#moreCategoryButton").find(".tn-smallicon-triangle-down").addClass("tn-smallicon-triangle-up").removeClass("tn-smallicon-triangle-down");
             $("#moreCategoryButton").find("a").attr("title", "收起").text("收起");
             $("#category").find("span.tn-directory-item:gt(15)").show();
@@ -178,19 +178,19 @@
         $("#moreAreaButton").click(function () {
             if ($(this).find(".tn-smallicon-triangle-down").length > 0)//更多
             {
-                $.cookie('ListGroupsMoreAreaButtonIsOpen', true);
+                $.cookie('ListTopicsMoreAreaButtonIsOpen', true);
                 $(this).find(".tn-smallicon-triangle-down").addClass("tn-smallicon-triangle-up").removeClass("tn-smallicon-triangle-down");
                 $(this).find("a").attr("title", "收起").text("收起");
                 $("#area").find("span.tn-directory-item:gt(15)").show();
             }
             else {
-                $.cookie('ListGroupsMoreAreaButtonIsOpen', false);
+                $.cookie('ListTopicsMoreAreaButtonIsOpen', false);
                 $(this).find(".tn-smallicon-triangle-up").addClass("tn-smallicon-triangle-down").removeClass("tn-smallicon-triangle-up");
                 $(this).find("a").attr("title", "更多").text("更多");
                 $("#area").find("span.tn-directory-item:gt(15):not(:last)").hide();
             }
         });
-        if ($.cookie('ListGroupsMoreAreaButtonIsOpen') == "true") {
+        if ($.cookie('ListTopicsMoreAreaButtonIsOpen') == "true") {
             $("#moreAreaButton").find(".tn-smallicon-triangle-down").addClass("tn-smallicon-triangle-up").removeClass("tn-smallicon-triangle-down");
             $("#moreAreaButton").find("a").attr("title", "收起").text("收起");
             $("#area").find("span.tn-directory-item:gt(15)").show();
@@ -204,7 +204,7 @@
 </script>)
 @Html.ScriptBlock(@<script>
     $(function () {
-        $("#searchGroup").click(function () {
+        $("#searchTopic").click(function () {
             var url = ""
         })
     })

@@ -69,23 +69,23 @@ namespace SpecialTopic.Topic.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonResult ValidateTopicKey(string groupKey, long groupId)
+        public JsonResult ValidateTopicKey(string topicKey, long topicId)
         {
             bool result = false;
-            if (groupId > 0)
+            if (topicId > 0)
             {
                 result = true;
             }
             else
             {
-                TopicEntity group = topicService.Get(groupKey);
-                if (group != null)
+                TopicEntity topic = topicService.Get(topicKey);
+                if (topic != null)
                 {
                     return Json("此专题Key已存在", JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    result = Regex.IsMatch(groupKey, @"^[A-Za-z0-9_\-\u4e00-\u9fa5]+$", RegexOptions.IgnoreCase);
+                    result = Regex.IsMatch(topicKey, @"^[A-Za-z0-9_\-\u4e00-\u9fa5]+$", RegexOptions.IgnoreCase);
                     if (!result)
                     {
                         return Json("只能输入字母数字汉字或-号", JsonRequestBehavior.AllowGet);
@@ -173,24 +173,24 @@ namespace SpecialTopic.Topic.Controllers
                 stream = groupLogo.InputStream;
                 groupEditModel.Logo = groupLogo.FileName;
             }
-            TopicEntity group = groupEditModel.AsTopicEntity();
+            TopicEntity topic = groupEditModel.AsTopicEntity();
 
-            bool result = topicService.Create(user.UserId, group);
+            bool result = topicService.Create(user.UserId, topic);
 
             if (stream != null)
             {
-                topicService.UploadLogo(group.TopicId, stream);
+                topicService.UploadLogo(topic.TopicId, stream);
             }
             //设置分类
             if (groupEditModel.CategoryId > 0)
             {
-                categoryService.AddItemsToCategory(new List<long>() { group.TopicId }, groupEditModel.CategoryId);
+                categoryService.AddItemsToCategory(new List<long>() { topic.TopicId }, groupEditModel.CategoryId);
             }
             //设置标签
             string relatedTags = Request.Form.Get<string>("RelatedTags");
             if (!string.IsNullOrEmpty(relatedTags))
             {
-                tagService.AddTagsToItem(relatedTags, group.TopicId, group.TopicId);
+                tagService.AddTagsToItem(relatedTags, topic.TopicId, topic.TopicId);
             }
             //发送邀请
             if (!string.IsNullOrEmpty(groupEditModel.RelatedUserIds))
@@ -198,9 +198,9 @@ namespace SpecialTopic.Topic.Controllers
 
                 //已修改
                 IEnumerable<long> userIds = Request.Form.Gets<long>("RelatedUserIds", null);
-                topicService.SendInvitations(group, user, string.Empty, userIds);
+                topicService.SendInvitations(topic, user, string.Empty, userIds);
             }
-            return Redirect(SiteUrls.Instance().TopicHome(group.TopicKey));
+            return Redirect(SiteUrls.Instance().TopicHome(topic.TopicKey));
         }
 
         #region 专题全文检索
@@ -489,19 +489,19 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 申请加入按钮
         /// </summary>
-        /// <param name="groupId">专题Id</param>
+        /// <param name="topicId">专题Id</param>
         /// <returns></returns>   
         [HttpGet]
-        public ActionResult _ApplyJoinButton(long groupId, bool showQuit = false, string buttonName = null)
+        public ActionResult _ApplyJoinButton(long topicId, bool showQuit = false, string buttonName = null)
         {
 
-            TopicEntity group = topicService.Get(groupId);
+            TopicEntity group = topicService.Get(topicId);
             if (group == null)
                 return new EmptyResult();
             IUser currentUser = UserContext.CurrentUser;
             if (currentUser == null)
                 return new EmptyResult();
-            bool isApplied = topicService.IsApplied(currentUser.UserId, groupId);
+            bool isApplied = topicService.IsApplied(currentUser.UserId, topicId);
             bool isMember = topicService.IsMember(group.TopicId, currentUser.UserId);
             bool isOwner = topicService.IsOwner(group.TopicId, currentUser.UserId);
             bool isManager = topicService.IsManager(group.TopicId, currentUser.UserId);
@@ -585,15 +585,15 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 用户加入专题（专题有验证时）
         /// </summary>
-        /// <param name="groupId">专题Id</param>
+        /// <param name="topicId">专题Id</param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult _EditApply(long groupId)
+        public ActionResult _EditApply(long topicId)
         {
 
             //已修改
 
-            bool isApplied = topicService.IsApplied(UserContext.CurrentUser.UserId, groupId);
+            bool isApplied = topicService.IsApplied(UserContext.CurrentUser.UserId, topicId);
             ViewData["isApplied"] = isApplied;
             return View();
         }

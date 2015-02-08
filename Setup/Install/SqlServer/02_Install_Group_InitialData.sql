@@ -84,3 +84,24 @@ INSERT [dbo].[tn_AdvertisingPosition] ([PositionId], [PresentAreaKey], [Descript
 INSERT [dbo].[tn_AdvertisingPosition] ([PositionId], [PresentAreaKey], [Description], [FeaturedImage], [Width], [Height], [IsEnable]) VALUES (N'13900200003', N'TopicSpace', N'专题详细显示页中部广告位(710x100)', N'AdvertisingPosition\00001\39002\00003\13900200003.jpg', 710, 100, 1)
 INSERT [dbo].[tn_AdvertisingPosition] ([PositionId], [PresentAreaKey], [Description], [FeaturedImage], [Width], [Height], [IsEnable]) VALUES (N'13900200004', N'TopicSpace', N'专题讨论详细显示页中部广告位(710x70)', N'AdvertisingPosition\00001\39002\00004\13900200004.jpg', 710, 70, 1)
 INSERT [dbo].[tn_AdvertisingPosition] ([PositionId], [PresentAreaKey], [Description], [FeaturedImage], [Width], [Height], [IsEnable]) VALUES (N'13900200005', N'TopicSpace', N'专题讨论详细显示页右下部广告位(230x260)', N'AdvertisingPosition\00001\39002\00005\13900200005.jpg', 230, 260, 1)
+
+
+--添加皮肤设置
+
+insert tn_PresentAreas(PresentAreaKey, AllowMultipleInstances, EnableThemes, DefaultAppearanceId, ThemeLocation) values('TopicSpace',1,	1,	'TopicSpace,Default,Default','~/Themes/TopicSpace')
+
+/*insert [tn_ThemeAppearances] ([Id],[PresentAreaKey] ,[ThemeKey],[AppearanceKey],[Name] ,[PreviewImage],[PreviewLargeImage],[LogoFileName],[Description],[Tags],[Author] ,[Copyright],[LastModified],[Version] ,[ForProductVersion],[DateCreated],[IsEnabled],[DisplayOrder],[UserCount],[Roles],[RequiredRank]) 
+values()
+TopicSpace,Deep_sea,Default	TopicSpace	Deep_sea	Default	Deep_sea	Preview.png	Preview.png	 	 	 	admin	chz	1900-01-01 00:00:00.000	1.0	4.0	1900-01-01 00:00:00.000	1	4	0	 	1
+TopicSpace,Default,Default	TopicSpace	Default	Default	Default	Preview.png	Preview.png				admin	chz	2015-02-08 00:00:00.000	1.0	4.0	2015-02-08 00:00:00.000	1	1	1		1
+TopicSpace,Portal,Default	TopicSpace	Portal	Default	Portal	Preview.png	Preview.png	 	 	 	admin	chz	1900-01-01 00:00:00.000	1.0	4.0	1900-01-01 00:00:00.000	1	5	0	 	1
+*/
+
+/*
+insert tn_themes([Id],[PresentAreaKey],[ThemeKey],[Parent],[Version])
+values()
+TopicSpace,Deep_sea	TopicSpace	Deep_sea	Default	1.0
+TopicSpace,Default	TopicSpace	Default	Default	1.0
+TopicSpace,Portal	TopicSpace	Portal	Default	1.0
+*/
+

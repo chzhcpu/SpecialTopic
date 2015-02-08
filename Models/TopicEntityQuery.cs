@@ -13,14 +13,14 @@ using Tunynet.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    /// 封装管理群组时用于查询帖子的条件
+    /// 封装管理专题时用于查询帖子的条件
     /// </summary>
     public class TopicEntityQuery
     {
         /// <summary>
-        /// 群组Id
+        /// 专题Id
         /// </summary>
-        public long? GroupId { get; set; }
+        public long? TopicId { get; set; }
         /// <summary>
         /// 群主id
         /// </summary>
@@ -29,7 +29,7 @@ namespace SpecialTopic.Topic
         /// <summary>
         /// 名称关键字
         /// </summary>
-        public string GroupNameKeyword { get; set; }
+        public string TopicNameKeyword { get; set; }
 
         /// <summary>
         /// 类别Id

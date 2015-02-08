@@ -19,13 +19,13 @@ using Spacebuilder.Common;
 namespace SpecialTopic.Topic
 {
     /// <summary>
-    ///群组成员申请Repository
+    ///专题成员申请Repository
     /// </summary>
     public class TopicMemberRepository : Repository<TopicMember>, ITopicMemberRepository
     {
 
         /// <summary>
-        /// 删除群组成员
+        /// 删除专题成员
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -45,7 +45,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 添加群组成员
+        /// 添加专题成员
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -72,9 +72,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取单个群组成员
+        /// 获取单个专题成员
         /// </summary>
-        /// <param name="groupId">群组ID</param>
+        /// <param name="groupId">专题ID</param>
         /// <param name="userId">用户ID</param>
         /// <returns></returns>
         public TopicMember GetMember(long groupId, long userId)
@@ -98,9 +98,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组所有成员用户Id集合(用于推送动态）
+        /// 获取专题所有成员用户Id集合(用于推送动态）
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns></returns>
         public IEnumerable<long> GetUserIdsOfTopic(long groupId)
         {
@@ -113,9 +113,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组管理员
+        /// 获取专题管理员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <returns>若没有找到，则返回空集合</returns>
         public IEnumerable<long> GetTopicManagers(long groupId)
         {
@@ -136,14 +136,14 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取群组成员
+        /// 获取专题成员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="hasManager">是否包含管理员</param>
         /// <param name="sortBy">排序字段</param>
         /// <param name="pageSize">每页记录数</param>
         /// <param name="pageIndex">页码</param>       
-        /// <returns>群组成员分页数据</returns>
+        /// <returns>专题成员分页数据</returns>
         public PagingDataSet<TopicMember> GetTopicMembers(long groupId, bool hasManager, SortBy_TopicMember sortBy, int pageSize, int pageIndex)
         {
             return GetPagingEntities(pageSize, pageIndex, CachingExpirationType.UsualObjectCollection,
@@ -180,9 +180,9 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 获取我关注的用户中同时加入某个群组的群组成员
+        /// 获取我关注的用户中同时加入某个专题的专题成员
         /// </summary>
-        /// <param name="groupId">群组Id</param>
+        /// <param name="groupId">专题Id</param>
         /// <param name="userId">当前用户的userId</param>
         /// <returns></returns>
         public IEnumerable<TopicMember> GetTopicMembersAlsoIsMyFollowedUser(long groupId, long userId)
@@ -206,7 +206,7 @@ namespace SpecialTopic.Topic
             return PopulateEntitiesByEntityIds<long>(groupMemberIds);
         }
         /// <summary>
-        /// 在线群组成员
+        /// 在线专题成员
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
@@ -241,7 +241,7 @@ namespace SpecialTopic.Topic
 
 
         /// <summary>
-        /// 获取群组下的所有成员
+        /// 获取专题下的所有成员
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>

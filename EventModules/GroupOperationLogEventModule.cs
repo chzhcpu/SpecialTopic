@@ -14,7 +14,7 @@ using Spacebuilder.Common;
 namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
-    /// 处理群组操作日志
+    /// 处理专题操作日志
     /// </summary>
     public class GroupOperationLogEventModule : IEventMoudle
     {
@@ -30,7 +30,7 @@ namespace SpecialTopic.Topic.EventModules
 
 
         /// <summary>
-        /// 群组操作日志事件处理
+        /// 专题操作日志事件处理
         /// </summary>
         private void GroupOperationLogEventModule_After(TopicEntity senders, CommonEventArgs eventArgs)
         {
@@ -48,7 +48,7 @@ namespace SpecialTopic.Topic.EventModules
                 entry.OperationType = eventArgs.EventOperationType;
                 entry.OperationObjectName = senders.TopicName;
                 entry.OperationObjectId = senders.TopicId;
-                entry.Description = string.Format(ResourceAccessor.GetString("OperationLog_Pattern_" + eventArgs.EventOperationType, entry.ApplicationId), "群组", entry.OperationObjectName);
+                entry.Description = string.Format(ResourceAccessor.GetString("OperationLog_Pattern_" + eventArgs.EventOperationType, entry.ApplicationId), "专题", entry.OperationObjectName);
 
                 OperationLogService logService = Tunynet.DIContainer.Resolve<OperationLogService>();
                 logService.Create(entry);

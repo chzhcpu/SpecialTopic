@@ -7,17 +7,17 @@
     var groupOwner = ViewData.Get<User>("groupOwner", null);
 
 }
-@section GroupInfo{
+@section TopicInfo{
 }
 @section Aside{
-    @Html.Action("_GroupProfile", "GroupSpace", new { spaceKey = Url.SpaceKey() })
-    @Html.Action("_LastGroupVisitors", "GroupSpace", new { spaceKey = Url.SpaceKey() })
-    @Html.Action("_ListMembers", "GroupSpace", new { spaceKey = Url.SpaceKey(), topNumber = 10 })
+    @Html.Action("_TopicProfile", "TopicSpace", new { spaceKey = Url.SpaceKey() })
+    @Html.Action("_LastTopicVisitors", "TopicSpace", new { spaceKey = Url.SpaceKey() })
+    @Html.Action("_ListMembers", "TopicSpace", new { spaceKey = Url.SpaceKey(), topNumber = 10 })
 }
 @section ContentHeader{
     <div class="tn-box tn-widget tn-widget-content tn-corner-all">
         <div class="tn-box-content tn-widget-content tn-corner-all">
-            @Html.Action("_GroupHeader", "GroupSpaceTheme", new { spaceKey = Url.SpaceKey(), showManageButton = false })
+            @Html.Action("_TopicHeader", "TopicSpaceTheme", new { spaceKey = Url.SpaceKey(), showManageButton = false })
         </div>
     </div>
 }

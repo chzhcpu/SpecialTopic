@@ -18,7 +18,7 @@ using Tunynet;
 namespace SpecialTopic.Topic.EventModules
 {
     /// <summary>
-    /// 处理群组申请通知的EventMoudle
+    /// 处理专题申请通知的EventMoudle
     /// </summary>
     public class TopicMemberApplyEventModule : IEventMoudle
     {
@@ -58,7 +58,7 @@ namespace SpecialTopic.Topic.EventModules
                     toUserIds.AddRange(entity.TopicManagers.Select(n => n.UserId));
                     foreach (var toUserId in toUserIds)
                     {
-                        //申请加入群组的请求
+                        //申请加入专题的请求
                         if (!groupService.IsMember(sender.TopicId, sender.UserId))
                         {
                             invitation = Invitation.New();

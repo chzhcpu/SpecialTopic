@@ -17,8 +17,8 @@
         <div class="tn-box-content tn-widget-content tn-corner-all">
             <ul class="spb-group-count tn-helper-clearfix">
                 <li class="tn-border-gray tn-border-right"><a href="@SiteUrls.Instance().UserCreatedTopics(spaceUser.UserName)">
-                    <strong class="tn-count">@spaceUser.CreatedTopicCount()</strong></a><span>创建的群组</span></li>
-                <li><a href="@SiteUrls.Instance().UserJoinedTopics(spaceUser.UserName)"><strong class="tn-count">@spaceUser.JoinedTopicCount()</strong></a><span>加入的群组</span></li>
+                    <strong class="tn-count">@spaceUser.CreatedTopicCount()</strong></a><span>创建的专题</span></li>
+                <li><a href="@SiteUrls.Instance().UserJoinedTopics(spaceUser.UserName)"><strong class="tn-count">@spaceUser.JoinedTopicCount()</strong></a><span>加入的专题</span></li>
             </ul>
         </div>
     </div>
@@ -55,11 +55,11 @@
         <div class="tn-tabs">
             <ul class="tn-tabs-nav tn-border-gray tn-border-bottom tn-helper-clearfix">
                 <li class="tn-widget-content tn-border-gray tn-border-trl tn-tabs-selected"><a  href="@SiteUrls.Instance().UserJoinedTopics(spaceUser.UserName)" title="@spaceUser.UserName">
-                    加入的群组</a> </li>
+                    加入的专题</a> </li>
                 <li class="tn-widget-content tn-border-gray tn-border-trl"><a  href="@SiteUrls.Instance().UserCreatedTopics(spaceUser.UserName)" title="@spaceUser.UserName">
-                    创建的群组</a> </li>
+                    创建的专题</a> </li>
             </ul>
         </div>
-        @Html.Partial("_List", Model, new ViewDataDictionary { { "noDataMessage", "目前还没加入群组!" }, { "isGetMore", true } })
+        @Html.Partial("_List", Model, new ViewDataDictionary { { "noDataMessage", "目前还没加入专题!" }, { "isGetMore", true } })
     </div>
 </div>

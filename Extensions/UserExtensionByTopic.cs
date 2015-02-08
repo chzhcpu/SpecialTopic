@@ -21,7 +21,7 @@ namespace SpecialTopic.Topic
     public static class UserExtensionByTopic
     {
         /// <summary>
-        /// 创建的群组数
+        /// 创建的专题数
         /// </summary>
         public static long CreatedTopicCount(this User user)
         {
@@ -29,7 +29,7 @@ namespace SpecialTopic.Topic
             return ownerDataService.GetLong(user.UserId, OwnerDataKeys.Instance().CreatedTopicCount());
         }
         /// <summary>
-        /// 加入的群组数
+        /// 加入的专题数
         /// </summary>
         public static long JoinedTopicCount(this User user)
         {

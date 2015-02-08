@@ -7,7 +7,7 @@
         @{
             ManagementOperationService service = new ManagementOperationService();
             IEnumerable<ApplicationManagementOperation> items = service.GetShortcuts(PresentAreaKeysOfBuiltIn.ControlPanel, false);
-            Html.ViewContext.RouteData.Values["tenantTypeId"] = TenantTypeIds.Instance().Group();
+            Html.ViewContext.RouteData.Values["tenantTypeId"] = TenantTypeIds.Instance().Topic();
         }
         <ul class="tn-side-menu tnc-operation">
             @foreach (var item in items)

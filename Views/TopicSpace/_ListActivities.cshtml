@@ -5,7 +5,7 @@
     MediaType? mediaType = ViewData.Get<MediaType?>("mediaType", null);
     bool? isOriginal = ViewData.Get<bool?>("isOriginal", null);
     long? userId = ViewData.Get<long?>("userId", null);
-    string countUrl = SiteUrls.Instance().GetNewerGroupActivityCount(Url.SpaceKey(), applicationId);
+    string countUrl = SiteUrls.Instance().GetNewerTopicActivityCount(Url.SpaceKey(), applicationId);
     int pageIndex = ViewData.Get<int>("pageIndex", 1);
     int pageCount = Model.PageCount;
 }
@@ -13,7 +13,7 @@
 <ul class="tn-list tnc-dynamic">
     @if (mediaType == null)
     { 
-        <li class="tnc-dynamic-new" id="newerActivitiesLi" style="display: none;"><a href="@SiteUrls.Instance()._GetNewerGroupActivities(Url.SpaceKey(), applicationId)" class="tn-instant-note tn-corner-all" ></a></li>
+        <li class="tnc-dynamic-new" id="newerActivitiesLi" style="display: none;"><a href="@SiteUrls.Instance()._GetNewerTopicActivities(Url.SpaceKey(), applicationId)" class="tn-instant-note tn-corner-all" ></a></li>
     }
     @if (Model != null && Model.Count > 0)
     {

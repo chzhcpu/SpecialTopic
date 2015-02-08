@@ -208,11 +208,11 @@
     <Compile Include="Configuration\TopicTenantAuthorizationHandler.cs" />
     <Compile Include="Configuration\TopicRecommendUrlGetter.cs" />
     <Compile Include="Configuration\JoinTopicOwnerDataGetter.cs" />
-    <Compile Include="Controllers\GroupSpaceController.cs" />
+    <Compile Include="Controllers\TopicSpaceController.cs" />
     <Compile Include="Controllers\ChannelTopicController.cs" />
-    <Compile Include="Controllers\ControlPanelGroupController.cs" />
+    <Compile Include="Controllers\ControlPanelTopicController.cs" />
     <Compile Include="Controllers\TopicSpaceSettingsController.cs" />
-    <Compile Include="Controllers\GroupSpaceThemeController.cs" />
+    <Compile Include="Controllers\TopicSpaceThemeController.cs" />
     <Compile Include="EventModules\GroupOperationLogEventModule.cs" />
     <Compile Include="EventModules\GroupIndexEventModule.cs" />
     <Compile Include="EventModules\GroupMemberApplyEventModule.cs" />
@@ -227,7 +227,9 @@
     <Compile Include="Configuration\TopicActivityReceiverGetter.cs" />
     <Compile Include="Extensions\EventOperationType.cs" />
     <Compile Include="Extensions\InvitationTypeKeys.cs" />
+    <Compile Include="Extensions\OwnerTypesExtension.cs" />
     <Compile Include="Extensions\PointItemKeys.cs" />
+    <Compile Include="Extensions\PresentAreaKeysOfBuiltInExtension.cs" />
     <Compile Include="Extensions\RecommendItemExtensionByTopic.cs" />
     <Compile Include="Extensions\SiteUrls.cs" />
     <Compile Include="Extensions\TenantTypeIds.cs" />
@@ -264,7 +266,7 @@
     <Compile Include="UI\TopicSpaceThemeResolver.cs" />
     <Compile Include="UrlRoutingRegistration.cs" />
     <Compile Include="ViewModels\TopicEditModel.cs.cs" />
-    <Compile Include="ViewModels\ManageGroupEditModel.cs" />
+    <Compile Include="ViewModels\ManageTopicEditModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Languages\zh-CN\InvitationTemplates.xml">
@@ -313,64 +315,64 @@
     <Content Include="Views\ChannelTopic\_TopicSubmenu.cshtml" />
     <Content Include="Views\ChannelTopic\Home.cshtml" />
     <Content Include="Views\ChannelTopic\Search.cshtml" />
-    <Content Include="Views\ControlPanelGroup\ManageGroups.cshtml" />
+    <Content Include="Views\ControlPanelTopic\ManageTopics.cshtml" />
     <Content Include="Views\ChannelTopic\_TopicItemSearch.cshtml" />
     <Content Include="Views\ChannelTopic\_CreateTopic.cshtml" />
-    <Content Include="Views\ControlPanelGroup\_PagingGroups.cshtml" />
+    <Content Include="Views\ControlPanelTopic\_PagingTopics.cshtml" />
     <Content Include="Views\ChannelTopic\_TopTopics_Flow.cshtml" />
     <Content Include="Views\ChannelTopic\_TopTopics_List.cshtml" />
     <Content Include="Views\ChannelTopic\_CategoryTopics.cshtml" />
     <Content Include="Views\ChannelTopic\_RecommendedTopicOwners.cshtml" />
     <Content Include="Views\ChannelTopic\FindTopic.cshtml" />
     <Content Include="Views\ChannelTopic\_AreaTopics.cshtml" />
-    <Content Include="Views\ControlPanelGroup\_ManageGroupSideMenu.cshtml" />
-    <Content Include="Views\GroupSpaceSettings\ManageMemberApplies.cshtml" />
-    <Content Include="Views\GroupSpaceSettings\ManageMembers.cshtml" />
-    <Content Include="Views\GroupSpaceSettings\EditGroup.cshtml" />
-    <Content Include="Views\GroupSpaceSettings\_ChangeGroupOwner.cshtml" />
+    <Content Include="Views\ControlPanelTopic\_ManageTopicSideMenu.cshtml" />
+    <Content Include="Views\TopicSpaceSettings\ManageMemberApplies.cshtml" />
+    <Content Include="Views\TopicSpaceSettings\ManageMembers.cshtml" />
+    <Content Include="Views\TopicSpaceSettings\EditTopic.cshtml" />
+    <Content Include="Views\TopicSpaceSettings\_ChangeTopicOwner.cshtml" />
     <Content Include="Views\ChannelTopic\_Topic.cshtml" />
     <Content Include="Views\ChannelTopic\_List.cshtml" />
-    <Content Include="Views\GroupSpace\_EditAnnouncement.cshtml" />
-    <Content Include="Views\GroupSpace\_GroupProfile.cshtml" />
-    <Content Include="Views\GroupSpace\_LastGroupVisitors.cshtml" />
+    <Content Include="Views\TopicSpace\_EditAnnouncement.cshtml" />
+    <Content Include="Views\TopicSpace\_TopicProfile.cshtml" />
+    <Content Include="Views\TopicSpace\_LastTopicVisitors.cshtml" />
     <Content Include="Views\ChannelTopic\ListByTag.cshtml" />
     <Content Include="Views\ChannelTopic\_EditApply.cshtml" />
     <Content Include="Views\ChannelTopic\_ApplyJoinButton.cshtml" />
     <Content Include="Views\ChannelTopic\_ValidateQuestion.cshtml" />
     <Content Include="Views\ChannelTopic\UserJoinedTopics.cshtml" />
     <Content Include="Views\ChannelTopic\UserCreatedTopics.cshtml" />
-    <Content Include="Views\GroupSpace\_Invite.cshtml" />
-    <Content Include="Views\GroupSpace\_GroupMemberAlsoJoinedGroups.cshtml" />
-    <Content Include="Views\GroupSpace\Members.cshtml" />
-    <Content Include="Views\GroupSpace\MyFollowedUsers.cshtml" />
+    <Content Include="Views\TopicSpace\_Invite.cshtml" />
+    <Content Include="Views\TopicSpace\_TopicMemberAlsoJoinedTopics.cshtml" />
+    <Content Include="Views\TopicSpace\Members.cshtml" />
+    <Content Include="Views\TopicSpace\MyFollowedUsers.cshtml" />
     <Content Include="Views\ChannelTopic\_TopTopics_Rank.cshtml" />
     <Content Include="Views\ChannelTopic\_QuickSearch.cshtml" />
     <Content Include="Views\ChannelTopic\TopicTagMap.cshtml" />
-    <Content Include="Views\GroupSpaceSettings\_GroupSettingRightMenu.cshtml" />
+    <Content Include="Views\TopicSpaceSettings\_TopicSettingRightMenu.cshtml" />
     <Content Include="Views\ChannelTopic\_TopicGlobalNavigations.cshtml" />
-    <Content Include="Views\ControlPanelGroup\_ManageGroupSideMenuShortcut.cshtml" />
-    <Content Include="Views\GroupSpace\_ListMembers.cshtml" />
+    <Content Include="Views\ControlPanelTopic\_ManageTopicSideMenuShortcut.cshtml" />
+    <Content Include="Views\TopicSpace\_ListMembers.cshtml" />
     <Content Include="Views\ChannelTopic\_InterestTopic.cshtml" />
     <Content Include="Views\ChannelTopic\_BlockGroups.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\GroupSpace\_ListActivities.cshtml" />
-    <Content Include="Views\GroupSpace\_GetNewerActivities.cshtml" />
-    <Content Include="Views\GroupSpace\_GroupMenu.cshtml" />
+    <Content Include="Views\TopicSpace\_ListActivities.cshtml" />
+    <Content Include="Views\TopicSpace\_GetNewerActivities.cshtml" />
+    <Content Include="Views\TopicSpace\_TopicMenu.cshtml" />
     <Content Include="Views\ChannelTopic\_TopTopics_ListForMyTopic.cshtml" />
     <Content Include="Views\ChannelTopic\_CreateTopicMember.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\ChannelTopic\_TopicSearch.cshtml" />
-    <Content Include="Views\GroupSpaceSettings\_Menu_Manage.cshtml" />
-    <Content Include="Views\GroupSpace\_OnlineGroupMembers.cshtml" />
+    <Content Include="Views\TopicSpaceSettings\_Menu_Manage.cshtml" />
+    <Content Include="Views\TopicSpace\_OnlineTopicMembers.cshtml" />
     <Content Include="Views\ChannelTopic\_FollowedButton.cshtml" />
     <Content Include="Views\ChannelTopic\_JoinTopic.cshtml" />
-    <Content Include="Views\GroupSpace\_TagCloud.cshtml" />
+    <Content Include="Views\TopicSpace\_TagCloud.cshtml" />
     <Content Include="Views\ChannelTopic\_RecommendedTopic.cshtml" />
-    <Content Include="Views\GroupSpace\_Announcement.cshtml" />
+    <Content Include="Views\TopicSpace\_Announcement.cshtml" />
     <Content Include="packages.config" />
-    <Content Include="Views\GroupSpace\_GroupActivities.cshtml" />
+    <Content Include="Views\TopicSpace\_TopicActivities.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resource.resx">

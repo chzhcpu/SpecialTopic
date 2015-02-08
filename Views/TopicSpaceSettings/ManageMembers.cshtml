@@ -5,7 +5,7 @@
     Html.ViewContext.RouteData.Values["CurrentNavigationId"] = 13900190;
 
     TopicEntity group = ViewData.Get<TopicEntity>("group", null);
-    bool canSetManager = DIContainer.Resolve<Authorizer>().Group_SetManager(group);
+    bool canSetManager = DIContainer.Resolve<Authorizer>().Topic_SetManager(group);
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-members">
     <div class="tn-box-content tn-widget-content tn-corner-all">
@@ -26,7 +26,7 @@
                         @if (canSetManager)
                         {
                             <span class="tn-option">
-                                @Html.LinkButton("转让群组", SiteUrls.Instance()._ChangeGroupOwner(Url.SpaceKey(), SiteUrls.Instance().GroupHome(Url.SpaceKey())), HighlightStyles.Secondary, htmlAttributes: new { plugin = "dialog" })
+                                @Html.LinkButton("转让专题", SiteUrls.Instance()._ChangeGroupOwner(Url.SpaceKey(), SiteUrls.Instance().GroupHome(Url.SpaceKey())), HighlightStyles.Secondary, htmlAttributes: new { plugin = "dialog" })
                             </span>
                         }
                         @Html.LinkButton("移除成员", SiteUrls.Instance().BatchRemoveMember(Url.SpaceKey()), iconType: IconTypes.SmallCross, htmlAttributes: new { id = "BatchRemoveMember" })
@@ -101,7 +101,7 @@
                 else
                 {
                     <div class="tn-no-data">
-                        搜索不到群组成员
+                        搜索不到专题成员
                     </div>
                 }
             </div>

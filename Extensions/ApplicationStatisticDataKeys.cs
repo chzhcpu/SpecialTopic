@@ -20,7 +20,7 @@ namespace SpecialTopic.Topic
     public static class ApplicationStatisticDataKeysExtension
     {
         /// <summary>
-        /// 群组待审核数
+        /// 专题待审核数
         /// </summary>
         public static string TopicPendingCount(this ApplicationStatisticDataKeys applicationStatisticDataKeys)
         {
@@ -28,7 +28,7 @@ namespace SpecialTopic.Topic
         }
 
         /// <summary>
-        /// 群组需再审核数
+        /// 专题需再审核数
         /// </summary>
         public static string TopicAgainCount(this ApplicationStatisticDataKeys applicationStatisticDataKeys)
         {

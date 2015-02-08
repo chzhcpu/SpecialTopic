@@ -18,13 +18,13 @@ using Tunynet;
 namespace SpecialTopic.Topic.Controllers
 {
     /// <summary>
-    /// 群组管理Controller
+    /// 专题管理Controller
     /// </summary>
-    [Themed(PresentAreaKeysOfBuiltIn.ControlPanel, IsApplication = true)]
+    [Themed(PresentAreaKeysOfExtension.TopicSpace, IsApplication = true)]
     [AnonymousBrowseCheck]
-    [TitleFilter(TitlePart = "群组", IsAppendSiteName = true)]
+    [TitleFilter(TitlePart = "专题", IsAppendSiteName = true)]
     [ManageAuthorize(CheckCookie = false)]
-    public class ControlPanelGroupController : Controller
+    public class ControlPanelTopicController : Controller
     {
         #region Private Items
         public IPageResourceManager pageResourceManager { get; set; }
@@ -33,56 +33,56 @@ namespace SpecialTopic.Topic.Controllers
 
         #region 页面
         /// <summary>
-        /// 管理群组
+        /// 管理专题
         /// </summary>
-        /// <param name="model">群组editmodel</param>
+        /// <param name="model">专题editmodel</param>
         /// <param name="pageIndex">页码</param>
-        /// <returns>群组列表</returns>
-        public ActionResult ManageGroups(ManageGroupEditModel model, int pageIndex = 1)
+        /// <returns>专题列表</returns>
+        public ActionResult ManageTopics(ManageTopicEditModel model, int pageIndex = 1)
         {
-            pageResourceManager.InsertTitlePart("群组管理");
+            pageResourceManager.InsertTitlePart("专题管理");
 
-            TopicEntityQuery group = model.GetGroupQuery();
+            TopicEntityQuery group = model.GetTopicQuery();
 
-            ViewData["Groups"] = groupService.GetsForAdmin(group.AuditStatus, group.CategoryId, group.GroupNameKeyword, group.UserId,
+            ViewData["Topics"] = groupService.GetsForAdmin(group.AuditStatus, group.CategoryId, group.TopicNameKeyword, group.UserId,
                 group.StartDate, group.EndDate, group.minMemberCount, group.maxMemberCount, model.PageSize ?? 20, pageIndex);
             return View(model);
         }
 
         /// <summary>
-        /// 删除群组
+        /// 删除专题
         /// </summary>
-        /// <param name="groupId">群组Id</param>
-        /// <returns>删除群组操作</returns>
+        /// <param name="groupId">专题Id</param>
+        /// <returns>删除专题操作</returns>
         [HttpPost]
-        public ActionResult DeleteGroup(long groupId)
+        public ActionResult DeleteTopic(long groupId)
         {
             groupService.Delete(groupId);
             return Json(new StatusMessageData(StatusMessageType.Success, "删除成功"));
         }
 
-        #region 批量操作-群组
+        #region 批量操作-专题
         /// <summary>
-        /// 设置群组的审核状态
+        /// 设置专题的审核状态
         /// </summary>
-        /// <param name="groupIds">群组id</param>
+        /// <param name="groupIds">专题id</param>
         /// <param name="isApproved">审核是否通过</param>
         /// <returns>返回审核操作</returns>
         [HttpPost]
-        public ActionResult BatchUpdateGroupAuditStatus(List<long> groupIds, bool isApproved = true)
+        public ActionResult BatchUpdateTopicAuditStatus(List<long> groupIds, bool isApproved = true)
         {
             groupService.Approve(groupIds, isApproved);
             return Json(new StatusMessageData(StatusMessageType.Success, "批量设置审核状态成功"));
         }
 
         /// <summary>
-        /// 设置群组的审核状态
+        /// 设置专题的审核状态
         /// </summary>
-        /// <param name="groupId">群组id</param>
+        /// <param name="groupId">专题id</param>
         /// <param name="isApproved">审核是否通过</param>
         /// <returns>返回审核操作</returns>
         [HttpPost]
-        public ActionResult BatchUpdateGroupAuditStatu(long groupId, bool isApproved = true)
+        public ActionResult BatchUpdateTopicAuditStatu(long groupId, bool isApproved = true)
         {
             List<long> groupIds = new List<long>() { groupId };
             groupService.Approve(groupIds, isApproved);

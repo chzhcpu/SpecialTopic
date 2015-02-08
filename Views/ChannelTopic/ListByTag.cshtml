@@ -5,21 +5,21 @@
     var tag = ViewData.Get<Tag>("tag", Tag.New());
 }
 @section ContentHeader{
-    @Html.Action("_GroupSubmenu", "ChannelGroup")
+    @Html.Action("_TopicSubmenu", "ChannelTopic")
 }
 @section Aside{
     <div class="tn-box tn-widget tn-widget-content tn-corner-all">
         <div class="tn-box-header tn-widget-header tn-corner-top tn-border-bottom ">
             <div class="tn-option">
-                <a href="@SiteUrls.Instance().GroupTagMap()">更多</a>
+                <a href="@SiteUrls.Instance().TopicTagMap()">更多</a>
             </div>
             <h3 class="tn-helper-reset">热门标签
             </h3>
         </div>
-        @Html.Action("_TagCloud", "Channel", new { area = "Common", tenantTypeId = TenantTypeIds.Instance().Group() })
+        @Html.Action("_TagCloud", "Channel", new { area = "Common", tenantTypeId = TenantTypeIds.Instance().Topic() })
     </div>
-    @Html.Action("_TopGroups", "ChannelGroup", new { topNumber = 10, sortBy = SortBy_Topic.StageHitTimes, viewName = "_TopGroups_Rank" })
-    @Html.Action("_RecommendedGroupOwners", "ChannelGroup", new { topNumber = 5, recommendTypeId = "00001111" })
+    @Html.Action("_TopTopics", "ChannelTopic", new { topNumber = 10, sortBy = SortBy_Topic.StageHitTimes, viewName = "_TopTopics_Rank" })
+    @Html.Action("_RecommendedTopicOwners", "ChannelTopic", new { topNumber = 5, recommendTypeId = "00001111" })
 }
 <div class="tn-box tn-widget tn-widget-content tn-corner-all spb-group-list-box">
     <div class="tn-box-content tn-widget-content tn-corner-all">

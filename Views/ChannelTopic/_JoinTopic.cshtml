@@ -1,7 +1,7 @@
 ﻿@model TopicEntity
 @{
    
-    string content = string.Format("@{0} 的群组 \"{1}\" {2} 很不错 推荐给大家看看", Model.User.NickName, Model.GroupName, SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(Model.GroupId)));
+    string content = string.Format("@{0} 的专题 \"{1}\" {2} 很不错 推荐给大家看看", Model.User.NickName, Model.GroupName, SiteUrls.FullUrl(SiteUrls.Instance().GroupHome(Model.GroupId)));
     string url = SiteUrls.Instance()._ShareToMicroblog(content, SiteUrls.Instance().LogoUrl(Model.Logo, TenantTypeIds.Instance().Group(), ImageSizeTypeKeys.Instance().Big()));
     var activity = ViewData.Get<Activity>("activity", Activity.New());
     string ownerName = activity.OwnerName;
@@ -29,7 +29,7 @@
             <div class="tnc-dynamic-title">
                 <a href="@SiteUrls.Instance().SpaceHome(ownerId)" class="tn-user-name" target="@hyperLinkTarget.ToString()">@ownerName</a>
                 @Html.IdentificationType(ownerId)
-                加入了群组
+                加入了专题
             </div>
             <div class="tnc-dynamic-group tn-helper-clearfix">
                 <div class="tn-group-avatar">

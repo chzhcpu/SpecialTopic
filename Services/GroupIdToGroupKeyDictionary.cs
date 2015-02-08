@@ -46,18 +46,18 @@ namespace SpecialTopic.Topic
         #endregion
 
         /// <summary>
-        /// 根据群组Id获取群组Key
+        /// 根据专题Id获取专题Key
         /// </summary>
         /// <returns>
-        /// 群组Key
+        /// 专题Key
         /// </returns>
         protected abstract string GetTopicKeyByTopicId(long groupId);
 
         /// <summary>
-        /// 根据群组Key获取群组Id
+        /// 根据专题Key获取专题Id
         /// </summary>
         /// <returns>
-        /// 群组Id
+        /// 专题Id
         /// </returns>
         protected abstract long GetTopicIdByTopicKey(string groupKey);
 

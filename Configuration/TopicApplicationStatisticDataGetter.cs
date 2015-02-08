@@ -32,17 +32,17 @@ namespace SpecialTopic.Topic
             IList<ApplicationStatisticData> applicationStatisticDatas = new List<ApplicationStatisticData>();
             Dictionary<string, long> barSectionManageableDatas = groupService.GetManageableDatas(tenantTypeId);
             if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().TopicPendingCount()))
-                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicPendingCount(), "群组",
-                 "群组待审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicPendingCount()])
+                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicPendingCount(), "专题",
+                 "专题待审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicPendingCount()])
                 {
-                    DescriptionPattern = "{0}个群组待审核",
+                    DescriptionPattern = "{0}个专题待审核",
                     Url = SiteUrls.Instance().ManageTopics(auditStatus: AuditStatus.Pending)
                 });
             if (barSectionManageableDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().TopicAgainCount()))
-                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicAgainCount(), "群组",
-                 "群组需再审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicAgainCount()])
+                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TopicAgainCount(), "专题",
+                 "专题需再审核数", barSectionManageableDatas[ApplicationStatisticDataKeys.Instance().TopicAgainCount()])
                 {
-                    DescriptionPattern = "{0}个群组需再审核",
+                    DescriptionPattern = "{0}个专题需再审核",
                     Url = SiteUrls.Instance().ManageTopics(auditStatus: AuditStatus.Again)
                 });
             return applicationStatisticDatas;
@@ -58,17 +58,17 @@ namespace SpecialTopic.Topic
             IList<ApplicationStatisticData> applicationStatisticDatas = new List<ApplicationStatisticData>();
             Dictionary<string, long> barThreadStatisticDatas = groupService.GetStatisticDatas(tenantTypeId);
             if (barThreadStatisticDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().TotalCount()))
-                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TotalCount(), "群组",
-                 "群组总数", barThreadStatisticDatas[ApplicationStatisticDataKeys.Instance().TotalCount()])
+                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().TotalCount(), "专题",
+                 "专题总数", barThreadStatisticDatas[ApplicationStatisticDataKeys.Instance().TotalCount()])
                 {
-                    DescriptionPattern = "共{0}个群组",
+                    DescriptionPattern = "共{0}个专题",
                     Url = SiteUrls.Instance().ManageTopics()
                 });
             if (barThreadStatisticDatas.ContainsKey(ApplicationStatisticDataKeys.Instance().Last24HCount()))
-                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().Last24HCount(), "群组",
-                 "群组24小时新增数", barThreadStatisticDatas[ApplicationStatisticDataKeys.Instance().Last24HCount()])
+                applicationStatisticDatas.Add(new ApplicationStatisticData(ApplicationStatisticDataKeys.Instance().Last24HCount(), "专题",
+                 "专题24小时新增数", barThreadStatisticDatas[ApplicationStatisticDataKeys.Instance().Last24HCount()])
                 {
-                    DescriptionPattern = "24小时新增{0}个群组",
+                    DescriptionPattern = "24小时新增{0}个专题",
                     Url = SiteUrls.Instance().ManageTopics()
                 });
             return applicationStatisticDatas;

@@ -16,7 +16,7 @@ namespace SpecialTopic.Topic
     
     
     /// <summary>
-    /// 群组成员申请实体
+    /// 专题成员申请实体
     /// </summary>
     [TableName("spt_TopicMemberApplies")]
     [PrimaryKey("Id", autoIncrement = true)]
@@ -25,7 +25,7 @@ namespace SpecialTopic.Topic
     public class TopicMemberApply : IEntity
     {
         /// <summary>
-        /// 群组成员申请实体
+        /// 专题成员申请实体
         /// </summary>
         public static TopicMemberApply New()
         {
@@ -45,7 +45,7 @@ namespace SpecialTopic.Topic
         public long Id { get; protected set; }
 
         /// <summary>
-        ///群组Id
+        ///专题Id
         /// </summary>
         public long TopicId { get; set; }
 

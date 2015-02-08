@@ -19,7 +19,7 @@ using DevTrends.MvcDonutCaching;
 
 namespace SpecialTopic.Topic.Controllers
 {
-    [Themed(PresentAreaKeysOfBuiltIn.GroupSpace, IsApplication = true)]
+    [Themed(PresentAreaKeysOfExtension.TopicSpace, IsApplication = true)]
     [AnonymousBrowseCheck]
     [TitleFilter(IsAppendSiteName = true)]
     [TopicSpaceAuthorize]
@@ -37,7 +37,7 @@ namespace SpecialTopic.Topic.Controllers
         private SubscribeService subscribeService = new SubscribeService(TenantTypeIds.Instance().Topic());
 
         /// <summary>
-        /// 群组标签云
+        /// 专题标签云
         /// </summary>_CommentList
         /// <param name="tenantTypeId">租户类型Id</param>
         /// <param name="topNumber">显示的标签数量</param>
@@ -66,7 +66,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组首页动态列表
+        /// 专题首页动态列表
         /// </summary>
         [HttpGet]
         public ActionResult _ListActivities(string spaceKey, int? pageIndex, int? applicationId, MediaType? mediaType, bool? isOriginal, long? userId)
@@ -129,7 +129,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 删除群组动态
+        /// 删除专题动态
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <param name="activityId"></param>
@@ -139,9 +139,9 @@ namespace SpecialTopic.Topic.Controllers
         {
             var activity = activityService.Get(activityId);
             if (!authorizer.Topic_DeleteTopicActivity(activity))
-                return Json(new StatusMessageData(StatusMessageType.Error, "没有删除群组动态的权限"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "没有删除专题动态的权限"));
             activityService.DeleteActivity(activityId);
-            return Json(new StatusMessageData(StatusMessageType.Success, "删除群组动态成功！"));
+            return Json(new StatusMessageData(StatusMessageType.Success, "删除专题动态成功！"));
         }
 
 
@@ -153,7 +153,7 @@ namespace SpecialTopic.Topic.Controllers
         {
             TopicEntity group = groupService.Get(spaceKey);
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到专题！"));
 
             //如何做
 
@@ -187,7 +187,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 编辑群组公告页
+        /// 编辑专题公告页
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <returns></returns>
@@ -199,9 +199,9 @@ namespace SpecialTopic.Topic.Controllers
             return View();
         }
         /// <summary>
-        /// 在线的群组成员
+        /// 在线的专题成员
         /// </summary>
-        /// <param name="spaceKey">群组</param>
+        /// <param name="spaceKey">专题</param>
         /// <param name="topNumber">前多少条</param>
         [DonutOutputCache(CacheProfile = "Frequently")]
         public ActionResult _OnlineTopicMembers(string spaceKey, int topNumber = 12)
@@ -220,9 +220,9 @@ namespace SpecialTopic.Topic.Controllers
             }
         }
         /// <summary>
-        /// 群组资料
+        /// 专题资料
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         public ActionResult _TopicProfile(string spaceKey)
         {
@@ -231,9 +231,9 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 编辑群组公告
+        /// 编辑专题公告
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <param name="announcement">公告</param>
         /// <returns></returns>
         [HttpPost]
@@ -281,7 +281,7 @@ namespace SpecialTopic.Topic.Controllers
 
 
             if (group == null)
-                return Json(new StatusMessageData(StatusMessageType.Error, "找不到群组！"));
+                return Json(new StatusMessageData(StatusMessageType.Error, "找不到专题！"));
 
             //在显示时做了判断
             //已修改
@@ -371,7 +371,7 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 我关注的群组成员
+        /// 我关注的专题成员
         /// </summary>
         /// <param name="spaceKey"></param>
         /// <param name="pageIndex"></param>
@@ -425,7 +425,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 最新加入
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <param name="topNumber">前几条数据</param>
         /// <returns></returns>
         public ActionResult _ListMembers(string spaceKey, int topNumber)
@@ -441,9 +441,9 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组空间导航
+        /// 专题空间导航
         /// </summary>
-        /// <param name="spaceKey">群组空间标识</param>
+        /// <param name="spaceKey">专题空间标识</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _TopicMenu(string spaceKey)
@@ -474,7 +474,7 @@ namespace SpecialTopic.Topic.Controllers
         /// <summary>
         /// 公告
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _Announcement(string spaceKey)
@@ -486,9 +486,9 @@ namespace SpecialTopic.Topic.Controllers
         }
 
         /// <summary>
-        /// 群组首页动态
+        /// 专题首页动态
         /// </summary>
-        /// <param name="spaceKey">群组标识</param>
+        /// <param name="spaceKey">专题标识</param>
         /// <returns></returns>
         [HttpGet]
         public ActionResult _TopicActivities(string spaceKey)
@@ -516,7 +516,7 @@ namespace SpecialTopic.Topic.Controllers
         ManageMember,
 
         /// <summary>
-        /// 群组设置
+        /// 专题设置
         /// </summary>
         TopicSettings
 

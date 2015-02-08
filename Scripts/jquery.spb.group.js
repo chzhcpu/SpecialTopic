@@ -29,7 +29,7 @@
         }
 
         if (joinway == 'ByApply' && isApplied == "True") {
-            art.dialog.tips("您已申请过该群组！", 1.5, 0);
+            art.dialog.tips("您已申请过该专题！", 1.5, 0);
             return false;
         }
 

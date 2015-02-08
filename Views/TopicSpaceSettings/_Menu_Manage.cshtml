@@ -5,7 +5,7 @@
     {
         currentNavigationId = Html.ViewContext.RouteData.Values.Get<int>("CurrentNavigationId", 0);
     }
-    GroupMenu? groupMenu = TempData["GroupMenu"] as GroupMenu?;
+    TopicMenu? groupMenu = TempData["TopicMenu"] as TopicMenu?;
     string spaceKey = Html.ViewContext.RouteData.Values["spaceKey"].ToString();
     int count = ViewData.Get<int>("MemberApplyCount", 0);
 }
@@ -21,19 +21,19 @@
                 }
                 <li class="@(selectedStatus)"><a class="tn-menu-text" href="@navigation.GetUrl(spaceKey)" title="@navigation.Text">@navigation.Text</a></li>
             }
-            <li class="@if (groupMenu.HasValue && groupMenu == GroupMenu.ManageMember)
+            <li class="@if (groupMenu.HasValue && groupMenu == TopicMenu.ManageMember)
                        {
                         @("tn-selected tn-bg-gray tn-border-gray tn-corner-all")
-                       }" ><a class="tn-menu-text" href="@SiteUrls.Instance().ManageMembers(Url.SpaceKey())" title="成员管理">成员管理</a>
+                       }" ><a class="tn-menu-text" href="@SiteUrls.Instance().ManageMembersOfTopic(Url.SpaceKey())" title="成员管理">成员管理</a>
                 @if (count > 0)
                 {
                     <span class="tn-msg-bubble">@("+" + count)</span>
                 }
             </li>
-            <li class="@if (groupMenu.HasValue && groupMenu == GroupMenu.GroupSettings)
+            <li class="@if (groupMenu.HasValue && groupMenu == TopicMenu.TopicSettings)
                        {
                         @("tn-selected tn-bg-gray tn-border-gray tn-corner-all")
-                       }" ><a class="tn-menu-text" href="@SiteUrls.Instance().EditGroup(Url.SpaceKey())" title="群组设置">群组设置</a></li>
+                       }" ><a class="tn-menu-text" href="@SiteUrls.Instance().EditTopic(Url.SpaceKey())" title="专题设置">专题设置</a></li>
         </ul>
     </div>
 </div>

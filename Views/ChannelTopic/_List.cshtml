@@ -11,17 +11,17 @@
             currentUserIsSpaceUser = true;
         }
     }
-    string noDataMessage = ViewData.Get<string>("noDataMessage", "搜索不到群组!");
+    string noDataMessage = ViewData.Get<string>("noDataMessage", "搜索不到专题!");
 
     bool isGetMore = ViewData.Get<bool>("isGetMore", false) || Request.QueryString.Get<bool>("isGetMore", false);
 }
 @if (Model != null && Model.Count() > 0)
 {
-    <div id="ListGroups">
+    <div id="ListTopics">
         <ul class="tn-list">
-            @foreach (var Group in Model)
+            @foreach (var Topic in Model)
             {
-                @Html.Partial("_Group", Group, new ViewDataDictionary { { "showJoinButton", !currentUserIsSpaceUser } })
+                @Html.Partial("_Topic", Topic, new ViewDataDictionary { { "showJoinButton", !currentUserIsSpaceUser } })
             }
         </ul>
         @if (isGetMore)
@@ -29,14 +29,14 @@
             if (Model.PageIndex < Model.PageCount)
             {
             <div plugin="GetMore" class="tn-load-more tn-border-gray tn-corner-all">
-                <a href="@SiteUrls.Instance().UserJoinedGroups(Url.SpaceKey(), Model.PageIndex + 1, true)">
+                <a href="@SiteUrls.Instance().UserJoinedTopics(Url.SpaceKey(), Model.PageIndex + 1, true)">
                     更多↓</a></div>
             }
         }
         else
         {
             <div class="tn-pagination">
-                @Html.AjaxPagingButton(Model, "ListGroups")
+                @Html.AjaxPagingButton(Model, "ListTopics")
                 @Html.PagingResults(Model)
             </div>
         }
